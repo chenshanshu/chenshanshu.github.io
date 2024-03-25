@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class="active"
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class="active"
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="home-content-container fade-in-down-animation">
+    <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2023/02/10/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2023-02-10/">
+                        前端分享-2023-02-10
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="js模拟点击"><a href="#js模拟点击" class="headerlink" title="js模拟点击"></a>js模拟点击</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> clickEvent = <span class="keyword">new</span> MouseEvent(<span class="string">&#x27;click&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">view</span>: <span class="built_in">window</span>,</span><br><span class="line">    <span class="attr">bubbles</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">cancelable</span>: <span class="literal">true</span>,</span><br><span class="line">&#125;);</span><br><span class="line">inputFile.current.disabled = <span class="string">&quot;&quot;</span>;</span><br><span class="line">inputFile.current.dispatchEvent(clickEvent);</span><br></pre></td></tr></table></figure>
+
+<p>需求：点击一个按钮，要先判断能否上传文件，如果能上传文件在触发input的点击事件触发文件选择框<br>问题：在Safari中不生效</p>
+<h2 id="axios上传文件问题"><a href="#axios上传文件问题" class="headerlink" title="axios上传文件问题"></a>axios上传文件问题</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> http = axios.create(&#123;</span><br><span class="line">    <span class="attr">withCredentials</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">baseURL</span>: process.env.REACT_APP_BASE_URL,</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line">http.interceptors.request.use(<span class="function"><span class="keyword">function</span>(<span class="params">config</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (config.url.indexOf(<span class="string">&#x27;/uploadimage&#x27;</span>) &gt;= <span class="number">0</span> || config.url.indexOf(<span class="string">&#x27;/uploadfile&#x27;</span>) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">        config.withCredentials = <span class="literal">false</span>;</span><br><span class="line">        config.timeout = <span class="number">2</span> * <span class="number">60</span> * <span class="number">1000</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> config</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>上传文件的请求 <code>withCredentials</code> 要改成 <code>false</code></p>
+<h2 id="css中的where选择器"><a href="#css中的where选择器" class="headerlink" title="css中的where选择器"></a>css中的where选择器</h2><pre><code>优先级低，方便用户覆盖，兼容有问题</code></pre><h2 id="craco配置"><a href="#craco配置" class="headerlink" title="craco配置"></a>craco配置</h2><ol>
+<li>把入口文件放到一个目录<code>entries</code></li>
+<li>目录下的每个文件作为一个入口进行打包</li>
+<li>每一个入口生成一个同名的<code>html</code>文件</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">configureWebpack</span>(<span class="params">webpackConfig, &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">    env,</span></span></span><br><span class="line"><span class="params"><span class="function">    paths</span></span></span><br><span class="line"><span class="params"><span class="function">&#125;</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//遍历entries创建多个入口</span></span><br><span class="line">    <span class="keyword">const</span> entriesDir = path.join(paths.appSrc, <span class="string">&#x27;entries&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> fileNames = fs.readdirSync(entriesDir);</span><br><span class="line">    <span class="keyword">const</span> entries = &#123;&#125;;</span><br><span class="line">    <span class="keyword">const</span> htmlWebpackPlugins = [];</span><br><span class="line">    fileNames.forEach(<span class="function"><span class="params">fileName</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> filePath = path.join(entriesDir, fileName);</span><br><span class="line">        <span class="keyword">const</span> file = fs.statSync(filePath);</span><br><span class="line">        <span class="keyword">if</span> (file.isDirectory()) &#123;</span><br><span class="line">            entries[fileName] = path.join(filePath, <span class="string">&#x27;index.js&#x27;</span>)</span><br><span class="line">            htmlWebpackPlugins.push(mkHtmlWebpackPlugin([fileName], fileName + <span class="string">&quot;.html&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="comment">//覆盖默认的plugins配置</span></span><br><span class="line">    <span class="keyword">const</span> defaultHtmlWebpackPluginIndex = webpackConfig.plugins.findIndex(<span class="function"><span class="params">plugin</span> =&gt;</span> plugin <span class="keyword">instanceof</span> HtmlWebpackPlugin);</span><br><span class="line">    webpackConfig.plugins.splice(defaultHtmlWebpackPluginIndex, <span class="number">1</span>, ...htmlWebpackPlugins);</span><br><span class="line">    webpackConfig = &#123;</span><br><span class="line">        ...webpackConfig,</span><br><span class="line">        <span class="attr">entry</span>: &#123;</span><br><span class="line">            <span class="attr">main</span>: webpackConfig.entry,</span><br><span class="line">            ...entries</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">externals</span>: &#123;</span><br><span class="line">            <span class="attr">react</span>: <span class="string">&#x27;React&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;react-dom&#x27;</span>: <span class="string">&#x27;ReactDOM&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> webpackConfig</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Fri Feb 10 2023 10:29:05 GMT+0000">2023-02-10</span></span>
+        
+        
+    </div>
+
+    <a href="/2023/02/10/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2023-02-10/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/12/16/js%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">
+                        js事件循环
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        js事件循环JavaScript 在设计之初便是单线程，即指程序运行时，只有一个线程存在，同一时间只能做一件事
+
+Event Loop：所有同步任务在主线程上执行，形成一个执行栈—-&gt;主线程之外还有任务队列，当异步任务执行有结果的时候就会在任务...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Fri Dec 16 2022 10:55:06 GMT+0000">2022-12-16</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/12/16/js%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/12/14/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-12-15/">
+                        前端分享-2022-12-15
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="console-log"><a href="#console-log" class="headerlink" title="console.log"></a>console.log</h2><p>在写node程序时，使用 <code>console</code> 打印，如果对象里面还是对象时不会展开, 会打印成 <code>[Object]</code>  <code>[Array]</code></p>
+<p>如果打印的内容比较长会超过缓冲区大小， <code>terminal</code> 里会显示不全<br>这些情况下可以使用 <code>debugger</code> 搭配 <code>logpoint</code></p>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Dec 14 2022 11:35:14 GMT+0000">2022-12-14</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/12/14/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-12-15/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/11/28/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8BRollup/">
+                        快速上手Rollup
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="什么是-Rollup"><a href="#什么是-Rollup" class="headerlink" title="什么是 Rollup"></a>什么是 <code>Rollup</code></h2><blockquote>
+<p>Rollup 是一个 JavaScript 模块打包工具，可以将多个小的代码片段编译为完整的库和应用。与传统的 CommonJS 和 AMD 这一类非标准化的解决方案不同，Rollup 使用的是 ES6 版本 Javascript 中的模块标准。新的 ES 模块可以让你自由、无缝地按需使用你最喜爱的库中那些有用的单个函数。这一特性在未来将随处可用，但 Rollup 让你现在就可以，想用就用。</p>
+</blockquote>
+<h2 id="为什么是-Rollup"><a href="#为什么是-Rollup" class="headerlink" title="为什么是 Rollup"></a>为什么是 <code>Rollup</code></h2><ol>
+<li>这里简单对<code>webpack</code>、<code>gulp</code>、<code>Rollup</code>做一个比较：</li>
+</ol>
+<p><code>gulp</code> 是一个构建工具，主要完成代码压缩、编译转化, 可以替代手工实现自动化工作</p>
+<p><code>Webpack</code> 支持 <code>HMR</code> ，有更完整的插件库，适合用于前端工程化开发</p>
+<p><code>Rollup</code> 更小巧，仅仅是一款 <code>ESM</code> 打包器，支持 <code>Tree-shaking</code></p>
+<ol start="2">
+<li>如果您的代码库是基于<code>ES6</code>或者<code>TS</code>，且希望其他人安装后可以直接使用，这个时候就可以使用<code>Rollup</code></li>
+</ol>
+<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><p><code>Rollup</code> 可以通过两种方式使用：使用命令行方式，或者 <code>JavaScript API</code> 方式</p>
+<ul>
+<li>直接命令行运行<br>用于浏览器:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 编译为一个在 &lt;script&gt; 标签中可用的自运行函数 (&#x27;iife&#x27;)</span><br><span class="line">rollup main.js --file bundle.js --format iife</span><br></pre></td></tr></table></figure>
+
+<p>用于 <code>Node.js</code> :</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 编译为 CommonJS 模块 (&#x27;cjs&#x27;)</span><br><span class="line">rollup main.js --file bundle.js --format cjs</span><br></pre></td></tr></table></figure>
+
+<p>同时用于浏览器和 Node.js：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 需要为 UMD 格式的包指定一个名称</span><br><span class="line">rollup main.js --file bundle.js --format umd --name &quot;myBundle&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>-f</code> ：是 <code>--format</code> 的缩写。<br><code>-o</code> ：指定了输出的路径。<br><code>-c</code> ：指定rollup的配置文件。<br><code>-w</code> ：监听源文件是否有改动，如果有改动，重新打包。</p>
+<ul>
+<li>使用配置文件<br>在项目中创建一个名为 <code>rollup.config.js</code> 的文件，增加如下代码：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="attr">input</span>: [<span class="string">&quot;./src/index.js&quot;</span>],</span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="attr">file</span>: <span class="string">&quot;./dist/bundle.js&quot;</span>,</span><br><span class="line">        <span class="attr">format</span>: <span class="string">&quot;umd&quot;</span>,</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&quot;experience&quot;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Mon Nov 28 2022 16:17:41 GMT+0000">2022-11-28</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/11/28/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8BRollup/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/11/16/%E7%BC%96%E5%86%99npm%E5%8C%85%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+                        编写npm包遇到的问题
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <p><strong>前言</strong><br>最近在编写一个npm包时遇到几个问题，记录下来防止下次卡在同一个地方，后续遇到的坑会继续整理</p>
+<h3 id="一、CJS和ESM不能同时使用"><a href="#一、CJS和ESM不能同时使用" class="headerlink" title="一、CJS和ESM不能同时使用"></a>一、CJS和ESM不能同时使用</h3><blockquote>
+<p>问题描述：在编写一个<code>node</code>环境的<code>NPM</code>包时，引用了一个<code>ESM</code>模块机制的包</p>
+</blockquote>
+<ol>
+<li><strong>Node对ESM的支持</strong><br><code>Node</code> 13.2.0 起开始正式支持<code>ES Modules</code>特性，使用方法如下：</li>
+</ol>
+<ul>
+<li>在<code>package.json</code>中，增加<code>&quot;type&quot;:&quot;module&quot;</code></li>
+<li>将文件<code>.js</code>后缀修改为<code>.mjs</code></li>
+<li>上面两种方法二选一，如果不配置，则会抛出警告：<br><code>Warning: To load an ES module, set &quot;type&quot;: &quot;module&quot; in the package.json or use the .mjs extension.</code></li>
+</ul>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Nov 16 2022 17:00:31 GMT+0000">2022-11-16</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/11/16/%E7%BC%96%E5%86%99npm%E5%8C%85%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/11/03/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-11-03/">
+                        前端分享-2022-11-03
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="遇到的几个问题"><a href="#遇到的几个问题" class="headerlink" title="遇到的几个问题"></a>遇到的几个问题</h2><ul>
+<li>时间戳转换日期出现不准确情况<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> t = <span class="number">577292400000</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>(t).toLocaleDateString()) <span class="comment">//1988/4/18</span></span><br><span class="line">t = t - <span class="number">24</span> * <span class="number">60</span> * <span class="number">60</span> * <span class="number">1000</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> <span class="built_in">Date</span>(t).toLocaleDateString()) <span class="comment">//1988/4/16</span></span><br><span class="line"><span class="keyword">let</span> t2 = <span class="keyword">new</span> <span class="built_in">Date</span>(<span class="string">&#x27;1988/4/17&#x27;</span>).getTime() <span class="comment">//577209600000</span></span><br><span class="line">t - t2 === <span class="number">23</span> * <span class="number">60</span> * <span class="number">60</span> * <span class="number">1000</span></span><br></pre></td></tr></table></figure></li>
+<li>safari中定位<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span>&#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">50%</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+发现用百分比不生效，修改为具体高度后解决</li>
+</ul>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Nov 03 2022 15:50:11 GMT+0000">2022-11-03</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/11/03/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-11-03/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/10/25/js%E6%95%B0%E7%BB%84%E5%8E%BB%E9%87%8D/">
+                        js数组去重
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="普通数组（元素为基本类型的）"><a href="#普通数组（元素为基本类型的）" class="headerlink" title="普通数组（元素为基本类型的）"></a>普通数组（元素为基本类型的）</h2><h3 id="1-使用Set"><a href="#1-使用Set" class="headerlink" title="1. 使用Set"></a>1. 使用Set</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>(arr));</span><br><span class="line">[...new <span class="built_in">Set</span>(arr)];</span><br><span class="line"><span class="comment">//两种任选一个</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-新建数组加indexOf"><a href="#2-新建数组加indexOf" class="headerlink" title="2. 新建数组加indexOf"></a>2. 新建数组加indexOf</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newArr = []</span><br><span class="line">arr.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (newArr.indexOf(item) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        newArr.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-类似前一种，使用includes-判断"><a href="#3-类似前一种，使用includes-判断" class="headerlink" title="3. 类似前一种，使用includes()判断"></a>3. 类似前一种，使用includes()判断</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newArr = []</span><br><span class="line">arr.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!newArr.includes(item)) &#123;</span><br><span class="line">        newArr.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-变量在原数组中出现的第一个位置"><a href="#4-变量在原数组中出现的第一个位置" class="headerlink" title="4. 变量在原数组中出现的第一个位置"></a>4. 变量在原数组中出现的第一个位置</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newArr = []</span><br><span class="line">arr.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (arr.indexOf(item) === index) &#123;</span><br><span class="line">        newArr.push(item)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-filter"><a href="#5-filter" class="headerlink" title="5. filter"></a>5. filter</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newArr = arr.filter(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> arr.indexOf(item) === index</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-利用两层循环-数组的splice方法-不推荐"><a href="#6-利用两层循环-数组的splice方法-不推荐" class="headerlink" title="6. 利用两层循环+数组的splice方法(不推荐)"></a>6. 利用两层循环+数组的splice方法(不推荐)</h3>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Tue Oct 25 2022 09:50:18 GMT+0000">2022-10-25</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/10/25/js%E6%95%B0%E7%BB%84%E5%8E%BB%E9%87%8D/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/10/13/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AAcli/">
+                        编写一个cli
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="cli"><a href="#cli" class="headerlink" title="cli"></a>cli</h2><p>Command Line Interface – 命令行界面<br>为什么要写这个东西？</p>
+<ul>
+<li>可以自己开发一个脚手架</li>
+<li>可以更灵活地更改配置</li>
+</ul>
+<h3 id="脚手架执行步骤："><a href="#脚手架执行步骤：" class="headerlink" title="脚手架执行步骤："></a>脚手架执行步骤：</h3><ul>
+<li>在终端输入 <code>vue create vue-test-app</code></li>
+<li>终端解析出 <code>vue</code>命令</li>
+<li>终端环境变量中找到<code>vue</code>命令</li>
+<li>终端利用<code>node</code>执行<code>vue.js</code></li>
+<li><code>vue.js</code>解析<code>command / options</code></li>
+<li><code>vue.js</code>执行<code>command</code></li>
+<li>执行完毕，退出执行</li>
+</ul>
+<h3 id="为什么全局安装完vue-cli-会有一个vue命令？"><a href="#为什么全局安装完vue-cli-会有一个vue命令？" class="headerlink" title="为什么全局安装完vue-cli 会有一个vue命令？"></a>为什么全局安装完<code>vue-cli</code> 会有一个<code>vue</code>命令？</h3><ul>
+<li>在<code>package.json</code>中配置了<code>bin</code>目录，<code>node</code>会在<code>bin</code>目录下配置一个对应的软连接</li>
+</ul>
+<h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><h3 id="1-初始化一个项目"><a href="#1-初始化一个项目" class="headerlink" title="1. 初始化一个项目"></a>1. 初始化一个项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; mkdir test-cli</span><br><span class="line">&gt; <span class="built_in">cd</span> test-cli</span><br><span class="line">&gt; npm init [-y] //创建一个package.json(默认初始值)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-注册执行命令"><a href="#2-注册执行命令" class="headerlink" title="2. 注册执行命令"></a>2. 注册执行命令</h3><ul>
+<li>新建目录<code>bin</code></li>
+<li>在这个目录新建文件<code>cli.js</code></li>
+<li>修改<code>package.json</code>, 来告诉<code>npm</code>执行文件位置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># package.json</span><br><span class="line">&quot;bin&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;./bin/cli.js&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编辑<code>cli.js</code></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;hello world!&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-模拟执行"><a href="#3-模拟执行" class="headerlink" title="3. 模拟执行"></a>3. 模拟执行</h3><p>发布上线再安装测试比较繁琐，且导致版本号膨胀，<br>可以在本地使用 <code>npm link(npm ln)</code> 创建软链接到全局<br>执行 <code>npm link</code> ，会在node的根目录下生成三个文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">├──node</span><br><span class="line">│   ├──node_modules</span><br><span class="line">│   ├──test</span><br><span class="line">│   ├──test.cmd</span><br><span class="line">│   └──test.ps1</span><br></pre></td></tr></table></figure>
+
+<p>在命令行中输入 <code>test</code> , 会看到打印信息</p>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Oct 13 2022 14:54:02 GMT+0000">2022-10-13</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/10/13/%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AAcli/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/09/15/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-09-15/">
+                        前端分享-2022-09-15
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="node版本管理工具"><a href="#node版本管理工具" class="headerlink" title="node版本管理工具"></a>node版本管理工具</h2><p><code>nvm</code> 是 Node.js 的版本管理工具，可以创建不同版本 Node 的隔离环境，从而避免不同版本包之间的干扰<br><code>mac</code>环境推荐使用<code>n</code></p>
+<h2 id="图片裁剪"><a href="#图片裁剪" class="headerlink" title="图片裁剪"></a>图片裁剪</h2><p><a href="/html/imgClip1">地址</a></p>
+<h2 id="js大数字问题"><a href="#js大数字问题" class="headerlink" title="js大数字问题"></a>js大数字问题</h2><p>超出 2 的 53 次方之后，一个数就不精确了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span>.MAX_SAFE_INTEGER === <span class="number">9007199254740991</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">handleResData</span>(<span class="params">str</span>)</span>&#123;</span><br><span class="line">    str = str.replace(<span class="regexp">/[:]([0-9]&#123;18,&#125;)[,]?/g</span>,<span class="string">`:&quot;$1&quot;,`</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(str)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Sep 15 2022 15:06:48 GMT+0000">2022-09-15</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/09/15/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-09-15/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2022/07/28/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-07-28/">
+                        前端分享-2022-07-28
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="NUXT"><a href="#NUXT" class="headerlink" title="NUXT"></a>NUXT</h2><h3 id="NUXT-简介"><a href="#NUXT-简介" class="headerlink" title="NUXT 简介"></a><code>NUXT</code> 简介</h3><ul>
+<li>Nuxt.js 是一个基于 Vue.js 的服务端渲染应用框架，它可以帮我们轻松的实现同构应用。</li>
+<li>SSR是英文server side render的缩写，即服务端描画。</li>
+</ul>
+<h3 id="NUXT-解决了什么问题"><a href="#NUXT-解决了什么问题" class="headerlink" title="NUXT 解决了什么问题"></a><code>NUXT</code> 解决了什么问题</h3><ul>
+<li>SPA随着工程不断变大，打包文件不断增长，页面的整体刷新加载速度慢。</li>
+<li>为了SEO</li>
+</ul>
+<h3 id="NUXT-会带来的问题"><a href="#NUXT-会带来的问题" class="headerlink" title="NUXT 会带来的问题"></a><code>NUXT</code> 会带来的问题</h3><ul>
+<li>更长的链路，之前是浏览器+nginx+后台服务，而现在就变成浏览器+nginx+nodejs+后台服务。</li>
+<li>nodejs中的阻塞型请求，容易成为性能的瓶颈。</li>
+<li>一套api，要考虑前后端的兼容性。</li>
+</ul>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Jul 28 2022 15:13:49 GMT+0000">2022-07-28</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/07/28/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-07-28/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+    </ul>
+
+    <div class="home-paginator">
+        <div class="paginator">
+    
+        <a class="prev btn"
+           href="/"
+        >Prev</a>
+    
+
+    
+        <a class="next btn"
+           href="/page/3/"
+        >Next</a>
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2024&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

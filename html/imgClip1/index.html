@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./index.css">
+    <title>图片裁剪</title>
+</head>
+
+<body>
+
+    <div class="title">裁剪前：</div>
+    <canvas class="clipCanvas" width="800" height="600"></canvas>
+    <div class="controlbox">
+        <div class="controlbox__item">
+            <div>上传：</div>
+            <input type="file" id="originImg" accept="image/*">
+        </div>
+        <div class="controlbox__item">
+            <div>旋转：</div>
+            <div class="progressbar" id="rotateProgress">
+                <div class="progressbar__btn"></div>
+            </div>
+        </div>
+        <div class="controlbox__item">
+            <div>大小：</div>
+            <div class="progressbar" id="sizeProgress">
+                <div class="progressbar__btn"></div>
+            </div>
+        </div>
+    </div>
+    <div class="title">裁剪结果：</div>
+    <canvas class="resultCanvas" style="display: none;"></canvas>
+    <img class="resultPic" />
+</body>
+<script src="./index.js"></script>
+<script type="text/javascript">
+    var imgClip = new ImgClip({
+        isSquare: true,
+        src: '/images/dog.jpeg'
+    })
+</script>
+</html>
