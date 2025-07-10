@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            除了keep-alive还有哪些页面缓存方案 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">除了keep-alive还有哪些页面缓存方案</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2024-05-09 16:08:31</span>
+        <span class="mobile">2024-05-09 16:08</span>
+    </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/vue/">vue</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>有这么一个需求：列表页进入详情页后，切换回列表页，需要对列表页进行缓存，如果从首页进入列表页，就要重新加载列表页。<br>对于这个需求，我的第一个想法就是使用keep-alive来缓存列表页，列表和详情页切换时，列表页会被缓存；从首页进入列表页时，就重置列表页数据并重新获取新数据来达到列表页重新加载的效果。<br>但是，这个方案有个很不好的地方就是：如果列表页足够复杂，有下拉刷新、下拉加载、有弹窗、有轮播等，在清除缓存时，就需要重置很多数据和状态，而且还可能要手动去销毁和重新加载某些组件，这样做既增加了复杂度，也容易出bug。<br>接下来说说我的想到的新实现方案（代码基于Vue3）。</p>
+<span id="more"></span>
+
+<h2 id="keep-alive-缓存和清除"><a href="#keep-alive-缓存和清除" class="headerlink" title="keep-alive 缓存和清除"></a>keep-alive 缓存和清除</h2><blockquote>
+<p>keep-alive 缓存原理：进入页面时，页面组件渲染完成，keep-alive 会缓存页面组件的实例；离开页面后，组件实例由于已经缓存就不会进行销毁；当再次进入页面时，就会将缓存的组件实例拿出来渲染，因为组件实例保存着原来页面的数据和Dom的状态，那么直接渲染组件实例就能得到原来的页面。</p>
+</blockquote>
+<p>keep-alive 最大的难题就是缓存的清理，如果能有简单的缓存清理方法，那么keep-alive 组件用起来就很爽。<br>但是，keep-alive 组件没有提供清除缓存的API，那有没有其他清除缓存的办法呢？答案是有的。我们先看看 keep-alive 组件的props：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">include - string | <span class="built_in">RegExp</span> | <span class="built_in">Array</span>。只有名称匹配的组件会被缓存。</span><br><span class="line">exclude - string | <span class="built_in">RegExp</span> | <span class="built_in">Array</span>。任何名称匹配的组件都不会被缓存。</span><br><span class="line">max - number | string。最多可以缓存多少组件实例。</span><br></pre></td></tr></table></figure>
+
+<p>从include描述来看，我发现include是可以用来清除缓存，做法是：将组件名称添加到include里，组件会被缓存；移除组件名称，组件缓存会被清除。根据这个原理，用hook简单封装一下代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ref, nextTick &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> caches = ref&lt;string[]&gt;([])</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">useRouteCache</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 添加缓存的路由组件</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">addCache</span> (<span class="params">componentName: string | string []</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(componentName)) &#123;</span><br><span class="line">      componentName.forEach(addCache)</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (!componentName || caches.value.includes(componentName)) <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    caches.value.push(componentName)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 移除缓存的路由组件</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">removeCache</span> (<span class="params">componentName: string</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> index = caches.value.indexOf(componentName)</span><br><span class="line">    <span class="keyword">if</span> (index &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> caches.value.splice(index, <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 移除缓存的路由组件的实例</span></span><br><span class="line">  <span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">removeCacheEntry</span> (<span class="params">componentName: string</span>) </span>&#123;    </span><br><span class="line">    <span class="keyword">if</span> (removeCache(componentName)) &#123;</span><br><span class="line">      <span class="keyword">await</span> nextTick()</span><br><span class="line">      addCache(componentName)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    caches,</span><br><span class="line">    addCache,</span><br><span class="line">    removeCache,</span><br><span class="line">    removeCacheEntry</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>hook的用法如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;router-view v-slot=<span class="string">&quot;&#123; Component &#125;&quot;</span>&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">keep-alive</span> <span class="attr">:include</span>=<span class="string">&quot;caches&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">component</span> <span class="attr">:is</span>=<span class="string">&quot;Component&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">keep-alive</span>&gt;</span></span></span><br><span class="line">&lt;/router-view&gt;</span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span> <span class="attr">lang</span>=<span class="string">&quot;ts&quot;</span>&gt;</span><span class="handlebars"><span class="xml"></span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars"><span class="xml">import useRouteCache from &#x27;./hooks/useRouteCache&#x27;</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars"><span class="xml">const &#123; caches, addCache &#125; = useRouteCache()</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars"><span class="xml"></span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars"><span class="xml"><span class="comment">&lt;!-- 将列表页组件名称添加到需要缓存名单中 --&gt;</span></span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars"><span class="xml">addCache([&#x27;List&#x27;])</span></span></span></span><br><span class="line"><span class="xml"><span class="handlebars"><span class="xml"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>清除列表页缓存如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> useRouteCache <span class="keyword">from</span> <span class="string">&#x27;@/hooks/useRouteCache&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; removeCacheEntry &#125; = useRouteCache()</span><br><span class="line">removeCacheEntry(<span class="string">&#x27;List&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>此处removeCacheEntry方法清除的是列表组件的实例，’List’ 值仍然在 组件的include里，下次重新进入列表页会重新加载列表组件，并且之后会继续列表组件进行缓存。</p>
+</blockquote>
+<h2 id="列表页清除缓存的时机"><a href="#列表页清除缓存的时机" class="headerlink" title="列表页清除缓存的时机"></a>列表页清除缓存的时机</h2><p><strong>进入列表页后清除缓存</strong><br>在列表页路由组件的beforeRouteEnter勾子中判断是否是从其他页面（Home）进入的，是则清除缓存，不是则使用缓存。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">defineOptions(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;List1&#x27;</span>,</span><br><span class="line">  beforeRouteEnter (to: RouteRecordNormalized, <span class="attr">from</span>: RouteRecordNormalized) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">from</span>.name === <span class="string">&#x27;Home&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> &#123; removeCacheEntry &#125; = useRouteCache()</span><br><span class="line">      removeCacheEntry(<span class="string">&#x27;List1&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这种缓存方式有个不太友好的地方：当从首页进入列表页，列表页和详情页来回切换，列表页是缓存的；但是在首页和列表页间用浏览器的前进后退来切换时，我们更多的是希望列表页能保留缓存，就像在多页面中浏览器前进后退会缓存原页面一样的效果。但实际上，列表页重新刷新了，这就需要使用另一种解决办法，点击链接时清除缓存清除缓存。</p>
+<p><strong>点击链接跳转前清除缓存</strong><br>在首页点击跳转列表页前，在点击事件的时候去清除列表页缓存，这样的话在首页和列表页用浏览器的前进后退来回切换，列表页都是缓存状态，只要当重新点击跳转链接的时候，才重新加载列表页，满足预期。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 首页 Home.vue</span></span><br><span class="line"></span><br><span class="line">&lt;li&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">&quot;/list&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;removeCacheBeforeEnter&quot;</span>&gt;</span>列表页<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span></span><br><span class="line">&lt;/li&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span> <span class="attr">lang</span>=<span class="string">&quot;ts&quot;</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> useRouteCache <span class="keyword">from</span> <span class="string">&#x27;@/hooks/useRouteCache&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">defineOptions(&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">name</span>: <span class="string">&#x27;Home&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">const</span> &#123; removeCacheEntry &#125; = useRouteCache()</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="comment">// 进入页面前，先清除缓存实例</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="function"><span class="keyword">function</span> <span class="title">removeCacheBeforeEnter</span> (<span class="params"></span>) </span>&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  removeCacheEntry(<span class="string">&#x27;List&#x27;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="状态管理实现缓存"><a href="#状态管理实现缓存" class="headerlink" title="状态管理实现缓存"></a>状态管理实现缓存</h2><p>通过状态管理库存储页面的状态和数据也能实现页面缓存。此处状态管理使用的是pinia。<br>首先使用pinia创建列表页store：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineStore &#125; <span class="keyword">from</span> <span class="string">&#x27;pinia&#x27;</span></span><br><span class="line"></span><br><span class="line">interface Item &#123;</span><br><span class="line">  id?: number,</span><br><span class="line">  content?: string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> useListStore = defineStore(<span class="string">&#x27;list&#x27;</span>, &#123;</span><br><span class="line">  <span class="comment">// 推荐使用 完整类型推断的箭头函数</span></span><br><span class="line">  <span class="attr">state</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">isRefresh</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">pageSize</span>: <span class="number">30</span>,</span><br><span class="line">      <span class="attr">currentPage</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">list</span>: [] <span class="keyword">as</span> Item[],</span><br><span class="line">      <span class="attr">curRow</span>: <span class="literal">null</span> <span class="keyword">as</span> Item | <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">actions</span>: &#123;</span><br><span class="line">    setList (data: Item []) &#123;</span><br><span class="line">      <span class="built_in">this</span>.list = data</span><br><span class="line">    &#125;,</span><br><span class="line">    setCurRow (data: Item) &#123;</span><br><span class="line">      <span class="built_in">this</span>.curRow = data</span><br><span class="line">    &#125;,</span><br><span class="line">    setIsRefresh (data: boolean) &#123;</span><br><span class="line">      <span class="built_in">this</span>.isRefresh = data</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> useListStore</span><br></pre></td></tr></table></figure>
+
+<p>通过beforeRouteEnter钩子判断是否从首页进来，是则通过 listStore.$reset() 来重置数据，否则使用缓存的数据状态；之后根据 listStore.isRefresh 标示判断是否重新获取列表数据。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">defineOptions(&#123;</span><br><span class="line">  beforeRouteEnter (to: RouteLocationNormalized, <span class="attr">from</span>: RouteLocationNormalized) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">from</span>.name === <span class="string">&#x27;Home&#x27;</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> listStore = useListStore()</span><br><span class="line">      listStore.$reset()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">onBeforeMount(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!listStore.useCache) &#123;</span><br><span class="line">    loading.value = <span class="literal">true</span></span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      listStore.setList(getData())</span><br><span class="line">      loading.value = <span class="literal">false</span></span><br><span class="line">    &#125;, <span class="number">1000</span>)</span><br><span class="line">    listStore.useCache = <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>缺点</strong><br>通过状态管理去做缓存的话，需要将状态数据都存在stroe里，状态多起来的话，会有点繁琐，而且状态写在store里肯定没有写在列表组件里来的直观；状态管理由于只做列表页数据的缓存，对于一些非受控组件来说，组件内部状态改变是缓存不了的，这就导致页面渲染后跟原来有差别，需要额外代码操作。</p>
+<h2 id="页面弹窗实现缓存"><a href="#页面弹窗实现缓存" class="headerlink" title="页面弹窗实现缓存"></a>页面弹窗实现缓存</h2><p>将详情页做成全屏弹窗，那么从列表页进入详情页，就只是简单地打开详情页弹窗，将列表页覆盖，从而达到列表页 “缓存”的效果，而非真正的缓存。<br>这里还有一个问题，打开详情页之后，如果点后退，会返回到首页，实际上我们希望是返回列表页，这就需要给详情弹窗加个历史记录，如列表页地址为 ‘/list’，打开详情页变为 ‘/list?id=1’。<br>弹窗组件实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PopupPage.vue</span></span><br><span class="line"></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;popup-page&quot;</span> <span class="attr">:class</span>=<span class="string">&quot;[!dialogVisible &amp;&amp; &#x27;hidden&#x27;]&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">slot</span> <span class="attr">v-if</span>=<span class="string">&quot;dialogVisible&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span> <span class="attr">lang</span>=<span class="string">&quot;ts&quot;</span>&gt;</span><span class="javascript"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> &#123; useLockscreen &#125; <span class="keyword">from</span> <span class="string">&#x27;element-plus&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> &#123; computed, defineProps, defineEmits &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">import</span> useHistoryPopup <span class="keyword">from</span> <span class="string">&#x27;./useHistoryPopup&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">const</span> props = defineProps(&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">modelValue</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">type</span>: <span class="built_in">Boolean</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">default</span>: <span class="literal">false</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="comment">// 路由记录</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">history</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">type</span>: <span class="built_in">Object</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="comment">// 配置了history后，初次渲染时，如果有url上有history参数，则自动打开弹窗</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">auto</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">type</span>: <span class="built_in">Boolean</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">default</span>: <span class="literal">true</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">size</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">type</span>: <span class="built_in">String</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">default</span>: <span class="string">&#x27;50%&#x27;</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">full</span>: &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">type</span>: <span class="built_in">Boolean</span>,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="attr">default</span>: <span class="literal">false</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">const</span> emit = defineEmits(</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  [<span class="string">&#x27;update:modelValue&#x27;</span>, <span class="string">&#x27;autoOpen&#x27;</span>, <span class="string">&#x27;autoClose&#x27;</span>]</span></span></span><br><span class="line"><span class="javascript"><span class="xml">)</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span></span></span><br><span class="line"><span class="javascript"><span class="xml"><span class="keyword">const</span> dialogVisible = computed&lt;boolean&gt;(&#123; <span class="comment">// 控制弹窗显示</span></span></span></span><br><span class="line"><span class="javascript"><span class="xml">  get () &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    <span class="keyword">return</span> props.modelValue</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  set (val) &#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">    emit(<span class="string">&#x27;update:modelValue&#x27;</span>, val)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  &#125;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span></span></span><br><span class="line"><span class="javascript"><span class="xml">useLockscreen(dialogVisible)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">useHistoryPopup(&#123;</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">history</span>: computed(<span class="function">() =&gt;</span> props.history),</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">auto</span>: props.auto,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">dialogVisible</span>: dialogVisible,</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">onAutoOpen</span>: <span class="function">() =&gt;</span> emit(<span class="string">&#x27;autoOpen&#x27;</span>),</span></span></span><br><span class="line"><span class="javascript"><span class="xml">  <span class="attr">onAutoClose</span>: <span class="function">() =&gt;</span> emit(<span class="string">&#x27;autoClose&#x27;</span>)</span></span></span><br><span class="line"><span class="javascript"><span class="xml">&#125;)</span></span></span><br><span class="line"><span class="javascript"><span class="xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">style</span> <span class="attr">lang</span>=<span class="string">&#x27;less&#x27;</span>&gt;</span><span class="css"></span></span></span><br><span class="line"><span class="css"><span class="xml"><span class="selector-class">.popup-page</span> &#123;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">position</span>: fixed;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">left</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">right</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">top</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">z-index</span>: <span class="number">100</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">overflow</span>: auto;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">padding</span>: <span class="number">10px</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">background</span>: <span class="number">#fff</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  </span></span></span><br><span class="line"><span class="css"><span class="xml">  &amp;<span class="selector-class">.hidden</span> &#123;</span></span></span><br><span class="line"><span class="css"><span class="xml">    <span class="attribute">display</span>: none;</span></span></span><br><span class="line"><span class="css"><span class="xml">  &#125;</span></span></span><br><span class="line"><span class="css"><span class="xml">&#125;</span></span></span><br><span class="line"><span class="css"><span class="xml"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>缺点</strong><br>弹窗实现页面缓存，局限比较大，只能在列表页和详情页中才有效，离开列表页之后，缓存就会失效，比较合适一些简单缓存的场景。</p>
+<h2 id="父子路由实现缓存"><a href="#父子路由实现缓存" class="headerlink" title="父子路由实现缓存"></a>父子路由实现缓存</h2><p>该方案原理其实就是页面弹窗，列表页为父路由，详情页为子路由，从列表页跳转到详情页时，显示详情页字路由，且详情页全屏显示，覆盖住列表页。<br>声明父子路由:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">path</span>: <span class="string">&#x27;/list&#x27;</span>,</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;list&#x27;</span>,</span><br><span class="line">  <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;./views/List.vue&#x27;</span>),</span><br><span class="line">  <span class="attr">children</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/detail&#x27;</span>,</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;detail&#x27;</span>,</span><br><span class="line">      <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;./views/Detail.vue&#x27;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>列表页代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 列表页</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">el-table</span> <span class="attr">v-loading</span>=<span class="string">&quot;loading&quot;</span> <span class="attr">:data</span>=<span class="string">&quot;tableData&quot;</span> <span class="attr">border</span> <span class="attr">style</span>=<span class="string">&quot;width: 100%; margin-top: 30px;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">el-table-column</span> <span class="attr">prop</span>=<span class="string">&quot;id&quot;</span> <span class="attr">label</span>=<span class="string">&quot;id&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">el-table-column</span> <span class="attr">prop</span>=<span class="string">&quot;content&quot;</span> <span class="attr">label</span>=<span class="string">&quot;内容&quot;</span>/&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">el-table-column</span> <span class="attr">label</span>=<span class="string">&quot;操作&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;<span class="name">template</span> <span class="attr">v-slot</span>=<span class="string">&quot;&#123; row &#125;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">el-link</span> <span class="attr">type</span>=<span class="string">&quot;primary&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;gotoDetail(row)&quot;</span>&gt;</span>进入详情<span class="tag">&lt;/<span class="name">el-link</span>&gt;</span></span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;<span class="name">el-tag</span> <span class="attr">type</span>=<span class="string">&quot;success&quot;</span> <span class="attr">v-if</span>=<span class="string">&quot;row.id === curRow?.id&quot;</span>&gt;</span>刚点击<span class="tag">&lt;/<span class="name">el-tag</span>&gt;</span></span></span><br><span class="line"><span class="xml">      <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">el-table-column</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">el-table</span>&gt;</span></span></span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">el-pagination</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">v-model:currentPage</span>=<span class="string">&quot;currentPage&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">:page-size</span>=<span class="string">&quot;pageSize&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">layout</span>=<span class="string">&quot;total, prev, pager, next&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">    <span class="attr">:total</span>=<span class="string">&quot;list.length&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="xml">  /&gt;</span></span></span><br><span class="line">  </span><br><span class="line">  &lt;!-- 详情页 --&gt;</span><br><span class="line">  <span class="xml"><span class="tag">&lt;<span class="name">router-view</span> <span class="attr">class</span>=<span class="string">&quot;popyp-page&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">router-view</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">style</span> <span class="attr">lang</span>=<span class="string">&#x27;less&#x27;</span> <span class="attr">scoped</span>&gt;</span><span class="css"></span></span></span><br><span class="line"><span class="css"><span class="xml"><span class="selector-class">.popyp-page</span> &#123;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">position</span>: fixed;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">top</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">left</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">right</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">z-index</span>: <span class="number">100</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">background</span>: <span class="number">#fff</span>;</span></span></span><br><span class="line"><span class="css"><span class="xml">  <span class="attribute">overflow</span>: auto;</span></span></span><br><span class="line"><span class="css"><span class="xml">&#125;</span></span></span><br><span class="line"><span class="css"><span class="xml"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/vue/">#vue</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2024/07/18/css%E7%BB%98%E5%88%B6%E4%B8%80%E4%B8%AA%E6%96%9C%E6%9D%A1%E7%BA%B9%E8%BF%9B%E5%BA%A6%E6%9D%A1/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">css绘制一个斜条纹进度条</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2024/03/25/flex%E5%B8%83%E5%B1%80/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">flex布局</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keep-alive-%E7%BC%93%E5%AD%98%E5%92%8C%E6%B8%85%E9%99%A4"><span class="nav-number">2.</span> <span class="nav-text">keep-alive 缓存和清除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E9%A1%B5%E6%B8%85%E9%99%A4%E7%BC%93%E5%AD%98%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="nav-number">3.</span> <span class="nav-text">列表页清除缓存的时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98"><span class="nav-number">4.</span> <span class="nav-text">状态管理实现缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E5%BC%B9%E7%AA%97%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98"><span class="nav-number">5.</span> <span class="nav-text">页面弹窗实现缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%88%B6%E5%AD%90%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98"><span class="nav-number">6.</span> <span class="nav-text">父子路由实现缓存</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

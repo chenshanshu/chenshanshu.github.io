@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            快速上手vue3 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">快速上手vue3</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2022-07-15 16:14:14</span>
+        <span class="mobile">2022-07-15 16:14</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/">快速上手</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/vue3/">vue3</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="vue3的优势"><a href="#vue3的优势" class="headerlink" title="vue3的优势"></a>vue3的优势</h2><ol>
+<li><code>Vue3</code>使用<code>TS</code>重构了项目，获得更好的类型支持。<ul>
+<li>TypeScript 增加了代码的可读性和可维护性</li>
+<li>引入了接口、类、继承的编程思想</li>
+<li>ts是js的超集，支持所有<code>es6</code>语法</li>
+<li>ts在编译时会有错误提示，js在运行时才能暴露错误（大型应用测试很难覆盖到全部代码）</li>
+<li>ts是强类型语言，可读性强，方便迭代 (不是「强类型」，是「静态类型检查」的「弱类型」)</li>
+<li>TypeScript 的类型系统是图灵完备的，可以定义从简单到复杂的几乎一切类型</li>
+<li>新建小程序项目可以发现默认的模板是ts</li>
+</ul>
+</li>
+<li>重构了响应式系统</li>
+<li>更好的Tree shaking</li>
+</ol>
+<blockquote>
+<p>Tree-shaking其实就是把无用的模块进行“剪枝”，很多没有用到的 <code>API</code> 就不会打包到最后的包里</p>
+</blockquote>
+<ol start="4">
+<li>比<code>Vue 2</code>更强<ul>
+<li>重写了虚拟Dom的实现</li>
+<li>编译模板的优化。</li>
+<li>更高效的组件初始化。</li>
+<li><code>update</code>性能提高1.3~2倍。</li>
+<li><code>SSR</code>速度提高了2~3倍。</li>
+</ul>
+</li>
+<li>Composition API</li>
+<li>暴露自定义渲染API</li>
+</ol>
+<h2 id="Composition-API"><a href="#Composition-API" class="headerlink" title="Composition API"></a>Composition API</h2><ol>
+<li><code>Options API</code>与<code>Composition API</code>对比</li>
+</ol>
+<table>
+    <tbody>
+    <tr>
+    <th>Options API 伪代码</th>
+    <th>Composition API 伪代码</th>
+    </tr>
+    <tr>
+    <td>
+        <pre>
+            <code>
+                export default &#123;
+                    name: ...,
+                    data() &#123;
+                        return &#123;
+                            // 功能A
+                            // 功能B
+                            ...
+                        &#125;
+                    &#125;,
+                    methods: &#123;
+                        // 功能A
+                        // 功能B
+                        ...
+                    &#125;,
+                    created() &#123;
+                        // 功能A
+                        // 功能B
+                        ...
+                    &#125;
+                &#125;
+            </code>
+        </pre>
+    </td>
+    <td>
+        <pre>
+            <code>
+                import &#123; defineComponent &#125; from 'vue'
+                export default defineComponent(&#123;
+                    setup(props,context)&#123;
+                        // 功能A
+                        // 功能B
+                        ...
+                        return&#123;
+                            ...
+                        &#125;
+                    &#125;
+                &#125;)
+            </code>
+        </pre>
+    </td>
+    </tr>
+    </tbody>
+</table>
+
+<ol start="2">
+<li>Composition API<br>这里仅介绍setup语法糖用法，函数式写法请参考vue3文档</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">&lt; script setup &gt;</span><br><span class="line">    <span class="keyword">import</span> &#123;</span><br><span class="line">        ref,</span><br><span class="line">        reactive,</span><br><span class="line">        defineExpose,</span><br><span class="line">        defineProps,</span><br><span class="line">        defineEmits,</span><br><span class="line">        onMounted,</span><br><span class="line">        nextTick,</span><br><span class="line">        computed，</span><br><span class="line">        watch</span><br><span class="line">    &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">    useStore</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;vuex&#x27;</span></span><br><span class="line"><span class="keyword">import</span> myLogo <span class="keyword">from</span> <span class="string">&#x27;@/components/myLogo&#x27;</span> <span class="comment">//引入的组件不需要再注册</span></span><br><span class="line"><span class="keyword">const</span> store = useStore() <span class="comment">//获取vuex商店</span></span><br><span class="line"><span class="keyword">const</span> userInfo = computed(<span class="function">() =&gt;</span> store.state.userInfo)</span><br><span class="line"><span class="keyword">const</span> props = defineProps(&#123;</span><br><span class="line">    <span class="attr">item</span>: &#123;</span><br><span class="line">        <span class="attr">type</span>: <span class="built_in">Object</span>,</span><br><span class="line">        <span class="attr">default</span>: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">onMounted(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    modelA()</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> list = ref(<span class="literal">null</span>) <span class="comment">// 1. ref底层还是调用的reactive</span></span><br><span class="line"><span class="keyword">const</span> element = ref(<span class="literal">null</span>) <span class="comment">// 2. ref的另一个用法，添加到元素的ref属性，将元素赋值给这个变量</span></span><br><span class="line"><span class="keyword">const</span> list2 = reactive(&#123;</span><br><span class="line">    <span class="attr">a</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">b</span>: <span class="number">2</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">modelA</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    request(&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 3. js中需要通过.value才能操作数据，template模板中可以直接访问</span></span><br><span class="line">        list.value = res.data;</span><br><span class="line">        list2.a = res.data.no;</span><br><span class="line">        <span class="comment">// 4. 不能重新给list2赋值，否则会断开响应式</span></span><br><span class="line">        <span class="comment">// list2 = &#123;</span></span><br><span class="line">        <span class="comment">//     ...</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    &#125;).catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 5. 给父组件传参方式</span></span><br><span class="line"><span class="keyword">const</span> emit = defineEmits([<span class="string">&#x27;choose&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleClick</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    emit(<span class="string">&#x27;choose&#x27;</span>, [arg])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6. setup中定义的变量、方法在外部组件不可见，通过defineExpose暴露出去</span></span><br><span class="line">defineExpose(&#123;</span><br><span class="line">        modelA</span><br><span class="line">    &#125;) &lt;</span><br><span class="line">    /script&gt;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="生命周期对比"><a href="#生命周期对比" class="headerlink" title="生命周期对比"></a>生命周期对比</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Vue2--------------vue3</span><br><span class="line">beforeCreate  -&gt; setup()</span><br><span class="line">created       -&gt; setup()</span><br><span class="line">beforeMount   -&gt; onBeforeMount</span><br><span class="line">mounted       -&gt; onMounted</span><br><span class="line">beforeUpdate  -&gt; onBeforeUpdate</span><br><span class="line">updated       -&gt; onUpdated</span><br><span class="line">beforeDestroy -&gt; onBeforeUnmount</span><br><span class="line">destroyed     -&gt; onUnmounted</span><br><span class="line">activated     -&gt; onActivated</span><br><span class="line">deactivated   -&gt; onDeactivated</span><br><span class="line">errorCaptured -&gt; onErrorCaptured</span><br></pre></td></tr></table></figure>
+
+<h2 id="vue3注意点"><a href="#vue3注意点" class="headerlink" title="vue3注意点"></a>vue3注意点</h2><ul>
+<li>放弃了对ie11的支持（proxy）</li>
+<li><span style="color:red; ">不再使用this</span></li>
+<li>删除了<code>onBeforeCreate</code>和<code>onCreated</code>。因为<code>setup</code>总是在创建组件实例时调用</li>
+<li>给vue2开了个口子，旧的options api也能用</li>
+<li>移除了<code>filter</code>，可以使用<code>function</code>和<code>computed</code>替代</li>
+<li>vue3不限制单个根标签</li>
+<li>避免写面条式代码</li>
+</ul>
+<h2 id="pinia"><a href="#pinia" class="headerlink" title="pinia"></a>pinia</h2><!-- #327bf9 -->
+<p>vuex已停止接受新功能，推荐vue3中使用<span style="color:#327bf9; ">pinia</span></p>
+<ul>
+<li>对于<code>typescript</code>支持更好</li>
+<li>移除了mutation<br>使用方法和vuex类似，这里不多介绍了<br><a class="link"   target="_blank" rel="noopener" href="https://www.php.cn/vuejs/488613.html" >什么是pinia<i class="fas fa-external-link-alt"></i></a></li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/vue3/">#vue3</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2022/07/28/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-07-28/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">前端分享-2022-07-28</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2022/06/30/es6%E6%95%B4%E7%90%86/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">es6整理</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vue3%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">1.</span> <span class="nav-text">vue3的优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Composition-API"><span class="nav-number">2.</span> <span class="nav-text">Composition API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%AF%B9%E6%AF%94"><span class="nav-number">3.</span> <span class="nav-text">生命周期对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vue3%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">vue3注意点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pinia"><span class="nav-number">5.</span> <span class="nav-text">pinia</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

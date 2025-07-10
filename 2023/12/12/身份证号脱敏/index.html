@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            身份证号脱敏 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">身份证号脱敏</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2023-12-12 16:26:49</span>
+        <span class="mobile">2023-12-12 16:26</span>
+    </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E6%AD%A3%E5%88%99/">正则</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="非前后端分离项目"><a href="#非前后端分离项目" class="headerlink" title="非前后端分离项目"></a>非前后端分离项目</h3><style>
+    .question-box{
+        background:#B7F4EC;
+        color:#16004D;
+        padding:12px 10px;
+        font-weight:500;
+        user-select:none;
+        border-radius:6px;
+    }
+    .test-btn{
+        width: 80px;
+        text-align: center;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: #4CD263;
+        color: #ffffff;
+        cursor: pointer;
+        margin-left: auto;
+        user-select:none;
+    }
+    .test-btn:hover{
+        background: #7BE188;
+    }
+    .disable{
+        background: #86909c;
+        cursor: default;
+    }
+    .disable:hover{
+       background: #86909c;
+    }
+    .text-box{
+        background: #efefef;
+        border-radius: 6px;
+        padding:12px 10px;
+    }
+</style>
+<div class="question-box">需求：找到网页上的身份证号并脱敏</div>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>321682199712237978<span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>这是一段文字用来测试321682199712237978身份证号码<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    标签测试<span class="tag">&lt;<span class="name">span</span>&gt;</span>321682<span class="tag">&lt;<span class="name">em</span>&gt;</span>19971223<span class="tag">&lt;/<span class="name">em</span>&gt;</span>7978<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="身份证号的正则"><a href="#身份证号的正则" class="headerlink" title="身份证号的正则"></a>身份证号的正则</h4><ol>
+<li>身份证开头两位是省级地址校验：<br>华北：北京11，天津12，河北13，山西14，内蒙古15<br>东北： 辽宁21，吉林22，黑龙江23<br>华东： 上海31，江苏32，浙江33，安徽34，福建35，江西36，山东37<br>华中： 河南41，湖北42，湖南43<br>华南： 广东44，广西45，海南46<br>西南： 四川51，贵州52，云南53，西藏54，重庆50<br>西北： 陕西61，甘肃62，青海63，宁夏64，新疆65<br>特别：台湾71，香港81，澳门82</li>
+<li>年份校验：(18|19|20)\d{2}</li>
+<li>日期校验：((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/^((<span class="number">1</span>[<span class="number">1</span>-<span class="number">5</span>])|(<span class="number">2</span>[<span class="number">1</span>-<span class="number">3</span>])|(<span class="number">3</span>[<span class="number">1</span>-<span class="number">7</span>])|(<span class="number">4</span>[<span class="number">1</span>-<span class="number">6</span>])|(<span class="number">5</span>[<span class="number">0</span>-<span class="number">4</span>])|(<span class="number">6</span>[<span class="number">1</span>-<span class="number">5</span>])|[<span class="number">7</span>-<span class="number">9</span>]<span class="number">1</span>)\d&#123;<span class="number">4</span>&#125;(<span class="number">18</span>|<span class="number">19</span>|<span class="number">20</span>)\d&#123;<span class="number">2</span>&#125;((<span class="number">0</span>[<span class="number">1</span>-<span class="number">9</span>])|(<span class="number">1</span>[<span class="number">0</span>-<span class="number">2</span>]))(([<span class="number">0</span>-<span class="number">2</span>][<span class="number">1</span>-<span class="number">9</span>])|<span class="number">10</span>|<span class="number">20</span>|<span class="number">30</span>|<span class="number">31</span>)\d&#123;<span class="number">3</span>&#125;[<span class="number">0</span>-9Xx]$/</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h4 id="怎么去遍历dom树"><a href="#怎么去遍历dom树" class="headerlink" title="怎么去遍历dom树"></a>怎么去遍历dom树</h4><ol>
+<li><p>document.getElementsByTagName(‘*’);获取所有标签元素,可以直接forEach循环</p>
+</li>
+<li><p>使用递归</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">loop(<span class="built_in">document</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loop</span>(<span class="params">node</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> nodes = node.childNodes;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt;nodes.length; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!nodes[i])&#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(nodes[i].childNodes.length &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            loop(nodes[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用document.createNodeIterator</p>
+</li>
+</ol>
+<h4 id="怎么判断过滤完成"><a href="#怎么判断过滤完成" class="headerlink" title="怎么判断过滤完成"></a>怎么判断过滤完成</h4><ol>
+<li>获取全文的文本：document.body.innerText</li>
+<li>通过正则全文匹配</li>
+</ol>
+<h4 id="正则表达式分组命名"><a href="#正则表达式分组命名" class="headerlink" title="正则表达式分组命名"></a>正则表达式分组命名</h4><ol>
+<li>我们用正则做局部替换时，常常用到$1,$2…，这些变量是匹配到的分组内容，当正则分组复杂时使用分组命名</li>
+<li>(?&lt;自定义组名&gt;匹配的规则)</li>
+</ol>
+<h4 id="页面局部刷新后，怎么触发重新匹配"><a href="#页面局部刷新后，怎么触发重新匹配" class="headerlink" title="页面局部刷新后，怎么触发重新匹配"></a>页面局部刷新后，怎么触发重新匹配</h4><p>1.使用api：MutationObserver</p>
+<h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filterIdNO</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> Reg1 = <span class="regexp">/(?&lt;first&gt;((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|[7-9]1)\d&#123;4&#125;)((?&lt;year&gt;(18|19|20)\d&#123;2&#125;)((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31))(?&lt;last&gt;\d&#123;3&#125;[0-9Xx])/g</span>;</span><br><span class="line">        <span class="keyword">var</span> Reg2 = <span class="regexp">/^((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|[7-9]1)\d&#123;4&#125;(18|19|20)\d&#123;2&#125;((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d&#123;3&#125;[0-9Xx]$/</span>;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">recursionDom</span>(<span class="params">parent</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> value = (parent.innerText || parent.textContent || <span class="string">&#x27;&#x27;</span>).replace(<span class="regexp">/\n/g</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (!value.match(Reg1)) <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">var</span> t = <span class="built_in">document</span>.createNodeIterator(parent, NodeFilter.SHOW_TEXT, <span class="literal">null</span>, <span class="literal">false</span>)</span><br><span class="line">            <span class="keyword">var</span> currNode = <span class="literal">null</span></span><br><span class="line">            <span class="keyword">var</span> mached = <span class="literal">null</span></span><br><span class="line">            <span class="keyword">while</span> ((currNode = t.nextNode()) !== <span class="literal">null</span>) &#123;</span><br><span class="line">                mached = Reg1.exec(currNode.textContent)</span><br><span class="line">                <span class="keyword">if</span> (Reg1.test(currNode.textContent)) &#123;</span><br><span class="line">                    currNode.textContent = currNode.textContent.replace(Reg1, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>)</span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> m.slice(<span class="number">0</span>,<span class="number">6</span>)+<span class="string">&#x27;********&#x27;</span>+m.slice(-<span class="number">4</span>)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            value = (parent.innerText || parent.textContent || <span class="string">&#x27;&#x27;</span>).replace(<span class="regexp">/\n/g</span>, <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (!value.match(Reg1)) <span class="keyword">return</span></span><br><span class="line">            t = <span class="built_in">document</span>.createNodeIterator(parent, NodeFilter.SHOW_ELEMENT, <span class="literal">null</span>, <span class="literal">false</span>)</span><br><span class="line">            <span class="keyword">while</span> ((currNode = t.nextNode()) !== <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (Reg2.test(currNode.innerText)) &#123;    <span class="comment">// 从body开始匹配，不用严格会整个替换</span></span><br><span class="line">                    currNode.innerText = currNode.innerText.replace(Reg1, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>)</span>&#123;</span><br><span class="line">                        <span class="keyword">return</span> m.slice(<span class="number">0</span>,<span class="number">6</span>)+<span class="string">&#x27;********&#x27;</span>+m.slice(-<span class="number">4</span>)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        recursionDom(<span class="built_in">document</span>.body)</span><br><span class="line">        <span class="keyword">var</span> observer = <span class="keyword">new</span> MutationObserver(<span class="function"><span class="keyword">function</span> (<span class="params">mutatinRecords</span>) </span>&#123;</span><br><span class="line">            <span class="comment">// console.log(&#x27;mutatinRecords&#x27;, mutatinRecords)</span></span><br><span class="line">            mutatinRecords.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</span><br><span class="line">                recursionDom(item.target)</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">        observer.observe(<span class="built_in">document</span>.body, &#123; <span class="attr">childList</span>: <span class="literal">true</span>, <span class="attr">characterData</span>: <span class="literal">true</span>, <span class="attr">subtree</span>: <span class="literal">true</span> &#125;)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;catch&#x27;</span>, error)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><div class="text-box">
+    <div>321682199712237978</div>
+    <div>这是一段文字用来测试321682199712237978身份证号码</div>
+    <div>321682<em>19971223</em>7978</div>
+    <div class="test-btn">测试一下</div>
+</div>
+
+
+<script type="text/javascript">
+    function filterIdNO() {
+            try {
+                var Reg1 = /(?<first>((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|[7-9]1)\d{4})((?<year>(18|19|20)\d{2})((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31))(?<last>\d{3}[0-9Xx])/g;
+                var Reg2 = /^((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|[7-9]1)\d{4}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+                function recursionDom(parent) {
+                    var value = (parent.innerText || parent.textContent || '').replace(/\n/g, '');
+                    if (!value.match(Reg1)) return
+                    var t = document.createNodeIterator(parent, NodeFilter.SHOW_TEXT, null, false)
+                    var currNode = null
+                    var mached = null
+                    while ((currNode = t.nextNode()) !== null) {
+                        if (Reg1.test(currNode.textContent)) {
+                            currNode.textContent = currNode.textContent.replace(Reg1, function(m){
+                                return m.slice(0,6)+'********'+m.slice(-4)
+                            })
+                        }
+                    }
+                    value = (parent.innerText || parent.textContent || '').replace(/\n/g, '');
+                    if (!value.match(Reg1)) return
+                    t = document.createNodeIterator(parent, NodeFilter.SHOW_ELEMENT, null, false)
+                    while ((currNode = t.nextNode()) !== null) {
+                        if (Reg2.test(currNode.innerText)) {    // 从body开始匹配，不用严格会整个替换
+                            currNode.innerText = currNode.innerText.replace(Reg1, function(m){
+                                return m.slice(0,6)+'********'+m.slice(-4)
+                            })
+                        }
+                    }
+                }
+                recursionDom(document.body)
+                var observer = new MutationObserver(function (mutatinRecords) {
+                    // console.log('mutatinRecords', mutatinRecords)
+                    mutatinRecords.forEach(function (item) {
+                        recursionDom(item.target)
+                    })
+                })
+                observer.observe(document.body, { childList: true, characterData: true, subtree: true })
+            } catch (error) {
+                console.log('catch', error)
+            }
+        }
+        document.getElementsByClassName('test-btn')[0].addEventListener('click',function(e){
+            if(window.afterObserver) return
+            e.target.classList.add('disable')
+            window.afterObserver = true
+            filterIdNO()
+        })
+
+</script>
+
+
+<h3 id="移动端"><a href="#移动端" class="headerlink" title="移动端"></a>移动端</h3><p>移动端项目是前后端分离而且走了公共的请求方法；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> IdCardReg = <span class="regexp">/(?&lt;first&gt;((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|[7-9]1)\d&#123;4&#125;)((?&lt;year&gt;(18|19|20)\d&#123;2&#125;)((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31))(?&lt;last&gt;\d&#123;3&#125;[0-9Xx])/g</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cleanIdno</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> params) &#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">typeof</span> params[key] === <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">			cleanIdno(params[key])</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (IdCardReg.test(params[key])) &#123;</span><br><span class="line">				params[key] = params[key].replace(IdCardReg, <span class="function"><span class="keyword">function</span> (<span class="params">m</span>) </span>&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;m.slice(<span class="number">0</span>, <span class="number">6</span>)&#125;</span>********<span class="subst">$&#123;m.slice(-<span class="number">4</span>)&#125;</span>`</span></span><br><span class="line">				&#125;)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> params</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> http = axios.create(options);</span><br><span class="line">http.interceptors.response.use(<span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(res.status == <span class="number">200</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> data = res.data;</span><br><span class="line">        <span class="keyword">return</span> data ? cleanIdno(data) : &#123;&#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(res)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(err);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/%E6%AD%A3%E5%88%99/">#正则</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2024/02/01/react-ssr%E7%9A%84%E5%AE%9E%E7%8E%B0/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">react-ssr的实现</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2023/10/31/nginx%E4%BD%BF%E7%94%A8/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">nginx使用</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">非前后端分离项目</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%9A%84%E6%AD%A3%E5%88%99"><span class="nav-number">1.1.</span> <span class="nav-text">身份证号的正则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%8E%BB%E9%81%8D%E5%8E%86dom%E6%A0%91"><span class="nav-number">1.2.</span> <span class="nav-text">怎么去遍历dom树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E8%BF%87%E6%BB%A4%E5%AE%8C%E6%88%90"><span class="nav-number">1.3.</span> <span class="nav-text">怎么判断过滤完成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%86%E7%BB%84%E5%91%BD%E5%90%8D"><span class="nav-number">1.4.</span> <span class="nav-text">正则表达式分组命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E5%B1%80%E9%83%A8%E5%88%B7%E6%96%B0%E5%90%8E%EF%BC%8C%E6%80%8E%E4%B9%88%E8%A7%A6%E5%8F%91%E9%87%8D%E6%96%B0%E5%8C%B9%E9%85%8D"><span class="nav-number">1.5.</span> <span class="nav-text">页面局部刷新后，怎么触发重新匹配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.6.</span> <span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.7.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF"><span class="nav-number">2.</span> <span class="nav-text">移动端</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            前端优化 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">前端优化</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2023-03-23 17:10:09</span>
+        <span class="mobile">2023-03-23 17:10</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E4%BC%98%E5%8C%96/">优化</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/">前端</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p>前端优化大概有以下几个方向：</p>
+<ul>
+<li>网络优化</li>
+<li>页面渲染优化</li>
+<li><code>js</code>优化</li>
+<li>图片优化</li>
+<li><code>webpack</code>打包优化</li>
+<li><code>vue</code>优化</li>
+<li><code>react</code>优化</li>
+</ul>
+<h2 id="网络优化"><a href="#网络优化" class="headerlink" title="网络优化"></a>网络优化</h2><ol>
+<li>DNS预解析<br> <code>link</code>标签的<code>rel</code>属性设置<code>dns-prefetch</code>，提前获取域名对应的<code>IP</code>地址</li>
+<li>使用缓存<br> 减轻服务器压力（强缓存和协商缓存）</li>
+<li>使用CDN<br> 用户与服务器的物理距离对响应时间也有影响。<br> 内容分发网络（CDN）是一组分散在不同地理位置的 web 服务器，用来给用户更高效地发送内容。典型地，选择用来发送内容的服务器是基于网络距离的衡量标准的。例如：选跳数（hop）最少的或者响应时间最快的服务器。</li>
+<li>压缩响应<br> 压缩组件通过减少 HTTP 请求产生的响应包的大小，从而降低传输时间的方式来提高性能。从 HTTP1.1 开始，Web 客户端可以通过 HTTP 请求中的 <code>Accept-Encoding</code> 头来标识对压缩的支持（这个请求头会列出一系列的压缩方法）<br> 如果 Web 服务器看到请求中的这个头，就会使用客户端列出的方法中的一种来压缩响应。Web 服务器通过响应中的 <code>Content-Encoding</code> 头来告知 Web 客户端使用哪种方法进行的压缩<br> 目前许多网站通常会压缩 HTML 文档，脚本和样式表的压缩也是值得的（包括 XML 和 JSON 在内的任何文本响应理论上都值得被压缩）。但是，图片和 PDF 文件不应该被压缩，因为它们本来已经被压缩了。</li>
+<li>使用多个域名<br> Chrome 等现代化浏览器，都会有同域名限制并发下载数的情况，不同的浏览器及版本都不一样，<span style="color:#c28a00;">使用不同的域名</span>可以最大化下载线程，但注意保持在 2~4 个域名内，以避免 DNS 查询损耗。</li>
+<li>避免图片src为空<br> 虽然 src 属性为空字符串，但浏览器仍然会向服务器发起一个 HTTP 请求：<br> IE 向页面所在的目录发送请求； Safari、Chrome、Firefox 向页面本身发送请求； Opera 不执行任何操作。</li>
+</ol>
+<h2 id="页面渲染优化"><a href="#页面渲染优化" class="headerlink" title="页面渲染优化"></a>页面渲染优化</h2><p>Webkit 渲染引擎流程：</p>
+<ul>
+<li>处理 HTML 并构建 DOM 树</li>
+<li>处理 CSS 构建 CSS 规则树(CSSOM)</li>
+<li>DOM Tree 和 CSSOM Tree 合成一棵渲染树 Render Tree。</li>
+<li>根据渲染树来布局，计算每个节点的位置</li>
+<li>调用 GPU 绘制，合成图层，显示在屏幕上</li>
+</ul>
+<ol>
+<li><p>避免css阻塞<br>css影响renderTree的构建，会阻塞页面的渲染，因此应该尽早（<span style="color:#c28a00;">将 CSS 放在 head 标签里</span>）和尽快（<span style="color:#c28a00;">启用 CDN 实现静态资源加载速度的优化</span>)的将css资源加载</p>
+</li>
+<li><p>降低css选择器的复杂度，浏览器读取选择器，遵循的原则是从选择器的右边到左边读取。</p>
+<ul>
+<li>减少嵌套：最多不要超过三层，并且后代选择器的开销较高，慎重使用</li>
+<li>避免使用通配符，对用到的元素进行匹配即可</li>
+<li>利用继承，避免重复匹配和定义</li>
+<li>正确使用类选择器和id选择器</li>
+</ul>
+</li>
+<li><p>避免使用CSS 表达式<br> css 表达式会被频繁地计算。</p>
+</li>
+<li><p>使用外链式的js和css<br> 在现实环境中使用外部文件通常会产生较快的页面，因为 JavaScript 和 CSS 有机会<span style="color:#c28a00;">被浏览器缓存起来</span>。对于内联的情况，由于 HTML 文档通常不会被配置为可以进行缓存的，所以每次请求 HTML 文档都要下载 JavaScript 和 CSS。所以，如果 JavaScript 和 CSS 在外部文件中，浏览器可以缓存它们，HTML 文档的大小会被减少而不必增加 HTTP 请求数量。</p>
+</li>
+<li><p>使用字体图标 iconfont 代替图片图标</p>
+<ul>
+<li>图片会增加网络请求次数，从而拖慢页面加载时间</li>
+<li>iconfont可以很好的缩放并且不会添加额外的请求</li>
+</ul>
+</li>
+<li><p>首屏加载优化</p>
+<ul>
+<li>使用骨架屏或者动画优化用户体验</li>
+<li>资源按需加载，首页不需要的资源延迟加载</li>
+</ul>
+</li>
+<li><p>减少重绘和回流</p>
+<ul>
+<li><p>增加多个节点使用documentFragment：不是真实dom的部分，不会引起重绘和回流</p>
+</li>
+<li><p>用 translate 代替 top ，因为 top 会触发回流，但是translate不会。所以translate会比top节省了一个layout的时间</p>
+</li>
+<li><p>使用 visibility 替换 display: none ，因为前者只会引起重绘，后者会引发回流（改变了布局）；opacity 代替 visiability，visiability会触发重绘（paint），但opacity不会。</p>
+</li>
+<li><p>把 DOM 离线后修改，比如：先把 DOM 给 display:none (有一次 Reflow)，然后你修改 100 次，然后再把它显示出来</p>
+</li>
+<li><p>不要把 DOM 结点的属性值放在一个循环里当成循环里的变量</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">    <span class="comment">// 获取 offsetTop 会导致回流，因为需要去获取正确的值</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">document</span>.querySelector(<span class="string">&#x27;.test&#x27;</span>).style.offsetTop)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>尽量少用table布局，table布局的话，每次有单元格布局改变，都会进行整个tabel回流重绘；</p>
+</li>
+<li><p>最好别频繁去操作DOM节点，最好把需要操作的样式，提前写成class，之后需要修改。只需要修改一次，需要修改的时候，直接修改className，做成一次性更新多条css DOM属性，一次回流重绘总比多次回流重绘要付出的成本低得多；</p>
+</li>
+<li><p>动画实现的速度的选择，动画速度越快，回流次数越多，也可以选择使用<code>requestAnimationFrame</code></p>
+</li>
+<li><p>每次访问DOM的偏移量属性的时候，例如获取一个元素的scrollTop、scrollLeft、scrollWidth、offsetTop、offsetLeft、offsetWidth、offsetHeight之类的属性，浏览器为了保证值的正确也会回流取得最新的值，所以如果你要多次操作，最取完做个缓存。更加不要for循环中访问DOM偏移量属性，而且使用的时候，最好定义一个变量，把要需要的值赋值进去，进行值缓存，把回流重绘的次数减少；</p>
+</li>
+<li><p>将频繁运行的动画变为图层，图层能够阻止该节点回流影响别的元素。比如对于 video 标签，浏览器会自动将该节点变为图层。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="JS中的性能优化"><a href="#JS中的性能优化" class="headerlink" title="JS中的性能优化"></a>JS中的性能优化</h2><ol>
+<li>使用事件委托</li>
+<li>防抖和节流</li>
+<li>尽量不要使用JS动画<br> css3动画和canvas动画都比JS动画性能好</li>
+<li>多线程<br> 复杂的计算开启webWorker进行计算，避免页面假死</li>
+<li>计算结果缓存<br> 减少运算次数，比如vue中的computed</li>
+</ol>
+<h2 id="图片的优化"><a href="#图片的优化" class="headerlink" title="图片的优化"></a>图片的优化</h2><ol>
+<li>雪碧图<br> 借助减少http请求次数来进行优化</li>
+<li>图片懒加载<br> 在图片即将进入可视区域的时候进行加载</li>
+<li>使用CSS3代替图片<br> 有很多图片使用 CSS 效果（渐变、阴影等）就能画出来，这种情况选择 CSS3 效果更好</li>
+<li>图片压缩<br> 压缩方法有两种，一是通过在线网站进行压缩，二是通过 webpack 插件 image-webpack-loader。它是基于 imagemin 这个 Node 库来实现图片压缩的。</li>
+<li>使用渐进式jpeg<br> 使用渐进式jpeg，会提高用户体验 <a class="link"   target="_blank" rel="noopener" href="https://www.biaodianfu.com/progressive-jpeg.html" >参考文章<i class="fas fa-external-link-alt"></i></a></li>
+<li>使用 webp 格式的图片<br> webp 是一种新的图片文件格式，它提供了有损压缩和无损压缩两种方式。在相同图片质量下，webp 的体积比 png 和 jpg 更小。</li>
+</ol>
+<h2 id="webpack打包优化"><a href="#webpack打包优化" class="headerlink" title="webpack打包优化"></a>webpack打包优化</h2><ol>
+<li><p>缩小loader 匹配范围</p>
+<ul>
+<li><p>优化loader配置</p>
+</li>
+<li><p>test、include、exclude三个配置项来缩⼩loader的处理范围</p>
+</li>
+<li><p>推荐include</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include: path.resolve(__dirname, <span class="string">&quot;./src&quot;</span>),</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>resolve.modules<br> resolve.modules用于配置webpack去哪些目录下寻找第三方模块，默认是 node_modules。<br> 寻找第三方，默认是在当前项目目录下的node_modules里面去找，如果没有找到，就会去上一级目录../node_modules找，再没有会去../../node_modules中找，以此类推，和Node.js的模块寻找机制很类似。<br> 如果我们的第三⽅模块都安装在了项⽬根⽬录下，就可以直接指明这个路径。</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">    <span class="attr">resolve</span>:&#123;</span><br><span class="line">        <span class="attr">modules</span>: [path.resolve(__dirname, <span class="string">&quot;./node_modules&quot;</span>)]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>resolve.extensions<br> resolve.extensions在导⼊语句没带⽂件后缀时，webpack会⾃动带上后缀后，去尝试查找⽂件是否存在。</p>
+<ul>
+<li>后缀尝试列表尽量的⼩</li>
+<li>导⼊语句尽量的带上后缀。</li>
+</ul>
+</li>
+<li><p>抽离css<br> 助mini-css-extract-plugin:本插件会将 CSS 提取到单独的文件中，为每个包含 CSS 的 JS 文件创建一个 CSS 文件，并且支持 CSS 和 SourceMaps 的按需加载</p>
+</li>
+<li><p>代码压缩<br> mode:production，使用的是terser-webpack-plugin</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">   <span class="attr">optimization</span>: &#123;</span><br><span class="line">       <span class="attr">minimize</span>: <span class="literal">true</span>,</span><br><span class="line">       <span class="attr">minimizer</span>: [</span><br><span class="line">           <span class="keyword">new</span> TerserPlugin(&#123;&#125;),</span><br><span class="line">       ]</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CSS代码压缩<br> css-minimizer-webpack-plugin</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   <span class="comment">// ...</span></span><br><span class="line">   <span class="attr">optimization</span>: &#123;</span><br><span class="line">       <span class="attr">minimize</span>: <span class="literal">true</span>,</span><br><span class="line">       <span class="attr">minimizer</span>: [</span><br><span class="line">           <span class="keyword">new</span> CssMinimizerPlugin(&#123;&#125;)</span><br><span class="line">       ]</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Html文件代码压缩</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">       <span class="comment">//...</span></span><br><span class="line">       <span class="attr">plugin</span>:[</span><br><span class="line">           <span class="keyword">new</span> HtmlwebpackPlugin(&#123;</span><br><span class="line">               ...</span><br><span class="line">               <span class="attr">minify</span>:&#123;</span><br><span class="line">                   <span class="attr">minifyCSS</span>:<span class="literal">false</span>, <span class="comment">// 是否压缩css</span></span><br><span class="line">                   <span class="attr">collapseWhitespace</span>:<span class="literal">false</span>, <span class="comment">// 是否折叠空格</span></span><br><span class="line">                   <span class="attr">removeComments</span>:<span class="literal">true</span> <span class="comment">// 是否移除注释</span></span><br><span class="line">               &#125;</span><br><span class="line">           &#125;)</span><br><span class="line">       ]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件大小压缩<br> 对文件的大小进行压缩，减少http传输过程中宽带的损耗<br> compression-webpack-plugin</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ComepressionPlugin(&#123;</span><br><span class="line">   <span class="attr">test</span>:<span class="regexp">/.(css|js)$/</span>,  <span class="comment">// 哪些文件需要压缩</span></span><br><span class="line">   threshold:<span class="number">500</span>, <span class="comment">// 设置文件多大开始压缩</span></span><br><span class="line">   <span class="attr">minRatio</span>:<span class="number">0.7</span>, <span class="comment">// 至少压缩的比例</span></span><br><span class="line">   <span class="attr">algorithm</span>:<span class="string">&quot;gzip&quot;</span>, <span class="comment">// 采用的压缩算法</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>图片压缩<br> 一般来说在打包之后，一些图片文件的大小是远远要比 js 或者 css 文件要来的大，所以图片压缩较为重要</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">    <span class="built_in">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">test</span>: <span class="regexp">/.(png|jpg|gif)$/</span>,</span><br><span class="line">            use: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">loader</span>: <span class="string">&#x27;file-loader&#x27;</span>,</span><br><span class="line">                    <span class="attr">options</span>: &#123;</span><br><span class="line">                        <span class="attr">name</span>: <span class="string">&#x27;[name]_[hash].[ext]&#x27;</span>,</span><br><span class="line">                        <span class="attr">outputPath</span>: <span class="string">&#x27;images/&#x27;</span>,</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">loader</span>: <span class="string">&#x27;image-webpack-loader&#x27;</span>,</span><br><span class="line">                    <span class="attr">options</span>: &#123;</span><br><span class="line">                        <span class="comment">// 压缩 jpeg 的配置</span></span><br><span class="line">                        <span class="attr">mozjpeg</span>: &#123;</span><br><span class="line">                            <span class="attr">progressive</span>: <span class="literal">true</span>,</span><br><span class="line">                            <span class="attr">quality</span>: <span class="number">65</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="comment">// 使用 imagemin**-optipng 压缩 png，enable: false 为关闭</span></span><br><span class="line">                        <span class="attr">optipng</span>: &#123;</span><br><span class="line">                            <span class="attr">enabled</span>: <span class="literal">false</span>,</span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="comment">// 使用 imagemin-pngquant 压缩 png</span></span><br><span class="line">                        <span class="attr">pngquant</span>: &#123;</span><br><span class="line">                            <span class="attr">quality</span>: <span class="string">&#x27;65-90&#x27;</span>,</span><br><span class="line">                            <span class="attr">speed</span>: <span class="number">4</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="comment">// 压缩 gif 的配置</span></span><br><span class="line">                        <span class="attr">gifsicle</span>: &#123;</span><br><span class="line">                            <span class="attr">interlaced</span>: <span class="literal">false</span>,</span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="comment">// 开启 webp，会把 jpg 和 png 图片压缩为 webp 格式</span></span><br><span class="line">                        <span class="attr">webp</span>: &#123;</span><br><span class="line">                            <span class="attr">quality</span>: <span class="number">75</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">    ]</span><br><span class="line">&#125; </span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Tree shaking 去除死代码<br>Tree Shaking 是一个术语，在计算机中表示消除死代码，依赖于ES Module的静态语法分析（不执行任何的代码，可以明确知道模块的依赖关系）</p>
+<p>在webpack实现Tree shaking有两种不同的方案：</p>
+<ul>
+<li>usedExports：通过标记某些函数是否被使用，之后通过Terser来进行优化的</li>
+<li>sideEffects：跳过整个模块/文件，直接查看该文件是否有副作用</li>
+</ul>
+</li>
+<li><p>css tree shaking</p>
+   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install purgecss-plugin-webpack -D</span><br></pre></td></tr></table></figure>
+
+   <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> PurgeCssPlugin = <span class="built_in">require</span>(<span class="string">&#x27;purgecss-webpack-plugin&#x27;</span>)</span><br><span class="line">    <span class="built_in">module</span>.exports = &#123;</span><br><span class="line">       ...</span><br><span class="line">       <span class="attr">plugins</span>:[</span><br><span class="line">           <span class="keyword">new</span> PurgeCssPlugin(&#123;</span><br><span class="line">               <span class="attr">path</span>:glob.sync(<span class="string">`<span class="subst">$&#123;path.resolve(<span class="string">&#x27;./src&#x27;</span>)&#125;</span>/**/*`</span>), &#123;<span class="attr">nodir</span>:<span class="literal">true</span>&#125;<span class="comment">// src里面的所有文件</span></span><br><span class="line">               <span class="attr">satelist</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                   <span class="keyword">return</span> &#123;</span><br><span class="line">                       <span class="attr">standard</span>:[<span class="string">&quot;html&quot;</span>]</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;)</span><br><span class="line">       ]</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>babel-plugin-transform-runtime减少ES6转化ES5的冗余</p>
+</li>
+<li><p>代码分离<br>这里通过splitChunksPlugin来实现，该插件webpack已经默认安装和集成，只需要配置即可<br>splitChunks主要属性有如下：</p>
+<ul>
+<li>Chunks，对同步代码还是异步代码进行处理</li>
+<li>minSize： 拆分包的大小, 至少为minSize，如何包的大小不超过minSize，这个包不会拆分</li>
+<li>maxSize： 将大于maxSize的包，拆分为不小于minSize的包</li>
+<li>minChunks：被引入的次数，默认是1</li>
+</ul>
+</li>
+<li><p>多线程打包提升打包速度</p>
+</li>
+</ol>
+<h2 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h2><ol>
+<li>v-for添加key</li>
+<li>路由懒加载</li>
+<li>第三方插件按需引入</li>
+<li>合理使用computed和watch</li>
+<li>v-for的同时避免使用v-if</li>
+<li>destory时销毁事件：比如addEventListener添加的事件、setTimeout、setInterval、bus.$on绑定的监听事件等</li>
+</ol>
+<h2 id="react"><a href="#react" class="headerlink" title="react"></a>react</h2><ol>
+<li>map循环展示添加key</li>
+<li>路由懒加载</li>
+<li>第三方插件按需引入</li>
+<li>使用scu，memo或者pureComponent避免不必要的渲染</li>
+<li>合理使用useMemo、memo、useCallback<ul>
+<li>useCallback 是针对函数进行“记忆”的，当它依赖项没有发生改变时，那么该函数的引用并不会随着组件的刷新而被重新赋值。当我们觉得一个函数不需要随着组件的更新而更新引用地址的时候，我们就可以使用 useCallback 去修饰它。</li>
+<li>React.memo 是对组件进行 “记忆”，当它接收的 props 没有发生改变的时候，那么它将返回上次渲染的结果，不会重新执行函数返回新的渲染结果。</li>
+<li>React.useMemo是针对 值计算 的一种“记忆“，当依赖项没有发生改变时，那么无需再去计算，直接使用之前的值，对于组件而言，这带来的一个好处就是，可以减少一些计算，避免一些多余的渲染。当我们遇到一些数据需要在组件内部进行计算的时候，可以考虑一下 React.useMemo</li>
+</ul>
+</li>
+</ol>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/">#前端</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2023/03/24/js%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E5%AD%97%E8%8A%82%E7%9A%84%E4%BA%92%E7%9B%B8%E8%BD%AC%E6%8D%A2/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">js字符串和字节的互相转换</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2023/03/20/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2023-03-23/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">前端分享-2023-03-23</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">网络优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E6%B8%B2%E6%9F%93%E4%BC%98%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">页面渲染优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS%E4%B8%AD%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">JS中的性能优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">图片的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack%E6%89%93%E5%8C%85%E4%BC%98%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">webpack打包优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vue"><span class="nav-number">6.</span> <span class="nav-text">vue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#react"><span class="nav-number">7.</span> <span class="nav-text">react</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

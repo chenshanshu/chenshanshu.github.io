@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            react-ssr的实现 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">react-ssr的实现</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2024-02-01 09:58:09</span>
+        <span class="mobile">2024-02-01 09:58</span>
+    </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/react/">react</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/ssr/">ssr</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="浏览器解析过程"><a href="#浏览器解析过程" class="headerlink" title="浏览器解析过程"></a>浏览器解析过程</h3><p>从输入URL到页面渲染完成大致流程为：</p>
+<ul>
+<li>解析URL</li>
+<li>浏览器本地缓存</li>
+<li>DNS解析</li>
+<li>建立TCP/IP连接</li>
+<li>发送HTTP请求</li>
+<li>服务器处理请求并返回HTTP报文</li>
+<li>浏览器根据深度遍历的方式把html节点遍历构建DOM树</li>
+<li>遇到CSS外链，异步加载解析CSS,构建CSS规则树</li>
+<li>遇到script标签，如果是普通JS标签则同步加载并执行，阻塞页面渲染，如果标签上有defer/async属性则异步加载JS资源</li>
+<li>将dom树和CSS DOM树构造成render树</li>
+<li>渲染render树</li>
+</ul>
+<span id="more"></span>
+<h3 id="一-主流渲染方式"><a href="#一-主流渲染方式" class="headerlink" title="一.主流渲染方式"></a>一.主流渲染方式</h3><h4 id="1-1-CSR客户端渲染"><a href="#1-1-CSR客户端渲染" class="headerlink" title="1.1 CSR客户端渲染"></a>1.1 CSR客户端渲染</h4><h5 id="1-1-1-概念"><a href="#1-1-1-概念" class="headerlink" title="1.1.1 概念"></a>1.1.1 概念</h5><p>客户端渲染，指页面上的内容由浏览器执行js脚本而生成<br>React SPA单页面应用项目就是客户端渲染</p>
+<h5 id="1-1-2-流程"><a href="#1-1-2-流程" class="headerlink" title="1.1.2 流程"></a>1.1.2 流程</h5><p>浏览器请求HTML,React项目利用webpack将页面打包成bundle.js脚本,插入index.html,浏览器请求到静态页面,会解析其中的bundle.js脚本,获取页面的动态数据和交互事件,向静态页面插入数据,最终形成完整的页面</p>
+<h5 id="1-1-3-优缺点"><a href="#1-1-3-优缺点" class="headerlink" title="1.1.3 优缺点"></a>1.1.3 优缺点</h5><p><strong>优点</strong></p>
+<ul>
+<li>前后端分离,前端负责渲染页面,后端负责实现接口</li>
+<li>前端跳转时,不需要请求后台,页面跳转更快</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>搜索引擎无法爬取分析网页内容,不利于SEO</li>
+<li>需要等待整个应用的js加载以及数据请求获取网页动态数据,首屏加载时间长</li>
+</ul>
+<h4 id="1-2-SSR服务端渲染"><a href="#1-2-SSR服务端渲染" class="headerlink" title="1.2 SSR服务端渲染"></a>1.2 SSR服务端渲染</h4><h5 id="1-2-1-概念"><a href="#1-2-1-概念" class="headerlink" title="1.2.1 概念"></a>1.2.1 概念</h5><p>SSR服务端渲染(Server-side Rendering),指在浏览器发起页面请求后由服务端完成页面的HTML结构拼接。</p>
+<h5 id="1-2-2-流程"><a href="#1-2-2-流程" class="headerlink" title="1.2.2 流程"></a>1.2.2 流程</h5><p>将组件在服务端转化为HTML字符串，直接将其发送给浏览器，然后将其中静态标记”激活“为客户端上完全可交互的应用程序</p>
+<h5 id="1-2-3-优缺点"><a href="#1-2-3-优缺点" class="headerlink" title="1.2.3 优缺点"></a>1.2.3 优缺点</h5><p><strong>优点</strong></p>
+<ul>
+<li>服务端直接输出HTML，SEO友好</li>
+<li>加载首页无需加载整个应用的JS，首页加载速度快</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>页面每次跳转都要访问服务器，体验比客户端渲染差</li>
+</ul>
+<h3 id="二-服务端渲染实现"><a href="#二-服务端渲染实现" class="headerlink" title="二.服务端渲染实现"></a>二.服务端渲染实现</h3><p>要是实现一个完整的React-SSR渲染，要做的事如下</p>
+<ul>
+<li>服务端执行React代码，生成HTML页面，并将打包好的客户端js文件插入HTML页面中</li>
+<li>发送HTML页面至浏览器展示</li>
+<li>浏览器加载HTML页面中的js文件</li>
+<li>js代码执行，并绑定DOM事件，最后接管页面操作</li>
+</ul>
+<p><strong>【负责】</strong></p>
+<ul>
+<li>客户端：事件绑定、路由跳转</li>
+<li>服务端：请求数据、绑定动态数据、渲染生成HTML</li>
+</ul>
+<h3 id="三-React项目服务端渲染"><a href="#三-React项目服务端渲染" class="headerlink" title="三.React项目服务端渲染"></a>三.React项目服务端渲染</h3><blockquote>
+<p>renderToString是react-dom/server提供的服务端渲染方法<br>renderToString、renderToStaticMarkup、renderToNodeStream、renderToStaticNodeStream四个方法能够将React组件渲染成静态的HTML标签，前两个方法能在客户端和服务端运行，后两个只能在服务端运行</p>
+</blockquote>
+<h4 id="3-1-实现一个React组件的服务端渲染"><a href="#3-1-实现一个React组件的服务端渲染" class="headerlink" title="3.1 实现一个React组件的服务端渲染"></a>3.1 实现一个React组件的服务端渲染</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> express frm <span class="string">&#x27;express&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;renderToString&#125; <span class="keyword">from</span> <span class="string">&#x27;react-dom/server&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./client/App&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> content = renderToString(<span class="xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span>)</span><br><span class="line">app.get(<span class="string">&#x27;/&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    res.send(</span><br><span class="line">        <span class="string">`&lt;html&gt;</span></span><br><span class="line"><span class="string">            &lt;head&gt;&lt;title&gt;ssr&lt;/title&gt;&lt;/head&gt;</span></span><br><span class="line"><span class="string">            &lt;body&gt;</span></span><br><span class="line"><span class="string">                &lt;div id=&quot;root&quot;&gt;<span class="subst">$&#123;content&#125;</span>&lt;/div&gt;</span></span><br><span class="line"><span class="string">            &lt;/body&gt;</span></span><br><span class="line"><span class="string">        &lt;/html&gt;`</span></span><br><span class="line">    )</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>,<span class="function">()=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;listen:3000&#x27;</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2实现同构渲染"><a href="#3-2实现同构渲染" class="headerlink" title="3.2实现同构渲染"></a>3.2实现同构渲染</h4><p>实现以下两步:</p>
+<ul>
+<li>服务端可运行React代码</li>
+<li>浏览器同样可运行React代码</li>
+<li>两者共用一套React代码进行运行</li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/react/">#react</a>&nbsp;
+                    </li>
+                
+                    <li class="tag-item">
+                        <a href="/tags/ssr/">#ssr</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2024/03/25/flex%E5%B8%83%E5%B1%80/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">flex布局</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2023/12/12/%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E8%84%B1%E6%95%8F/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">身份证号脱敏</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">浏览器解析过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80-%E4%B8%BB%E6%B5%81%E6%B8%B2%E6%9F%93%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">一.主流渲染方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-CSR%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 CSR客户端渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-1-%E6%A6%82%E5%BF%B5"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.1.1 概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-2-%E6%B5%81%E7%A8%8B"><span class="nav-number">2.1.2.</span> <span class="nav-text">1.1.2 流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-3-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">2.1.3.</span> <span class="nav-text">1.1.3 优缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-SSR%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 SSR服务端渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.1.</span> <span class="nav-text">1.2.1 概念</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-%E6%B5%81%E7%A8%8B"><span class="nav-number">2.2.2.</span> <span class="nav-text">1.2.2 流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-3-%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">2.2.3.</span> <span class="nav-text">1.2.3 优缺点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">二.服务端渲染实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89-React%E9%A1%B9%E7%9B%AE%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="nav-number">4.</span> <span class="nav-text">三.React项目服务端渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAReact%E7%BB%84%E4%BB%B6%E7%9A%84%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 实现一个React组件的服务端渲染</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%9E%84%E6%B8%B2%E6%9F%93"><span class="nav-number">4.2.</span> <span class="nav-text">3.2实现同构渲染</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#myCanvas {
+    overflow: hidden;
+}
+
+#btnConfirm {
+    width: 120px;
+    height: 30px;
+    margin-top: 20px;
+    background: #0075eb;
+    color: #ffffff;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.title {
+    line-height: 30px;
+    font-size: 18px;
+}
+
+.controlbox {
+    padding-bottom: 12px;
+    padding-left: 12px;
+}
+
+.controlbox__item{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.progressbar {
+    width: 300px;
+    height: 16px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progressbar__btn {
+    width: 36px;
+    height: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: rgb(64, 158, 255);
+    position: absolute;
+    left: 0;
+    top: 0;
+    user-select: none;
+    text-align: center;
+    line-height: 16px;
+    font-size: 12px;
+    color: #ffffff;
+}
+
+.progressbar__btn::after {
+    display: block;
+    content: '';
+    width: 300px;
+    background: rgba(64, 158, 255, 0.2);
+    height: 16px;
+    border-radius: 8px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.progressbar__btn::before {
+    display: block;
+    content: '';
+    width: 300px;
+    background: rgba(64, 158, 255, 0.5);
+    height: 16px;
+    border-radius: 8px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+}

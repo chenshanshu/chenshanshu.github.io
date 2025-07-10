@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            浏览器打印功能 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">浏览器打印功能</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2021-04-07 10:22:41</span>
+        <span class="mobile">2021-04-07 10:22</span>
+    </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/js/">js</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <blockquote>
+<p>打印API：<br>window.print()</p>
+</blockquote>
+<h3 id="需求：打印局部内容，如打印下面页面类名-printBox-里面的内容"><a href="#需求：打印局部内容，如打印下面页面类名-printBox-里面的内容" class="headerlink" title="需求：打印局部内容，如打印下面页面类名 printBox 里面的内容"></a>需求：打印局部内容，如打印下面页面类名 <strong>printBox</strong> 里面的内容</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span>页面内容...<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;printBtn&quot;</span>&gt;</span>打印报告<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;printContent&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;printBox&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">h1</span>&gt;</span>打印报告<span class="tag">&lt;<span class="name">h1</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>报告内容...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="实现：已知A4纸张尺寸为297mm-210mm，通过创建-iframe-来实现打印；"><a href="#实现：已知A4纸张尺寸为297mm-210mm，通过创建-iframe-来实现打印；" class="headerlink" title="实现：已知A4纸张尺寸为297mm*210mm，通过创建 iframe 来实现打印；"></a>实现：已知A4纸张尺寸为297mm*210mm，通过创建 <strong>iframe</strong> 来实现打印；</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> frameId = <span class="string">&#x27;printFrame&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;boolean&#125;</span> </span>portrait 是否纵向打印</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">var</span> print = <span class="function"><span class="keyword">function</span>(<span class="params">portrait</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> iframe = <span class="built_in">document</span>.getElementById(frameId);</span><br><span class="line">    <span class="keyword">if</span>(!iframe)&#123;</span><br><span class="line">        <span class="keyword">var</span> frameStyle = portrait ?</span><br><span class="line">        <span class="string">`&lt;style&gt;@page&#123;size:A4 portrait;margin:0mm;width:297mm;min-height:200mm;&#125;&lt;/style&gt;`</span>:</span><br><span class="line">        <span class="string">`&lt;style&gt;@page&#123;size:A4 landscape;margin:0mm;width:210mm;min-height:280mm;&#125;&lt;/style&gt;`</span>;</span><br><span class="line">        <span class="comment">// 当高度设置为最大值，会出现打印内容后面多出一张空白页</span></span><br><span class="line">        <span class="keyword">var</span> el = <span class="built_in">document</span>.getElementById(<span class="string">&quot;printContent&quot;</span>);</span><br><span class="line">        iframe = <span class="built_in">document</span>.createElement(<span class="string">&#x27;IFRAME&#x27;</span>);</span><br><span class="line">        iframe.setAttribute(frameId);</span><br><span class="line">        iframe.setAttribute(<span class="string">&#x27;style&#x27;</span>, <span class="string">&#x27;position:absolute;width:0px;height:0px;left:-500px;top:-500px;&#x27;</span>);</span><br><span class="line">        <span class="built_in">document</span>.body.appendChild(iframe);</span><br><span class="line">        <span class="keyword">var</span> doc = iframe.contentWindow.document;</span><br><span class="line">        doc.write(frameStyle);</span><br><span class="line">        doc.write(<span class="string">`&lt;div&gt;<span class="subst">$&#123;el.innerHTML&#125;</span>&lt;/div&gt;`</span>);</span><br><span class="line">        doc.close();</span><br><span class="line">        iframe.contentWindow.focus();  </span><br><span class="line">    &#125;</span><br><span class="line">    iframe.contentWindow.print();</span><br><span class="line">    <span class="keyword">if</span> (navigator.userAgent.indexOf(<span class="string">&quot;MSIE&quot;</span>) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">document</span>.body.removeChild(iframe);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h3><ul>
+<li>当打印内容带有背景时候记得勾选背景图形选项</li>
+<li>此处只测试了Chrome，兼容性未处理</li>
+</ul>
+<h3 id="扩展：打印机型号不同时打印内容也有差别，所以可以通过用canvas来绘制内容-可以参考微信小程序生成分享图功能-，然后生成图片放入第二步的iframe中。"><a href="#扩展：打印机型号不同时打印内容也有差别，所以可以通过用canvas来绘制内容-可以参考微信小程序生成分享图功能-，然后生成图片放入第二步的iframe中。" class="headerlink" title="扩展：打印机型号不同时打印内容也有差别，所以可以通过用canvas来绘制内容(可以参考微信小程序生成分享图功能)，然后生成图片放入第二步的iframe中。"></a>扩展：打印机型号不同时打印内容也有差别，所以可以通过用canvas来绘制内容(<font color=green>可以参考微信小程序生成分享图功能</font>)，然后生成图片放入第二步的iframe中。</h3>
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/js/">#js</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/23/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">浏览器下载文件</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/11/06/web-components/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Web Components</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%EF%BC%9A%E6%89%93%E5%8D%B0%E5%B1%80%E9%83%A8%E5%86%85%E5%AE%B9%EF%BC%8C%E5%A6%82%E6%89%93%E5%8D%B0%E4%B8%8B%E9%9D%A2%E9%A1%B5%E9%9D%A2%E7%B1%BB%E5%90%8D-printBox-%E9%87%8C%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">需求：打印局部内容，如打印下面页面类名 printBox 里面的内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%EF%BC%9A%E5%B7%B2%E7%9F%A5A4%E7%BA%B8%E5%BC%A0%E5%B0%BA%E5%AF%B8%E4%B8%BA297mm-210mm%EF%BC%8C%E9%80%9A%E8%BF%87%E5%88%9B%E5%BB%BA-iframe-%E6%9D%A5%E5%AE%9E%E7%8E%B0%E6%89%93%E5%8D%B0%EF%BC%9B"><span class="nav-number">2.</span> <span class="nav-text">实现：已知A4纸张尺寸为297mm*210mm，通过创建 iframe 来实现打印；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">注意：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9A%E6%89%93%E5%8D%B0%E6%9C%BA%E5%9E%8B%E5%8F%B7%E4%B8%8D%E5%90%8C%E6%97%B6%E6%89%93%E5%8D%B0%E5%86%85%E5%AE%B9%E4%B9%9F%E6%9C%89%E5%B7%AE%E5%88%AB%EF%BC%8C%E6%89%80%E4%BB%A5%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E7%94%A8canvas%E6%9D%A5%E7%BB%98%E5%88%B6%E5%86%85%E5%AE%B9-%E5%8F%AF%E4%BB%A5%E5%8F%82%E8%80%83%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%94%9F%E6%88%90%E5%88%86%E4%BA%AB%E5%9B%BE%E5%8A%9F%E8%83%BD-%EF%BC%8C%E7%84%B6%E5%90%8E%E7%94%9F%E6%88%90%E5%9B%BE%E7%89%87%E6%94%BE%E5%85%A5%E7%AC%AC%E4%BA%8C%E6%AD%A5%E7%9A%84iframe%E4%B8%AD%E3%80%82"><span class="nav-number">4.</span> <span class="nav-text">扩展：打印机型号不同时打印内容也有差别，所以可以通过用canvas来绘制内容(可以参考微信小程序生成分享图功能)，然后生成图片放入第二步的iframe中。</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

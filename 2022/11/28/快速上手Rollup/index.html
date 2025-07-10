@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            快速上手Rollup |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">快速上手Rollup</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2022-11-28 16:17:41</span>
+        <span class="mobile">2022-11-28 16:17</span>
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/">快速上手</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Rollup/">Rollup</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="什么是-Rollup"><a href="#什么是-Rollup" class="headerlink" title="什么是 Rollup"></a>什么是 <code>Rollup</code></h2><blockquote>
+<p>Rollup 是一个 JavaScript 模块打包工具，可以将多个小的代码片段编译为完整的库和应用。与传统的 CommonJS 和 AMD 这一类非标准化的解决方案不同，Rollup 使用的是 ES6 版本 Javascript 中的模块标准。新的 ES 模块可以让你自由、无缝地按需使用你最喜爱的库中那些有用的单个函数。这一特性在未来将随处可用，但 Rollup 让你现在就可以，想用就用。</p>
+</blockquote>
+<h2 id="为什么是-Rollup"><a href="#为什么是-Rollup" class="headerlink" title="为什么是 Rollup"></a>为什么是 <code>Rollup</code></h2><ol>
+<li>这里简单对<code>webpack</code>、<code>gulp</code>、<code>Rollup</code>做一个比较：</li>
+</ol>
+<p><code>gulp</code> 是一个构建工具，主要完成代码压缩、编译转化, 可以替代手工实现自动化工作</p>
+<p><code>Webpack</code> 支持 <code>HMR</code> ，有更完整的插件库，适合用于前端工程化开发</p>
+<p><code>Rollup</code> 更小巧，仅仅是一款 <code>ESM</code> 打包器，支持 <code>Tree-shaking</code></p>
+<ol start="2">
+<li>如果您的代码库是基于<code>ES6</code>或者<code>TS</code>，且希望其他人安装后可以直接使用，这个时候就可以使用<code>Rollup</code></li>
+</ol>
+<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><p><code>Rollup</code> 可以通过两种方式使用：使用命令行方式，或者 <code>JavaScript API</code> 方式</p>
+<ul>
+<li>直接命令行运行<br>用于浏览器:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 编译为一个在 &lt;script&gt; 标签中可用的自运行函数 (&#x27;iife&#x27;)</span><br><span class="line">rollup main.js --file bundle.js --format iife</span><br></pre></td></tr></table></figure>
+
+<p>用于 <code>Node.js</code> :</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 编译为 CommonJS 模块 (&#x27;cjs&#x27;)</span><br><span class="line">rollup main.js --file bundle.js --format cjs</span><br></pre></td></tr></table></figure>
+
+<p>同时用于浏览器和 Node.js：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 需要为 UMD 格式的包指定一个名称</span><br><span class="line">rollup main.js --file bundle.js --format umd --name &quot;myBundle&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>-f</code> ：是 <code>--format</code> 的缩写。<br><code>-o</code> ：指定了输出的路径。<br><code>-c</code> ：指定rollup的配置文件。<br><code>-w</code> ：监听源文件是否有改动，如果有改动，重新打包。</p>
+<ul>
+<li>使用配置文件<br>在项目中创建一个名为 <code>rollup.config.js</code> 的文件，增加如下代码：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="attr">input</span>: [<span class="string">&quot;./src/index.js&quot;</span>],</span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="attr">file</span>: <span class="string">&quot;./dist/bundle.js&quot;</span>,</span><br><span class="line">        <span class="attr">format</span>: <span class="string">&quot;umd&quot;</span>,</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&quot;experience&quot;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="输出的6种格式"><a href="#输出的6种格式" class="headerlink" title="输出的6种格式"></a>输出的6种格式</h2><p><code>iife</code> , <code>amd</code> , <code>umd</code> , <code>cjs</code> , <code>esm</code> , <code>system</code></p>
+<table>
+<thead>
+<tr>
+<th>模块化方案</th>
+<th>描述</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>iife</td>
+<td>是前端模块化早期的产物，它的核心思路是：<br>1、构建一个匿名函数<br>2、立即执行这个函数，外部的依赖通过入参形式传入<br>3、返回该模块的输出</td>
+<td>不影响代码体积</td>
+<td>1、输出的变量可能影响全局变量，引入依赖包时依赖全局变量<br>2、需要使用者自行维护 <code>script</code> 标签加载顺序</td>
+</tr>
+<tr>
+<td>cjs</td>
+<td>为了解决 <code>node.js</code> 在模块化上的缺失，2009年 <code>CommonJS</code> 规范首次被提出</td>
+<td>完善的模块化方案</td>
+<td>只能在 <code>node.js</code> 环境使用</td>
+</tr>
+<tr>
+<td>amd</td>
+<td>2011年， <code>amdjs-api</code> 被正式提出</td>
+<td>1、解决了 IIFE 的缺点<br>2、一套完备的浏览器里 <code>js</code> 文件模块化方案</td>
+<td>代码组织形式别扭，可读性差</td>
+</tr>
+<tr>
+<td>umd</td>
+<td>兼容了 <code>amd</code> 和 <code>CommonJS</code></td>
+<td>抹平了一个包在 <code>AMD</code> 和 <code>CommonJS</code> 里的差异</td>
+<td>会产生兼容代码</td>
+</tr>
+<tr>
+<td>esm</td>
+<td><code>javascript</code> 模块化官方标准格式。</td>
+<td>可读性高</td>
+<td>部分浏览器不兼容</td>
+</tr>
+</tbody></table>
+<h2 id="Rollup-中常用的几个插件"><a href="#Rollup-中常用的几个插件" class="headerlink" title="Rollup 中常用的几个插件"></a><code>Rollup</code> 中常用的几个插件</h2><ul>
+<li><code>resolve</code>: 将我们编写的源码与依赖的第三方库进行合并</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D @rollup/plugin-node-resolve</span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>rollup.config.js</code> :</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import resolve from &quot;@rollup/plugin-node-resolve&quot;;</span><br><span class="line">export default&#123;</span><br><span class="line">...</span><br><span class="line">plugins: [resolve()],</span><br><span class="line">external: [],</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>commonjs</code>: 使得<code>rollup.js</code>编译支持<code>npm</code>模块和<code>CommonJS</code>模块方式的插件：<code>@rollup/plugin-commonjs</code></li>
+<li><code>babel</code>: 将<code>ES6</code>语法转成<code>ES5</code></li>
+<li><code>json</code></li>
+</ul>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Rollup/">#Rollup</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2022/12/14/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-12-15/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">前端分享-2022-12-15</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2022/11/16/%E7%BC%96%E5%86%99npm%E5%8C%85%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">编写npm包遇到的问题</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Rollup"><span class="nav-number">1.</span> <span class="nav-text">什么是 Rollup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-Rollup"><span class="nav-number">2.</span> <span class="nav-text">为什么是 Rollup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B"><span class="nav-number">3.</span> <span class="nav-text">快速开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%9A%846%E7%A7%8D%E6%A0%BC%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">输出的6种格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rollup-%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E4%B8%AA%E6%8F%92%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">Rollup 中常用的几个插件</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>

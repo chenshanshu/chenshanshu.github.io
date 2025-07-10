@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            js事件模型 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">js事件模型</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2022-01-19 15:07:06</span>
+        <span class="mobile">2022-01-19 15:07</span>
+    </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/js/">js</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h4 id="DOM0级事件模型"><a href="#DOM0级事件模型" class="headerlink" title="DOM0级事件模型"></a>DOM0级事件模型</h4><p>  DOM0级事件模型是早期事件模型，实现代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;btn&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>特点：</strong></p>
+<ul>
+<li><em>直接在<code>DOM</code> 对象上注册事件</em></li>
+<li><em>注册多个时后面的事件<mark>会覆盖之前的</mark></em></li>
+<li><em>所有浏览器都兼容</em></li>
+<li><em>清除事件时直接赋值null</em></li>
+</ul>
+<hr/>
+
+<h4 id="DOM2级事件模型"><a href="#DOM2级事件模型" class="headerlink" title="DOM2级事件模型"></a>DOM2级事件模型</h4><h5 id="标准事件模型"><a href="#标准事件模型" class="headerlink" title="标准事件模型"></a>标准事件模型</h5><h6 id="事件传播过程"><a href="#事件传播过程" class="headerlink" title="事件传播过程"></a>事件传播过程</h6><pre><code>1. 事件捕获：事件由`document`一直向下捕捉到目标元素
+2. 事件执行：目标对象的事件处理程序执行
+3. 事件冒泡：事件从目标元素上升到`document`</code></pre><p>  所有时间类型都会经历第一阶段，有的事件不会经历第三阶段（submit），一个 <code>DOM</code> 对象可以注册多个相同类型的事件，不会发生覆盖。</p>
+<h6 id="事件注册"><a href="#事件注册" class="headerlink" title="事件注册"></a>事件注册</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[object].addEventListener(&#x27;事件名称&#x27;，方法名（函数），事件模型（true/false）)</span><br></pre></td></tr></table></figure>
+
+<h6 id="解除事件"><a href="#解除事件" class="headerlink" title="解除事件"></a>解除事件</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[object].removeEventListener(&#x27;事件名称&#x27;，方法名（函数），事件模型（true/false）)</span><br></pre></td></tr></table></figure>
+
+<p>true/false决定在那个阶段调用函数<br>true: 捕获<br>false: 冒泡</p>
+<h6 id="事件对象"><a href="#事件对象" class="headerlink" title="事件对象"></a>事件对象</h6><ul>
+<li>停止传播：event.stopPropagation()</li>
+<li>阻止默认动作：event.preventDefault()</li>
+</ul>
+<h6 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h6><ul>
+<li>给一个元素添加两个事件，捕获阶段的事件会先执行，但两个时间戳相同。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn__submit&#x27;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;in bubble&#x27;</span>, <span class="keyword">new</span> <span class="built_in">Date</span>().getTime())</span><br><span class="line">&#125;, <span class="literal">false</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>, <span class="function"><span class="keyword">function</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;in capture&#x27;</span>, <span class="keyword">new</span> <span class="built_in">Date</span>().getTime())</span><br><span class="line">&#125;, <span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>绑定多个事件，并阻止冒泡<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">    params.stopPropagation()</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;,<span class="literal">false</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">&#125;,<span class="literal">true</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&#x27;click&#x27;</span>,<span class="function"><span class="keyword">function</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>)</span><br><span class="line">&#125;,<span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+在冒泡阶段阻止冒泡，在捕获阶段的绑定事件会先执行，三个事件都会触发<br>在捕获阶段阻止冒泡，第一个事件不再触发，后两个触发。</li>
+</ul>
+<span id="more"></span>
+
+<h5 id="IE模型"><a href="#IE模型" class="headerlink" title="IE模型"></a>IE模型</h5><p>  IE的事件机制没有捕获阶段，事件流是非标准的，只有目标阶段和冒泡阶段。</p>
+<ul>
+<li>添加事件：dom.attachEvent()</li>
+<li>移除事件：dom.detachEvent()</li>
+<li>阻止冒泡：<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">e = <span class="built_in">window</span>.event;</span><br><span class="line">e.cancelBubble = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure></li>
+<li>阻止默认事件<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e.returnValue = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></li>
+<li>标准事件模型中，注册函数时，事件类型前不加on,IE中要加on</li>
+<li>attachEvent注册的函数为全局调用函数，而不是文档元素的方法，因此this引用的是window对象</li>
+<li>注册多个处理函数时，标准事件模型中，若注册多个同名函数会被忽略，以第一个为准；在<code>IE</code>中，同一个函数可以被注册多次</li>
+</ul>
+<h4 id="DOM3级事件"><a href="#DOM3级事件" class="headerlink" title="DOM3级事件"></a>DOM3级事件</h4><p>DOM3级事件在DOM2级事件的基础上添加了更多的事件类型，全部类型如下：</p>
+<ul>
+<li>UI事件，当用户与页面上的元素交互时触发，如：load、scroll、abort、select、error</li>
+<li>焦点事件，当元素获得或失去焦点时触发，如：blur、focus</li>
+<li>鼠标事件，当用户通过鼠标在页面执行操作时触发如：dbclick、mouseup</li>
+<li>滚轮事件，当使用鼠标滚轮或类似设备时触发，如：mousewheel</li>
+<li>文本事件，当在文档中输入文本时触发，如：textInput</li>
+<li>键盘事件，当用户通过键盘在页面上执行操作时触发，如：keydown、keypress</li>
+<li>合成事件，当为IME（输入法编辑器）输入字符时触发，如：compositionstart</li>
+<li>变动事件，当底层DOM结构发生变化时触发，如：DOMsubtreeModified</li>
+<li>同时DOM3级事件也允许使用者自定义一些事件。</li>
+</ul>
+<p>UI事件在DOM2级事件中归为HTML事件，判断浏览器是否支持DOM2级别事件中的HTML事件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> isSupported = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;HTMLEvents&quot;</span>,<span class="string">&quot;2.0&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>判断浏览器是否支持DOM3级事件规定的UI事件：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> isSupported = <span class="built_in">document</span>.implementation.hasFeature(<span class="string">&quot;UIEvents&quot;</span>,<span class="string">&quot;3.0&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="自定义事件（Event和CustomEvent）"><a href="#自定义事件（Event和CustomEvent）" class="headerlink" title="自定义事件（Event和CustomEvent）"></a>自定义事件（Event和CustomEvent）</h5><ul>
+<li>Event<blockquote>
+<p>Event算是一个顶级接口，CustomEvent基于Event,增加了部分参数</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = <span class="keyword">new</span> Event(typeArg[, eventInit]);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>eventInit:</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">bubbles</td>
+<td align="left">可选，Boolean类型，默认值为 false，表示该事件是否冒泡。</td>
+</tr>
+<tr>
+<td align="left">cancelable</td>
+<td align="left">可选，Boolean类型，默认值为 false， 表示该事件能否被取消。</td>
+</tr>
+<tr>
+<td align="left">composed</td>
+<td align="left">可选，Boolean类型，默认值为 false，指示事件是否会在影子DOM根节点之外触发侦听器。</td>
+</tr>
+</tbody></table>
+<p><strong>example:</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> evt = <span class="keyword">new</span> Event(<span class="string">&quot;test&quot;</span>, &#123;<span class="string">&quot;bubbles&quot;</span>:<span class="literal">true</span>, <span class="string">&quot;cancelable&quot;</span>:<span class="literal">false</span>&#125;);</span><br><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">&#x27;test&#x27;</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;触发了自定义事件&#x27;</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">document</span>.dispatchEvent(evt);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>CustomEvent<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = <span class="keyword">new</span> CustomEvent(typeArg,customEventInit);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>customEventInit:</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">detail</td>
+<td align="left">可选的默认值是 null 的任意类型数据，是一个与 event 相关的值（向事件对象添加更多数据）</td>
+</tr>
+</tbody></table>
+<p>customEventInit可以接受eventInit字典的参数</p>
+<blockquote>
+<p>以上内容参考了下列文章<br>CSDN:<a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41440282/article/details/81207302" >事件模型<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
+
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/js/">#js</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2022/01/20/%E5%89%8D%E7%AB%AF-question/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">前端questions</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2022/01/11/GithubAction%E5%92%8CWebhook%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">GithubAction和Webhook使用入门</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#DOM0%E7%BA%A7%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">DOM0级事件模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DOM2%E7%BA%A7%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">DOM2级事件模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">标准事件模型</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E4%BC%A0%E6%92%AD%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.1.</span> <span class="nav-text">事件传播过程</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E6%B3%A8%E5%86%8C"><span class="nav-number">2.1.2.</span> <span class="nav-text">事件注册</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%A7%A3%E9%99%A4%E4%BA%8B%E4%BB%B6"><span class="nav-number">2.1.3.</span> <span class="nav-text">解除事件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.1.4.</span> <span class="nav-text">事件对象</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.1.5.</span> <span class="nav-text">示例</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#IE%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">IE模型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DOM3%E7%BA%A7%E4%BA%8B%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">DOM3级事件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%EF%BC%88Event%E5%92%8CCustomEvent%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">自定义事件（Event和CustomEvent）</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>
