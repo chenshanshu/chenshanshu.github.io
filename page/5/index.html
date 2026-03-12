@@ -172,6 +172,127 @@
                 
 
                 <h3 class="home-article-title">
+                    <a href="/2021/12/31/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2021-12-31/">
+                        前端分享 2021/12/31
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="reduce-的用法"><a href="#reduce-的用法" class="headerlink" title="reduce()的用法"></a>reduce()的用法</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.reduce(callback,[initialValue])</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>数组求和</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">prev, cur, index, arr</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> prev + cur;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>计算一个数组中每个元素出现的次数</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="string">&#x27;test&#x27;</span>, <span class="string">&#x27;test&#x27;</span>, <span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;sun&#x27;</span>, <span class="string">&#x27;mon&#x27;</span>, <span class="string">&#x27;wen&#x27;</span>, <span class="string">&#x27;sun&#x27;</span>]</span><br><span class="line"><span class="keyword">let</span> result = arr.reduce(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (cur <span class="keyword">in</span> pre) &#123;</span><br><span class="line">        pre[cur]++</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        pre[cur] = <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> pre</span><br><span class="line">&#125;, &#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>数组去重</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = arr.reduce(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!pre.includes(cur)) &#123;</span><br><span class="line">        pre.push(cur)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;, [])</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>将多维数组转为一维</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [</span><br><span class="line">    [<span class="number">0</span>, <span class="number">1</span>],</span><br><span class="line">    [<span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">    [<span class="number">4</span>, [<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]]</span><br><span class="line">]</span><br><span class="line"><span class="keyword">const</span> newArr = <span class="function"><span class="keyword">function</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arr.reduce(<span class="function">(<span class="params">pre, cur</span>) =&gt;</span> pre.concat(<span class="built_in">Array</span>.isArray(cur) ? newArr(cur) : cur), [])</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(newArr(arr)); <span class="comment">//[0, 1, 2, 3, 4, 5, 6, 7]</span></span><br></pre></td></tr></table></figure>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Fri Dec 31 2021 10:16:25 GMT+0800">2021-12-31</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/12/31/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2021-12-31/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2021/10/19/flask-auth/">
+                        flask-auth
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="一、windows系统python3虚拟环境"><a href="#一、windows系统python3虚拟环境" class="headerlink" title="一、windows系统python3虚拟环境"></a>一、windows系统python3虚拟环境</h2><ul>
+<li>新建文件夹venv，然后执行<code>python -m venv venv</code></li>
+<li>运行<code>.\Scripts\activate.bat</code>启动虚拟环境<div class="tip">cmd中需要使用反斜线，否则无法启动</div>
+
+</li>
+</ul>
+<h2 id="二、Flask服务"><a href="#二、Flask服务" class="headerlink" title="二、Flask服务"></a>二、Flask服务</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask,request</span><br><span class="line"><span class="keyword">from</span> markupsafe <span class="keyword">import</span> escape</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="comment">#通过route()装饰器来把函数绑定到URL</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hellow world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#app对象的add_url_rule()函数也可以用于将URL与函数绑定</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;hello world&#x27;</span></span><br><span class="line">app.add_url_rule(<span class="string">&#x27;/&#x27;</span>,<span class="string">&#x27;hello&#x27;</span>,hello_word)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&quot;/path/&lt;path:subpath&gt;&quot;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_subpath</span>(<span class="params">subpath</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">f&#x27;subpath <span class="subst">&#123;escape(subpath)&#125;</span>&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app.run(host=<span class="string">&quot;0.0.0.0&quot;</span>, port=<span class="number">5000</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="转换器类型："><a href="#转换器类型：" class="headerlink" title="转换器类型："></a>转换器类型：</h3><p>URL内用中括号标记变量，通过<a class="link"   href="converter:variable_name" >converter:variable_name<i class="fas fa-external-link-alt"></i></a>为变量加上转换器</p>
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="right">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>string</code></td>
+<td align="right">（缺省值）接受任何不包含斜杆的文本</td>
+</tr>
+<tr>
+<td align="center"><code>int</code></td>
+<td align="right">接受正整数</td>
+</tr>
+<tr>
+<td align="center"><code>float</code></td>
+<td align="right">接受正浮点数</td>
+</tr>
+<tr>
+<td align="center"><code>path</code></td>
+<td align="right">类似 <code>string</code> ，但可以包含斜杠</td>
+</tr>
+<tr>
+<td align="center"><code>uuid</code></td>
+<td align="right">接受 UUID 字符串</td>
+</tr>
+</tbody></table>
+<h3 id="URL构建"><a href="#URL构建" class="headerlink" title="URL构建"></a>URL构建</h3><p>url_for()函数用于构建指定函数的URL, 函数名称作为第一个参数，可接受任意个关键字参数</p>
+<h3 id="静态文件"><a href="#静态文件" class="headerlink" title="静态文件"></a>静态文件</h3><p>只要在您的包或模块旁边创建一个名为 static 的文件夹就行了。 静态文件位于应用的 /static 中。<br> <code>url_for(&#39;static&#39;, filename=&#39;style.css&#39;)</code></p>
+<h2 id="三、Flask服务启动"><a href="#三、Flask服务启动" class="headerlink" title="三、Flask服务启动"></a>三、Flask服务启动</h2><ul>
+<li>安装Flask模块<code>pip install Flask</code></li>
+<li>编写好脚本保存为<code>server.py</code></li>
+<li><code>set FLASK_APP=server</code>  </li>
+<li>需要打开开发功能<code>set FLASK_ENV=development</code></li>
+<li>运行<code>flask run</code></li>
+</ul>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Tue Oct 19 2021 15:41:16 GMT+0800">2021-10-19</span></span>
+        
+        
+    </div>
+
+    <a href="/2021/10/19/flask-auth/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
                     <a href="/2021/07/28/css%E6%95%B4%E7%90%86/">
                         css整理
                     </a>
@@ -505,67 +626,6 @@
 
             </li>
         
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2020/10/28/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8Bwebpack/">
-                        快速上手webpack
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        概念
-webpack是一个前端资源加载/打包工具。
-
-它将根据模块的依赖关系进行静态分析，然后将这些模块按照指定的规则生成对应的静态资源。它做的事情是，分析你的项目结构，找到JavaScript模块以及其它的一些浏览器不能直接运行的拓展语言（Scss...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Oct 28 2020 15:25:23 GMT+0800">2020-10-28</span></span>
-        
-        
-    </div>
-
-    <a href="/2020/10/28/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8Bwebpack/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2020/10/28/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
-                        正则表达式
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        ^((?!\d*$)\S{2, })|(\d{6, })$//超过2个字符或者超过6位纯数字
-
-匹配某个变量123var ch = &#x27;变量&#x27;eval(`/$&#123;ch&#125;/g`)new RegExp(ch,&#x27...
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Oct 28 2020 10:58:34 GMT+0800">2020-10-28</span></span>
-        
-        
-    </div>
-
-    <a href="/2020/10/28/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
     </ul>
 
     <div class="home-paginator">
@@ -601,7 +661,7 @@ webpack是一个前端资源加载/打包工具。
               <span>2020</span>
               -
             
-            2025&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+            2026&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
         </div>
         
         <div class="theme-info info-item">
