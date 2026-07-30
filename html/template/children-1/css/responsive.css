@@ -1,0 +1,1265 @@
+/* Normal desktop :992px. */
+@media (min-width: 992px) and (max-width: 1169px) {
+/*----------------------------------------*/
+/*  1.  Home Page One Responsive CSS
+/*----------------------------------------*/
+.container{width:970px;}
+.slides.nivoSlider {
+  border-radius: 0;
+}
+.bend.niceties.preview-2 {
+  height: 363px;
+}
+.headet-top { 
+  padding-right: 35px;
+}
+.main-menu ul.nav li ul.sub-menu { 
+  width: 850px; 
+}
+.main-menu ul.nav li.mega-menu-two ul.sub-menu {
+  width: 700px;
+}
+.main-menu ul.nav li.mega-menu-three ul.sub-menu {
+  width: 600px;
+}
+.main-menu ul.nav li.mega-menu-for ul.sub-menu {
+  width: 539px;
+}
+.single-promotion:hover div.singleh {
+  padding-top: 38px;
+}
+.single-promotion:hover div.singleh {
+  padding-top: 55px;
+}
+.single-promotion h3 {
+  font-size: 14px;
+}
+.single-promotion p {
+  font-size: 11px;
+}
+.single-promotion span a {
+  border-radius: 30px;
+  font-size: 13px;
+  line-height: 30px;
+  padding: 0 20px;
+}
+.product-area {
+  margin: 35px 0;
+}
+div.newslatter {
+  padding: 38px 10px 30px;
+}
+.curt { 
+  padding-right: 35px;
+}
+.right-featured div.product-text a p {
+  padding: 0 10px;
+}
+.payment { 
+  float: right; 
+}
+/*----------------------------------------*/
+/*  2.  Home Page Two Responsive CSS
+/*----------------------------------------*/
+.home-two-menu ul.nav li a span {
+  margin-right: 8px;
+}
+.home-two-menu ul.nav li a {
+font-size: 14px;
+}
+.left-featured.bg-bd {
+  padding: 38px 10px 30px;
+}
+.home-two div.single-promotion:hover div.singleh {
+  padding-top: 25px;
+}
+ .newslatter {
+  position: inherit; 
+}
+.newslatter div.col-sm-offset-6 {
+  margin-left: 0;
+  padding: 0;
+}
+/*----------------------------------------*/
+/*  3.  Home Page Three Responsive CSS
+/*----------------------------------------*/
+.home-three div.bend.niceties.preview-2 {
+  height: 370px;
+}
+.home-three div.single-promotion h3 {
+  padding-top: 0px;
+}
+.home-three div.single-promotion h3, .single-hsp h3 {
+  font-size: 18px; 
+}
+.home-three div.single-hsp p { 
+  padding: 0 15px;
+}
+.home-three div.single-promotion span a{
+  font-size: 13px; 
+  line-height: 30px;
+  padding: 0 15px; 
+}
+/*----------------------------------------*/
+/*  4.  Chechout Page Responsive CSS
+/*----------------------------------------*/
+ .cut-page-tab ul.nav-tabs li span { 
+  padding-right: 10px; 
+}
+.duboll-requer { 
+  margin-top: 0px;
+  text-align: left;
+}
+/*----------------------------------------*/
+/*  5.  Singale Product Page Responsive CSS
+/*----------------------------------------*/
+.single-page div.review ul li {
+  float: left; 
+  margin-right: -7px;
+}
+.single-page div.review ul li a.comment { 
+  margin-right: 18px;
+  padding-right: 15px;
+}
+.smol-slide div.owl-carousel.owl-theme div.owl-controls.clickable div.owl-buttons { 
+  right: -14px;
+  top: 25px; 
+}
+.social-button button {
+  font-size: 12px; 
+}
+.quantity {
+  display: inline-block;
+}
+.single-page div.action div.product-text {
+  float: left;
+}
+.owl-item div.col-lg-12 {
+  overflow: hidden;
+  padding: 0 13px;
+}
+}
+/* Tablet desktop :768px. */
+@media (min-width: 768px) and (max-width: 991px) {
+.container{width:750px;}
+/*----------------------------------------*/
+/*  1.  Home Page One Responsive CSS
+/*----------------------------------------*/
+.slides.nivoSlider {
+  border-radius: 0;
+}
+.bend.niceties.preview-2 {
+  height: 280px;
+}
+.home-two-menu,.main-menu{
+  display: none;
+}
+.mobile-menu-area {
+  display: block;
+}
+.htop-one ul li ul {
+  right: 0;
+  left: inherit;
+}
+.search { 
+  width: 330px;
+}
+.search form input[type="text"] { 
+  width: 100%;
+}
+.lago {
+  margin: 14px 0 0 0;
+}
+ul.nav li a { 
+  padding: 0 20px;
+  }
+.right-feature-head::after,
+.product-tab ul.tab-menu::after { 
+  width: 185px;
+}
+.single-promotion:hover div.singleh {
+  padding-top: 20px;
+}
+.main-menu ul.nav li:last-child:hover ul.dworpdown { 
+  right: 0;
+}
+.single-promotion:hover div.singleh {
+  padding-top: 15%;
+}
+.left-featured div.link {
+  left: 40%; 
+  top: 45%;
+}
+.right-featured div.product-text a p {
+  padding: 0 10px;
+}
+.left-featured div.cart-box { 
+  top: 50%; 
+}
+.single-lago { 
+  margin: 2px 8px; 
+}
+.client-logo.owl-carousel.owl-theme div.owl-controls.clickable div.owl-buttons {
+  top: 20%;
+}
+.left-single-feature div.product-text a i { 
+  height: 28px;
+  line-height: 27px; 
+  width: 28px;
+}
+.left-single-feature div.product-text a p { 
+  padding: 0 12px; 
+}
+div.newslatter {
+  padding: 28px 0 0 0;
+}
+.product-area {
+  margin: 35px 0;
+}
+.owl-item div.col-lg-12 {
+  padding: 0px 5px;
+}
+/*----------------------------------------*/
+/*  2.  Home Page Two Responsive CSS
+/*----------------------------------------*/
+.home-two div.bend.niceties.preview-2 {
+  height: 386px;
+}
+.home-two div.main-menu{
+  display: none;
+}
+.mobile-menu-area {
+  display: block;
+}
+.single-promotion img {
+  width: 100%;
+}
+.home-tow-left-featured div.owl-item { 
+  padding: 15px;
+}
+.home-two div.singleh { 
+  top: 91%; 
+}
+ .hide-sm {
+  display: none;
+}
+.home-two div.left-featured div.link {
+  left: 44%; 
+  top: 50%;
+}
+.left-section div.add img {
+  width: 100%;
+  border-radius: 35px;
+}
+div.bg-bd div.single-promotion { 
+  margin-bottom: 25px;
+}
+.home-two div.subscribe button[type="submit"] {
+  width: 25%;
+}
+/*----------------------------------------*/
+/*  3.  Home Page Three Responsive CSS
+/*----------------------------------------*/
+.home-three div.bend.niceties.preview-2 {
+  height: 386px;
+}
+.promotion-area {
+  margin: 30px 0 0;
+}
+.home-three div.left-section {
+  margin: 0;
+}
+.home-three div.right-section {
+  margin: 10px 0 0 0 ;
+}
+.home-three div.newslatter {
+  position: inherit;
+}
+.home-three div.owl-theme.owl-carousel div.owl-item {
+  padding: 0px;
+} 
+.home-three div.blog {
+  border-right: none; 
+}
+.subscribe input[type="text"] {   
+  width: 65%;
+  float: left;
+  margin-right: 5px;
+}
+.home-three div.client-logo.owl-carousel.owl-theme div.owl-controls.clickable div.owl-buttons {
+  top: 14%;
+}
+.home-three div.add a img {
+  border-radius: 20px;
+}
+.add img {
+  width: 100%;
+  padding:0;
+}
+.single-hsp img {
+  width: 100%;
+}
+.home-three div.copyright-text {
+  text-align: center;
+}
+.home-three div.payment {
+  text-align: center;
+  width: 100%;
+  padding: 0 0 15px 0;
+}
+.hide-item {
+  display: none;
+}
+/*----------------------------------------*/
+/*  4.  Chechout Page Responsive CSS
+/*----------------------------------------*/
+.cut-page-tab ul.nav-tabs li a::after {
+  position: inherit;
+}
+.cut-page-tab ul.nav-tabs li.active a::before {
+  position: inherit;
+}
+.cut-page-tab ul.nav-tabs li { 
+  border-right: 2px solid #ddd; 
+}
+.cut-page-tab ul.nav-tabs li span { 
+  padding-right:0px; 
+}
+.new-account.border {
+  margin-bottom: 20px;
+}
+.duboll-requer { 
+  margin-top: 0px;
+  text-align: left;
+}
+/*----------------------------------------*/
+/*  5.  Shope Page Responsive CSS
+/*----------------------------------------*/
+.page-one div.product-right-tab ul.tab-menu li.tab-menu-li select {
+  padding: 5px;
+  width: 40px;
+}
+.page-one div.product-right-tab ul.tab-menu li span { 
+  font-size: 14px; 
+  padding:0 0 0 0;
+}
+.catalog-section.bg-bd,
+.beds-section.bg-bd {
+  padding: 15px;
+}
+.page-one div.blog {
+  border-right: medium none;
+  padding: 0 5px;
+}
+.page-one div.bolg-newslatter { 
+  padding: 25px 30px 0px; 
+}
+.page-one div.newslatter {
+  position: inherit;
+}
+.price_slider_amount input[type="text"] { 
+  width: 135px;
+}
+/*----------------------------------------*/
+/*  6.  Single Product Responsive CSS
+/*----------------------------------------*/
+.smol-slide div.owl-item { 
+  padding: 5px;
+}
+.smol-slide div.owl-carousel.owl-theme div.owl-controls.clickable div.owl-buttons {
+  top: 30%;
+  width: 126%;
+}
+.larg-vew p {
+  top: 62%; 
+}
+.single-page div.top-seal {
+  margin-top: 30px;
+}
+.top-seal h4 { 
+  text-align: center;
+}
+.top-seal::before { 
+  top: 8%; 
+}
+.all-seal-product div.rank {
+  display: inline-block;
+  margin: 0;
+}
+.bootom-section ul li:last-child { 
+  right: inherit; 
+  top: 25px;
+}
+.bootom-section ul li:first-child { 
+  left: inherit; 
+  top: -25px;
+}
+/*----------------------------------------*/
+/*  7.  Contract Page Responsive CSS
+/*----------------------------------------*/
+ .form-area form { 
+  padding: 15px;
+}
+.message textarea { 
+  width: 100%;
+}
+}
+/* small mobile :320px. */
+@media (max-width: 767px) {
+.container {width:300px}
+/*----------------------------------------*/
+/*  1.  Home Page One Responsive CSS
+/*----------------------------------------*/
+.slides.nivoSlider {
+  border-radius: 0;
+}
+.bend.niceties.preview-2 {
+  height: 112px;
+}
+.slider-2 h1,.slider-2 h3,.slider-2 h4,
+.slider-1 h1,.slider-1 h3,.slider-1 h4{
+	font-size:14px;
+}
+.slider-2 h3,.slider-2 h4,
+.slider-1 h3,.slider-1 h4{ 
+	font-size:10px; 
+}
+.slider-2 h1, .slider-2 h3, .slider-2 h4, .slider-1 h1, .slider-1 h3, .slider-1 h4 {  
+  line-height: 18px; 
+}
+.slider-2 h1, .slider-1 h1 { 
+  margin-bottom: 0;
+}
+button.shop-button { 
+  font-size: 10px;
+  line-height: 20px; 
+  padding: 0 10px; 
+}
+.preview-2 .nivo-controlNav { 
+  display: none; 
+}
+.preview-2 .nivo-directionNav a.nivo-nextNav::before { 
+  border-radius: 5px; 
+  font: 400 15px/35px FontAwesome;
+  height: 35px; 
+  width: 35px; 
+}
+.preview-2 .nivo-directionNav a.nivo-prevNav::before {
+  border-radius: 5px; 
+  font: 400 15px/35px FontAwesome;
+  height: 35px; 
+  width: 35px; 
+}
+.nivo-directionNav a { 
+  top: 30%; 
+}
+.preview-2 .nivoSlider:hover .nivo-directionNav a.nivo-prevNav {
+  left: 5px;
+}
+.preview-2 .nivoSlider:hover .nivo-directionNav a.nivo-nextNav {
+  right: 40px;
+}
+.title2::after {
+  right: 145px;
+}
+.title3::after {
+  right: 80px;
+}
+.slider-2 h3, .slider-2 h4, .slider-1 h3, .slider-1 h4 { 
+  margin: 0 35px 0 0; 
+}
+.title1 {
+  margin-right: 35px;
+}
+.main-menu{
+  display: none;
+}
+.headet-top { 
+  text-align: left; 
+}
+.search { 
+  margin-right: 0px; 
+}
+.lago {
+  text-align: center;
+  margin: 10px 0;
+}
+.curt span { 
+  top: -5px; 
+}
+.search { 
+  width: 100%;
+}
+.search form input[type="text"] { 
+  width: 100%;
+}
+.single-promotion img {
+  width: 100%;
+}
+.single-promotion:hover div.singleh {
+  padding-top: 30px;
+}
+.single-promotion span a { 
+  font-size: 12px; 
+  line-height: 33px;
+  padding: 0 18px; 
+}
+.single-promotion h3 {
+  font-size: 15px; 
+}
+.home-two div.single-promotion h3 {
+  font-size: 13px;
+  line-height: 40px;
+}
+.home-two div.single-promotion p {
+  font-size: 13px; 
+  line-height: 20px;
+  padding: 0 3px;
+   margin-bottom: 5px;
+}
+.product-tab ul.tab-menu li a {
+  font-size: 14px;
+  padding: 8px;
+}
+.right-feature-head::after, .product-tab ul.tab-menu::after {
+  width: 0px;
+  display: none;
+}
+.product-tab ul.tab-menu li { 
+  margin-bottom: 7px;
+}
+.tab-vew-reviw, .tab-content, .reviw-tab-text {
+  margin-top: 10px;
+}
+.product-tab ul.tab-menu::after {
+  display: none;
+  width: 0px;
+}
+.owl-buttons { 
+  display: none;
+}
+.product-area {
+  margin: 35px 0;
+}
+.add a img {
+  border-radius: 35px;
+}
+.single-lago { 
+  margin: 0 5px; 
+}
+.blog {
+  border-right: none; 
+}
+div.newslatter {
+  padding: 0px 0 30px 0;
+}
+.payment {
+  text-align: center;
+  width: 100%;
+  padding-bottom: 15px;
+  padding-top: 0px;
+}
+.copyright-text p { 
+  line-height: 15px; 
+  padding: 14px 0 10px;
+}
+.headet-top { 
+  display: none;
+}
+.htop-one ul li { 
+  margin-left:0px; 
+}
+.blog-img { 
+  width: 100%;
+  margin-bottom: 15px;
+  border-radius:0px;
+}
+.blog-text {
+  overflow: inherit;
+}
+.footer-bg {
+  padding-bottom: 25px;
+}
+.curt-list { 
+  right: 20px; 
+}
+.widget h5 { 
+  margin: 15px 0 0 0;
+}
+.add {
+  padding: 0 0 30px;
+}
+.cl-logo .col-lg-12 img,.blog-img img {
+  width: 100%;
+}
+.curt li {
+  display: inline-block;
+  text-align: center;
+}
+.curt { 
+    padding-top: 7px;
+    height: inherit;
+}
+/*----------------------------------------*/
+/*  2.  Home Page Two Responsive CSS
+/*----------------------------------------*/
+.home-two div.bend.niceties.preview-2 {
+  height: 154px;
+}
+.home-two div.slider-2 h1,.home-two div.slider-2 h3,.home-two div.slider-2 h4,
+.home-two div.slider-1 h1,.home-two div.slider-1 h3,.home-two div.slider-1 h4{
+	font-size:20px;
+}
+.home-two div.slider-2 h3,.home-two div.slider-2 h4,
+.home-two div.slider-1 h3,.home-two div.slider-1 h4{ 
+	font-size:14px; 
+}
+.home-two div.slider-2 h1,.home-two div .slider-2 h3,.home-two div.slider-2 h4,.home-two div .slider-1 h1,.home-two div .slider-1 h3,.home-two div .slider-1 h4 {  
+  line-height: 23px; 
+}
+.home-two h3.title2::after {
+  right: 200px;
+}
+.home-two h4.title3::after {
+  right: 115px;
+}
+.home-two-menu,.main-menu{
+  display: none;
+}
+.home-two div.newslatter div.col-sm-offset-6 {
+  margin-left: 0;
+  padding: 0 15px;
+}
+.home-two div.left-section{
+  margin-top: -14px;
+}
+.home-two div.all-seal-product div.product-image { 
+  width: 20%;
+}
+.copyright-text {
+  text-align: center;
+}
+.home-two div.all-seal-product div.product-image {
+  width: 100%;
+}
+.home-two div.all-seal-product div.rank {
+  display: inline-block;
+  margin: 0;
+}
+.all-seal-product div.single-product { 
+  margin: 0 10px 0 0;
+}
+.home-two div.top-seal::before { 
+  top: 95px; 
+}
+div.newslatter {
+  padding: 0 0 0px;
+}
+.home-two div.left-section div.add {
+  display: none; 
+}
+.latter.bg-bd {
+  margin: 30px 0 0;
+}
+/*----------------------------------------*/
+/*  3.  Home Page Three Responsive CSS
+/*----------------------------------------*/
+.home-three div.bend.niceties.preview-2 {
+  height: 154px;
+} 
+.promotion-area {
+  margin: 30px 0 0;
+}
+.home-three div.slider-2 h1,.home-three div.slider-2 h3,.home-three div.slider-2 h4,
+.home-three div.slider-1 h1,.home-three div.slider-1 h3,.home-three div.slider-1 h4{
+	font-size:20px;
+}
+.home-three div.slider-2 h3,.home-three div.slider-2 h4,
+.home-three div.slider-1 h3,.home-three div.slider-1 h4{ 
+	font-size:14px; 
+}
+.home-three div.slider-2 h1,.home-three div .slider-2 h3,.home-three div.slider-2 h4,.home-three div .slider-1 h1,.home-three div .slider-1 h3,.home-three div .slider-1 h4 {  
+  line-height: 23px; 
+}
+.home-three h3.title2::after {
+  right: 200px;
+}
+.home-three h4.title3::after {
+  right: 115px;
+}
+.add a img {
+  border-radius: 20px;
+}
+.add img {
+  width: 100%;
+  padding: 25px 0 0 0;
+}
+.single-hsp img {
+  width: 100%;
+}
+.singleh.bg-color-six.new-singleh {
+  position: inherit;
+  margin-bottom: 25px;
+  border-radius: 0 0 20px 20px;
+}
+.home-three div.left-section {
+  margin: 0;
+}
+.home-three div.right-section {
+  margin: 10px 0 0 0 ;
+}
+.home-three div.blog {
+  padding: 30px 0;
+}
+/*----------------------------------------*/
+/*  4.  Chechout Page Responsive CSS
+/*----------------------------------------*/
+.cut-page-tab ul.nav-tabs li a::after {
+  position: inherit;
+}
+.cut-page-tab ul.nav-tabs li.active a::before {
+  position: inherit;
+}
+.cut-page-tab ul.nav-tabs li span {
+  padding-left: 15px;
+  text-align: left;
+}
+.cut-page-tab ul.nav-tabs li {
+  border-bottom: 2px solid #cacaca;
+  float: left;
+  width: 100%;
+}
+.new-account.border {
+  margin-bottom: 20px;
+}
+.duboll-requer { 
+  margin-top: 0px;
+  text-align: left;
+}
+.zoomWindow { 
+  height:100% !important; 
+  width: 100% !important;
+}
+.smol-slide {
+  margin: 15px 0 25px;
+}
+/*----------------------------------------*/
+/*  4.  Shope Page Responsive CSS
+/*----------------------------------------*/
+.catalog-section {
+  margin: 30px 0;
+}
+.page-one div.right-all-product { 
+  padding: 0;
+}
+.page-one div.product-right-tab ul.top-bg { 
+  padding: 7px 8px;
+}.tab-menu-li > select {
+  width: 35px;
+}
+.page-one div.product-right-tab ul.tab-menu li span { 
+  font-size: 12px; 
+  line-height: 20px;
+  padding: 3px 6px 0 0;
+}
+.page-one div.product-right-tab ul.tab-menu li p { 
+  padding: 0 18px 0 10px; 
+}
+.page-one div.product-right-tab ul.tab-menu li p::before { 
+  right: 7px; 
+}
+.page-one div.product-right-tab ul.tab-menu li { 
+  margin-right:0px;
+}
+.tab-menu-li {
+  display: none !important;
+}
+.page-one div.product-right-tab ul.tab-menu li p {
+  display: none; 
+}
+.page-one div.right-all-product {
+  margin-top: 25px;
+  padding: 0 15px;
+}
+.right-all-product div.price-box a p.price-box-heading { 
+  text-align: center; 
+}
+.previous-next { 
+  display: none; 
+}
+.subscribe {
+  overflow: hidden;
+  padding-bottom: 25px;
+}
+#right-ap div.price {
+  display: inline-block; 
+}
+#right-ap span.leval {
+  display: none; 
+}
+/*----------------------------------------*/
+/*  6.  Single Product Responsive CSS
+/*----------------------------------------*/
+.single-page div.top-seal {
+  margin-top: 30px;
+}
+.all-seal-product div.product-image {
+  width: 100%;
+}
+.all-seal-product div.rank {
+  margin-left: 35%;
+}
+.product-image {
+  margin-bottom: 15px;
+}
+.twitter {
+  margin-bottom: 5px;
+}
+.quantity {
+  display: inline-block;
+}
+.single-page div.action div.product-text {
+  float: left;
+}
+.review ul li a { 
+  display: block; 
+  text-align: left;
+}
+.review ul li {
+  display: block; 
+}
+.review ul li a.comment {
+  border-right: medium none; 
+}
+.single-page div#right-ap div.price {
+  margin-top: 5px;
+  overflow: hidden;
+  padding-left: 10px;
+}
+/*----------------------------------------*/
+/*  7.  Checkout Page Responsive CSS
+/*----------------------------------------*/
+.bootom-section ul {
+  margin: 45px 7px; 
+}
+.bootom-section ul li.pro-check {
+  float: none;
+  margin-top: 10px;
+  text-align: center;
+}
+.bootom-section ul li.con-shopp {
+  float: none;
+  text-align: center;
+}
+.main-form input.input { 
+  width: 100%;
+}
+.main-form option.input {
+  padding: 0 20px;
+  width: 100%;
+}
+/*----------------------------------------*/
+/*  7.  Contract Page Responsive CSS
+/*----------------------------------------*/
+ .form-area form { 
+  padding: 15px;
+}
+.message textarea { 
+  width: 100%;
+}
+.mobile-menu-area {
+  margin-top: 20px;
+}
+.search {
+  margin-bottom: 20px;
+}
+.header-midile {
+  margin-bottom: 8px;
+}
+
+}
+/* Large Mobile :480px. */
+@media only screen and (min-width: 480px) and (max-width:767px) {
+.container {width:450px;}
+/*----------------------------------------*/
+/*  1.  Home Page One Responsive CSS
+/*----------------------------------------*/
+.slides.nivoSlider {
+  border-radius: 0;
+}
+.bend.niceties.preview-2 {
+  height: 168px;
+}
+.slider-2 h1,.slider-2 h3,.slider-2 h4,
+.slider-1 h1,.slider-1 h3,.slider-1 h4{
+	font-size:20px;
+}
+.slider-2 h3,.slider-2 h4,
+.slider-1 h3,.slider-1 h4{ 
+	font-size:14px; 
+}
+.slider-2 h1, .slider-2 h3,.slider-2 h4, .slider-1 h1, .slider-1 h3, .slider-1 h4 {  
+  line-height: 23px; 
+}
+.slider-2 h1, .slider-1 h1 { 
+  margin-bottom: 0;
+}
+button.shop-button { 
+  font-size: 14px;
+  line-height: 30px; 
+  padding: 0 10px; 
+}
+.preview-2 .nivo-controlNav { 
+  display: none; 
+}
+.preview-2 .nivo-directionNav a.nivo-nextNav::before { 
+  border-radius: 5px; 
+  font: 400 15px/35px FontAwesome;
+  height: 35px; 
+  width: 35px; 
+}
+.preview-2 .nivo-directionNav a.nivo-prevNav::before {
+  border-radius: 5px; 
+  font: 400 15px/35px FontAwesome;
+  height: 35px; 
+  width: 35px; 
+}
+.nivo-directionNav a { 
+  top: 40%; 
+}
+.preview-2 .nivoSlider:hover .nivo-directionNav a.nivo-prevNav {
+  left: 5px;
+}
+.preview-2 .nivoSlider:hover .nivo-directionNav a.nivo-nextNav {
+  right: 40px;
+}
+.title2::after {
+  right: 200px;
+}
+.title3::after {
+  right: 120px;
+}
+.slider-2 h3, .slider-2 h4, .slider-1 h3, .slider-1 h4 { 
+  margin: 0 35px 0 0; 
+}
+.title1 {
+  margin-right: 35px;
+}
+.main-menu{
+	display: none;
+}
+.mobile-menu{
+  display: none;
+}
+.headet-top { 
+  text-align: center; 
+}
+.curt {
+  margin:0; 
+  text-align: center;
+}
+.single-promotion img {
+  width: 100%;
+}
+.right-feature-head::after,
+.product-tab ul.tab-menu::after { 
+  width: 150px;
+}
+.product-area {
+  margin: 35px 0;
+}
+.bg-bd { 
+  padding: 60px 30px 30px;
+}
+.product-tab ul.tab-menu::after {
+  left: 233px;
+  top: -60px;
+  height: 60px;
+}
+.left-featured.bg-bd {
+  padding: 35px 15px 30px;
+}
+.left-single-feature.owl-theme.owl-carousel div.owl-item {
+  margin-top: 10px;
+}
+.client-logo.owl-carousel.owl-theme div.owl-controls.clickable div.owl-buttons {
+  display: none;
+}
+.single-lago { 
+  margin: 0 6px; 
+}
+.left-featured div.single-product {
+  padding: 0 8px;
+}
+.add a img {
+  border-radius: 35px;
+}
+.add {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.search { 
+  width: 100%;
+}
+.search form input[type="text"] { 
+  width: 100%;
+}
+.bolg-newslatter { 
+  padding: 0 25px; 
+}
+ div.newslatter {
+  padding: 38px 0 30px;
+}
+.right-feature-head::after {
+  left: 145px;
+  top: -40px;
+}
+.subscribe input[type="text"] {
+  float: left;
+  width: 65%;
+  margin-right: 5px;
+}
+.blog {
+  border-right: 0px dashed #6ec4ea; 
+}
+.single-blog { 
+  margin: 17px 2px;
+}
+.single-promotion:hover div.singleh {
+  padding-top: 25%;
+}
+.singleh { 
+  top: 86%; 
+}
+.widget {
+  text-align: left;
+}
+.payment {
+  text-align: center;
+  width: 100%;
+  padding-top: 0px;
+  padding-bottom: 10px;
+}
+.copyright-text {
+  text-align: center;
+}
+.headet-top {
+  text-align: center;
+  line-height: 50px; 
+}
+.curt-list { 
+  right: 90px; 
+}
+/*----------------------------------------*/
+/*  2.  Home Page Two Responsive CSS
+/*----------------------------------------*/
+.home-two div.slider-2 h1,.home-two div.slider-2 h3,.home-two div.slider-2 h4,
+.home-two div.slider-1 h1,.home-two div.slider-1 h3,.home-two div.slider-1 h4{
+	font-size:20px;
+}
+.home-two div.slider-2 h3,.home-two div.slider-2 h4,
+.home-two div.slider-1 h3,.home-two div.slider-1 h4{ 
+	font-size:14px; 
+}
+.home-two div.slider-2 h1,.home-two div .slider-2 h3,.home-two div.slider-2 h4,.home-two div .slider-1 h1,.home-two div .slider-1 h3,.home-two div .slider-1 h4 {  
+  line-height: 23px; 
+}
+.home-two h3.title2::after {
+  right: 200px;
+}
+.home-two h4.title3::after {
+  right: 115px;
+}
+.home-two div.bend.niceties.preview-2 {
+  height: 231px;
+}
+.home-two-menu,.main-menu{
+  display: none;
+}
+ .all-seal-product { 
+  padding-top: 10px;
+}
+.home-two div.all-seal-product div.price-box a p { 
+  margin: 12px 0 0 0; 
+}
+.home-two div.left-section div.add {
+  display: none; 
+}
+.home-two div.right-section {
+  margin-top: 0;
+}
+.home-two div.newslatter div.col-sm-offset-6 {
+  margin-left: 0;
+  padding: 0 15px;
+}
+.home-two div.left-section div.left-featured {
+  margin-top: 0px;
+}
+.home-two div.left-section{
+  margin-top: 0px;
+}
+div.bg-bd div.single-promotion { 
+  margin-bottom: 25px;
+}
+.left-section div.add {
+  display: none; 
+}
+.all-seal-product div.single-product {
+  height: 300px;
+  margin: 0 10px 0 0;
+}
+.home-two div.subscribe button[type="submit"] {
+  width: 50%;
+}
+/*----------------------------------------*/
+/*  3.  Home Page Three Responsive CSS
+/*----------------------------------------*/
+.home-three div.bend.niceties.preview-2 {
+  height: 230px;
+}
+.promotion-area {
+  margin: 30px 0 0;
+}
+.home-two div.slider-2 h1,.home-two div.slider-2 h3,.home-two div.slider-2 h4,
+.home-two div.slider-1 h1,.home-two div.slider-1 h3,.home-two div.slider-1 h4{
+	font-size:20px;
+}
+.home-two div.slider-2 h3,.home-two div.slider-2 h4,
+.home-two div.slider-1 h3,.home-two div.slider-1 h4{ 
+	font-size:14px; 
+}
+.home-two div.slider-2 h1,.home-two div .slider-2 h3,.home-two div.slider-2 h4,.home-two div .slider-1 h1,.home-two div .slider-1 h3,.home-two div .slider-1 h4 {  
+  line-height: 23px; 
+}
+.home-two h3.title2::after {
+  right: 200px;
+}
+.home-two h4.title3::after {
+  right: 115px;
+}
+.home-two div.bend.niceties.preview-2 {
+  height: 231px;
+}
+.home-three div.single-hsp img {
+  width: 100%;
+}
+.home-three div.add {
+  padding: 15px 0 0 0;
+}
+.home-three div.curt { 
+  padding-top: 20px;
+}
+.home-three div.left-section,
+.home-three div.right-section{
+   margin-top: 0px; 
+}
+.home-three div.single-promotion { 
+  position: inherit;
+}
+.home-three div.owl-theme.owl-carousel div.owl-item {
+  margin-top: 5px;
+}
+.singleh.bg-color-six.new-singleh {
+  position: inherit;
+}
+.add a img {
+  border-radius: 20px;
+}
+.add img {
+  width: 100%;
+  padding: 25px 0 0 0;
+}
+.single-hsp img {
+  width: 100%;
+}
+/*----------------------------------------*/
+/*  4.  Chechout Page Responsive CSS
+/*----------------------------------------*/
+.cut-page-tab ul.nav-tabs li a::after {
+  position: inherit;
+}
+.cut-page-tab ul.nav-tabs li.active a::before {
+  position: inherit;
+}
+.cut-page-tab ul.nav-tabs li span {
+  padding-left: 15px;
+  text-align: left;
+}
+.cut-page-tab ul.nav-tabs li {
+  border-bottom: 2px solid #cacaca;
+  float: left;
+  width: 100%;
+}
+.new-account.border {
+  margin-bottom: 20px;
+}
+.duboll-requer { 
+  margin-top: 0px;
+  text-align: left;
+}
+.smol-slide {
+  margin: 15px 0 25px;
+}
+/*----------------------------------------*/
+/*  4.  Shope Page Responsive CSS
+/*----------------------------------------*/
+.catalog-section {
+  margin: 30px 0;
+}
+.page-one div.right-all-product { 
+  padding: 0;
+}
+.page-one div.product-right-tab ul.tab-menu li p { 
+  font-size: 10px; 
+}
+.page-one div.product-right-tab ul.tab-menu li p {
+  padding: 0 14px 0 4px;
+}
+#right-ap div.price {
+  display: inline-block; 
+}
+/*----------------------------------------*/
+/*  6.  Single Product Responsive CSS
+/*----------------------------------------*/
+.smol-slide div.owl-item { 
+  padding: 5px;
+}
+.smol-slide div.owl-carousel.owl-theme div.owl-controls.clickable div.owl-buttons {
+  top: 30%;
+  width: 126%;
+}
+.larg-vew p {
+  top: 62%; 
+}
+.single-page div.top-seal {
+  margin-top: 30px;
+}
+.all-seal-product div.product-image { 
+  width: 14%;
+}
+.all-seal-product div.rank {
+  margin-left: 52%;
+}
+.all-seal-product div.product-image {
+  width: 100%;
+}
+.all-seal-product div.rank {
+  margin-left: 42%;
+}
+.top-seal::before { 
+  top: 3%; 
+}
+/*----------------------------------------*/
+/*  7.  Whist list Responsive CSS
+/*----------------------------------------*/
+.bootom-section ul li:last-child { 
+  right: inherit; 
+  top: 25px;
+}
+.bootom-section ul li:first-child { 
+  left: inherit; 
+  top: -25px;
+}
+
+}
+ 

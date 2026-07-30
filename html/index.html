@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .box1 {
+        width: 100%;
+        height: 200px;
+        background-color: #1f1f1f;
+        position: absolute;
+      }
+
+      .box2 {
+        width: 100%;
+        height: 100%;
+        background-color: #eeeeee;
+      }
+      .progress-row {
+        width: 100px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #eff6fb;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        background-color: #327bf9;
+        /* background: linear-gradient(
+          45deg,
+          #fb3 25%,
+          #58a 0,
+          #58a 50%,
+          #fb3 0,
+          #fb3 75%,
+          #58a 0
+        ); */
+        background-image: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.15) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.15) 50%,
+          rgba(255, 255, 255, 0.15) 75%,
+          transparent 0
+        );
+        animation: slide 1s linear infinite;
+        background-size: 12px 12px;
+        transition: width 1s;
+      }
+      @keyframes slide {
+        0% {
+          background-position-x: 0px;
+        }
+        100% {
+          background-position-x: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="index_body">
+    <div class="progress-row">
+      <div class="progress-bar"></div>
+    </div>
+    <script>
+      var obj = { a: 1 };
+      function buildObj(params) {
+        params["b"] = 2;
+      }
+      buildObj(obj);
+      console.log(obj);
+
+      const IdCardReg =
+        /(?<first>((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|[7-9]1)\d{4})((?<year>(18|19|20)\d{2})((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31))(?<last>\d{3}[0-9Xx])/g;
+      function cleanIdno(params) {
+        for (let key in params) {
+          if (typeof params[key] === "object") {
+            cleanIdno(params[key]);
+          } else {
+            if (IdCardReg.test(params[key])) {
+              params[key] = params[key].replace(IdCardReg, function (m) {
+                return `${m.slice(0, 6)}********${m.slice(-4)}`;
+              });
+            }
+          }
+        }
+        return params;
+      }
+      const idNo = "陈山树320682199312237975陈山树";
+      const result = cleanIdno({
+        a: idNo,
+        b: [{ a: idNo, b: { a: idNo } }],
+        c: ["陈山树320682199312237975陈露3206821993122379792", idNo, idNo],
+      });
+      console.log("result", result);
+    </script>
+  </body>
+</html>

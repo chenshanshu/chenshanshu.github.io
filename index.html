@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+        <div class="first-screen-container flex-center fade-in-down-animation">
+    <div class="content flex-center">
+        <div class="description">
+            Keep writing and Keep loving.
+        </div>
+        
+    </div>
+</div>
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content has-first-screen">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class="active"
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class="active"
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="home-content-container fade-in-down-animation">
+    <ul class="home-article-list">
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2026/07/08/vue2%E5%8F%8C%E5%B1%82%E7%BC%93%E5%AD%98%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+                        vue2双层缓存遇到的问题
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>监控模块大致是这样结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">App.vue</span><br><span class="line">  keep-alive（缓存 MonitorLayout，key 固定为 /monitor）</span><br><span class="line">    MonitorLayout（布局：顶栏 + 底栏 + 子路由）</span><br><span class="line">      keep-alive（缓存各 Tab / 子页）</span><br><span class="line">        router-view</span><br></pre></td></tr></table></figure>
+
+<p>外层缓存布局，是因为列表进的是 <strong><code>/monitor</code> 外面的详情</strong>；不冻布局的话，出模块后内层叶子实例一起没了，分页列表和滚动位置就回不来。</p>
+<p>内层再缓存叶子页，用来做模块内 Tab 互切、以及「列表 → 站外详情 → 返回」时的现场恢复。</p>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Jul 08 2026 20:24:55 GMT+0000">2026-07-08</span></span>
+        
+        
+    </div>
+
+    <a href="/2026/07/08/vue2%E5%8F%8C%E5%B1%82%E7%BC%93%E5%AD%98%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2026/03/12/docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">
+                        docker使用记录
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        新建一个容器docker run -it –name shuidi-font -p 8090:8090 -v /home/chenss/shuidi-font:/shuidi-font shuidi-font:v20.19.3 /bin/sh -c ...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Mar 12 2026 09:45:58 GMT+0000">2026-03-12</span></span>
+        
+        
+    </div>
+
+    <a href="/2026/03/12/docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2025/10/31/%E6%A0%B9%E6%8D%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AEsass%E5%8F%98%E9%87%8F/">
+                        根据环境变量设置sass变量
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        背景在项目中，我们通常会根据不同的环境（如开发环境、测试环境、生产环境）来配置不同的 sass 变量。
+
+cra 项目
+
+123456789101112131415161718// craco.config.jsconst imgPath = pro...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Fri Oct 31 2025 16:20:19 GMT+0000">2025-10-31</span></span>
+        
+        
+    </div>
+
+    <a href="/2025/10/31/%E6%A0%B9%E6%8D%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AEsass%E5%8F%98%E9%87%8F/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2025/07/10/%E7%BD%91%E9%A1%B5%E5%8A%A0%E8%BD%BD%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/">
+                        网页加载性能分析
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        关键性能指标
+DNS 查询时间
+
+通过 performance.timing.domainLookupEnd - performance.timing.domainLookupStart 获取。
+
+TCP 连接时间
+
+通过 performance.t...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Jul 10 2025 14:12:24 GMT+0000">2025-07-10</span></span>
+        
+        
+    </div>
+
+    <a href="/2025/07/10/%E7%BD%91%E9%A1%B5%E5%8A%A0%E8%BD%BD%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2025/04/27/css%E5%AE%9E%E7%8E%B0%E5%B1%95%E5%BC%80%E6%94%B6%E8%B5%B7%E8%BF%87%E5%BA%A6%E6%95%88%E6%9E%9C/">
+                        css实现展开收起过度效果
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        css 实现一个高度不固定的弹窗，鼠标悬浮时展开，鼠标离开时收起
+在不使用 js 的情况下，无法获取弹窗高度，而浏览器中需要是数值型发生变化才会有过度效果，比如width、top这些属性，所以我们需要使用其他方式来实现过渡效果。
+这里我们可以使用ma...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Sun Apr 27 2025 18:15:05 GMT+0000">2025-04-27</span></span>
+        
+        
+    </div>
+
+    <a href="/2025/04/27/css%E5%AE%9E%E7%8E%B0%E5%B1%95%E5%BC%80%E6%94%B6%E8%B5%B7%E8%BF%87%E5%BA%A6%E6%95%88%E6%9E%9C/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2025/03/30/mac%E5%91%BD%E4%BB%A4/">
+                        mac命令
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        nginx相关使用brew安装的项目
+123456789101112131415161718192021# 安装nginxbrew install nginx# 启动nginxbrew services start nginx# 停止nginxbre...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Sun Mar 30 2025 10:22:40 GMT+0000">2025-03-30</span></span>
+        
+        
+    </div>
+
+    <a href="/2025/03/30/mac%E5%91%BD%E4%BB%A4/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2025/03/19/%E7%80%91%E5%B8%83%E6%B5%81%E5%B8%83%E5%B1%80/">
+                        瀑布流布局
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        css 实现12345.waterfall &#123;  column-count: 2;  padding: 16px 28px;  column-gap: 16px;&#125;
+
+
+如果第二列首个元素被截断了，添加样式
+
+123.waterf...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Mar 19 2025 16:14:41 GMT+0000">2025-03-19</span></span>
+        
+        
+    </div>
+
+    <a href="/2025/03/19/%E7%80%91%E5%B8%83%E6%B5%81%E5%B8%83%E5%B1%80/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2025/02/07/next-js%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">
+                        next.js项目开发遇到的问题
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h3 id="项目启动后，初始渲染内容为空，页面元素全部是-js-插入的"><a href="#项目启动后，初始渲染内容为空，页面元素全部是-js-插入的" class="headerlink" title="项目启动后，初始渲染内容为空，页面元素全部是 js 插入的"></a>项目启动后，初始渲染内容为空，页面元素全部是 js 插入的</h3><p>项目开发接近尾声，发现 ssr 不能正常渲染，发现所有的<code>Server Components</code>能正常<code>ssr</code>，而所有的<code>Client Components</code>不正常。<br>这里介绍下这两种组件：</p>
+<table>
+<thead>
+<tr>
+<th align="left">What do you need to do?</th>
+<th align="left">Server Component</th>
+<th align="left">Client Component</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Fetch data</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Access backend resources (directly)</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Keep sensitive information on the server (access tokens, API keys, etc)</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Keep large dependencies on the server / Reduce client-side JavaScript</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Add interactivity and event listeners (onClick(), onChange(), etc)</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Use State and Lifecycle Effects (useState(), useReducer(), useEffect(), etc)</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Use browser-only APIs</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Use custom hooks that depend on state, effects, or browser-only APIs</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+<tr>
+<td align="left">Use React Class components</td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/cancel.svg"
+                      style="box-shadow:none;"
+                ></td>
+<td align="left"><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/svgs/correct.svg"
+                      style="box-shadow:none;"
+                ></td>
+</tr>
+</tbody></table>
+<p>调查陷入误区以为<code>Client Components</code>导致的问题。然后就查看<code>demo</code>，一点点注释代码找到了下面两个问题。</p>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Fri Feb 07 2025 10:56:55 GMT+0000">2025-02-07</span></span>
+        
+        
+    </div>
+
+    <a href="/2025/02/07/next-js%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2024/07/24/%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E9%95%BF%E5%88%97%E8%A1%A8%E5%BD%93%E5%89%8D%E6%BB%91%E5%8A%A8%E7%9A%84%E4%BD%8D%E7%BD%AE/">
+                        获取一个长列表当前滑动的位置
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        question: 在一个列表页中，每个子元素高度不固定，怎么获取到当前视窗中的元素是第几个
+使用 elementFromPoint
+elementFromPoint 方法可以根据指定的坐标点，返回与该点最近的元素。如果指定坐标上没有元素，则返回 n...
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Wed Jul 24 2024 11:19:36 GMT+0000">2024-07-24</span></span>
+        
+        
+    </div>
+
+    <a href="/2024/07/24/%E8%8E%B7%E5%8F%96%E4%B8%80%E4%B8%AA%E9%95%BF%E5%88%97%E8%A1%A8%E5%BD%93%E5%89%8D%E6%BB%91%E5%8A%A8%E7%9A%84%E4%BD%8D%E7%BD%AE/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
+                    <a href="/2024/07/18/css%E7%BB%98%E5%88%B6%E4%B8%80%E4%B8%AA%E6%96%9C%E6%9D%A1%E7%BA%B9%E8%BF%9B%E5%BA%A6%E6%9D%A1/">
+                        css绘制一个斜条纹进度条
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;progress-row&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;progress-bar&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.progress-row</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#eff6fb</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.progress-bar</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#327bf9</span>;</span><br><span class="line">  <span class="comment">/* background: linear-gradient(</span></span><br><span class="line"><span class="comment">          45deg,</span></span><br><span class="line"><span class="comment">          #fb3 25%,</span></span><br><span class="line"><span class="comment">          #58a 0,</span></span><br><span class="line"><span class="comment">          #58a 50%,</span></span><br><span class="line"><span class="comment">          #fb3 0,</span></span><br><span class="line"><span class="comment">          #fb3 75%,</span></span><br><span class="line"><span class="comment">          #58a 0</span></span><br><span class="line"><span class="comment">        ); */</span></span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">linear-gradient</span>(</span><br><span class="line">    <span class="number">45deg</span>,</span><br><span class="line">    <span class="built_in">rgba</span>(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">0.15</span>) <span class="number">25%</span>,</span><br><span class="line">    transparent <span class="number">25%</span>,</span><br><span class="line">    transparent <span class="number">50%</span>,</span><br><span class="line">    <span class="built_in">rgba</span>(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">0.15</span>) <span class="number">50%</span>,</span><br><span class="line">    <span class="built_in">rgba</span>(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">0.15</span>) <span class="number">75%</span>,</span><br><span class="line">    transparent <span class="number">0</span></span><br><span class="line">  );</span><br><span class="line">  <span class="attribute">animation</span>: slide <span class="number">1s</span> linear infinite;</span><br><span class="line">  <span class="attribute">background-size</span>: <span class="number">12px</span> <span class="number">12px</span>;</span><br><span class="line">  <span class="attribute">transition</span>: width <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@keyframes</span> slide &#123;</span><br><span class="line">  <span class="number">0%</span> &#123;</span><br><span class="line">    <span class="attribute">background-position</span>-x: <span class="number">0px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="number">100%</span> &#123;</span><br><span class="line">    <span class="attribute">background-position</span>-x: <span class="number">12px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Jul 18 2024 20:53:15 GMT+0000">2024-07-18</span></span>
+        
+        
+    </div>
+
+    <a href="/2024/07/18/css%E7%BB%98%E5%88%B6%E4%B8%80%E4%B8%AA%E6%96%9C%E6%9D%A1%E7%BA%B9%E8%BF%9B%E5%BA%A6%E6%9D%A1/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+    </ul>
+
+    <div class="home-paginator">
+        <div class="paginator">
+    
+
+    
+        <a class="next btn"
+           href="/page/2/"
+        >Next</a>
+    
+</div>
+
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2026&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+</div>
+
+
+
+</body>
+</html>

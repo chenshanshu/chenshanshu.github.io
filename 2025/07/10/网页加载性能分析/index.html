@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="前端开发 javascript css html 样式">
+    <meta name="author" content="chenshanshu">
+    
+    <title>
+        
+            网页加载性能分析 |
+        
+        Chenss&#39;s Blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/logo.svg">
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"chenshanshu.github.io","root":"/","language":"en","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/header.png","favicon":"/images/logo.svg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Keep writing and Keep loving."},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":true},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":true},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+  </script>
+<meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="MyBlog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/header.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                Chenss&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                HOME
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                ARCHIVES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                CATEGORIES
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                TAGS
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/html"
+                            >
+                                HTML
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">HOME</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">ARCHIVES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">CATEGORIES</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">TAGS</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/html">HTML</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">网页加载性能分析</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/header.png">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">chenshanshu</span>
+                        
+                            <span class="author-label">Lv4</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2025-07-10 14:12:24</span>
+        <span class="mobile">2025-07-10 14:12</span>
+    </span>
+    
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h3 id="关键性能指标"><a href="#关键性能指标" class="headerlink" title="关键性能指标"></a>关键性能指标</h3><ol>
+<li>DNS 查询时间</li>
+</ol>
+<p>通过 performance.timing.domainLookupEnd - performance.timing.domainLookupStart 获取。</p>
+<ol start="2">
+<li>TCP 连接时间</li>
+</ol>
+<p>通过 performance.timing.connectEnd - performance.timing.connectStart 获取。</p>
+<ol start="3">
+<li>SSL/TLS 握手时间（仅 HTTPS）</li>
+</ol>
+<p>通过 performance.timing.connectEnd - performance.timing.secureConnectionStart 获取。</p>
+<ol start="4">
+<li>TTFB（Time To First Byte）</li>
+</ol>
+<p>首字节到达时间，通过 performance.timing.responseStart - performance.timing.requestStart 获取。</p>
+<ol start="5">
+<li>资源下载时间</li>
+</ol>
+<p>通过 performance.timing.responseEnd - performance.timing.responseStart 获取。</p>
+<ol start="6">
+<li>DOM 解析时间</li>
+</ol>
+<p>通过 performance.timing.domComplete - performance.timing.domLoading 获取。</p>
+<ol start="7">
+<li>DOMContentLoaded 事件时间</li>
+</ol>
+<p>表示 HTML 和同步 JS 加载完成的时间，通过监听 DOMContentLoaded 事件或 performance.timing.domContentLoadedEventEnd 获取。</p>
+<ol start="8">
+<li>页面完全加载时间（Load Event）</li>
+</ol>
+<p>通过 performance.timing.loadEventEnd - performance.timing.navigationStart 获取。</p>
+<h3 id="用户体验指标"><a href="#用户体验指标" class="headerlink" title="用户体验指标"></a>用户体验指标</h3><ol>
+<li>首次绘制（FP, First Paint）</li>
+</ol>
+<p>通过 performance.getEntriesByType(‘paint’) 获取，需浏览器支持。</p>
+<ol start="2">
+<li>首次内容绘制（FCP, First Contentful Paint）</li>
+</ol>
+<p>同上，通过 performance.getEntriesByType(‘paint’) 获取。</p>
+<ol start="3">
+<li>最大内容绘制（LCP, Largest Contentful Paint）</li>
+</ol>
+<p>通过 PerformanceObserver 监听 largest-contentful-paint 类型。</p>
+<ol start="4">
+<li>首次输入延迟（FID, First Input Delay）</li>
+</ol>
+<p>通过 PerformanceObserver 监听 first-input 类型（需实际用户交互）。</p>
+<ol start="5">
+<li>累积布局偏移（CLS, Cumulative Layout Shift）</li>
+</ol>
+<p>通过 PerformanceObserver 监听 layout-shift 类型。</p>
+<h3 id="资源加载指标"><a href="#资源加载指标" class="headerlink" title="资源加载指标"></a>资源加载指标</h3><ol>
+<li>资源加载时间</li>
+</ol>
+<p>通过 performance.getEntriesByType(‘resource’) 获取所有资源的加载详情（如 JS、CSS、图片等）。</p>
+<ol start="2">
+<li>关键资源加载时间</li>
+</ol>
+<p>筛选 performance.getEntriesByType(‘resource’) 中的关键资源（如主 CSS、JS）。</p>
+<ol start="3">
+<li>异步请求耗时</li>
+</ol>
+<p>通过 performance.getEntriesByType(‘navigation’) 或 performance.getEntriesByType(‘resource’) 获取 XHR/Fetch 请求的耗时。</p>
+<h3 id="网页性能指标（基于-PerformanceNavigationTiming）"><a href="#网页性能指标（基于-PerformanceNavigationTiming）" class="headerlink" title="网页性能指标（基于 PerformanceNavigationTiming）"></a>网页性能指标（基于 PerformanceNavigationTiming）</h3><table>
+<thead>
+<tr>
+<th align="left">指标名称</th>
+<th align="left">描述</th>
+<th align="left">获取方式</th>
+<th align="left">标准时间（良好）</th>
+<th align="left">优化目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">DNS 查询时间</td>
+<td align="left">DNS 解析耗时</td>
+<td align="left">domainLookupEnd - domainLookupStart</td>
+<td align="left">&lt; 100ms</td>
+<td align="left">减少第三方 DNS 依赖</td>
+</tr>
+<tr>
+<td align="left">TCP 连接时间</td>
+<td align="left">TCP 握手耗时</td>
+<td align="left">connectEnd - connectStart</td>
+<td align="left">&lt; 200ms</td>
+<td align="left">启用 HTTP/2 或 HTTP/3</td>
+</tr>
+<tr>
+<td align="left">SSL/TLS 时间</td>
+<td align="left">SSL 握手耗时（仅 HTTPS）</td>
+<td align="left">connectEnd - secureConnectionStart</td>
+<td align="left">&lt; 100ms</td>
+<td align="left">使用 TLS 1.3 或优化证书</td>
+</tr>
+<tr>
+<td align="left">TTFB（首字节时间）</td>
+<td align="left">从请求发起至收到第一个字节的时间</td>
+<td align="left">responseStart - requestStart</td>
+<td align="left">&lt; 500ms</td>
+<td align="left">优化服务端响应</td>
+</tr>
+<tr>
+<td align="left">资源下载时间</td>
+<td align="left">内容下载耗时</td>
+<td align="left">responseEnd - responseStart</td>
+<td align="left">取决于资源大小</td>
+<td align="left">压缩资源（如 Brotli）</td>
+</tr>
+<tr>
+<td align="left">DOM 解析时间</td>
+<td align="left">DOM 树构建完成时间</td>
+<td align="left">domComplete - domInteractive</td>
+<td align="left">&lt; 1s</td>
+<td align="left">减少阻塞渲染的 JS/CSS</td>
+</tr>
+<tr>
+<td align="left">DOMContentLoaded (DCL)</td>
+<td align="left">HTML 和同步 JS 加载完成时间</td>
+<td align="left">domContentLoadedEventEnd - navigationStart</td>
+<td align="left">&lt; 1.5s</td>
+<td align="left">延迟非关键 JS</td>
+</tr>
+<tr>
+<td align="left">页面完全加载 (Load)</td>
+<td align="left">所有资源（如图片）加载完成时间</td>
+<td align="left">loadEventEnd - navigationStart</td>
+<td align="left">&lt; 2.5s</td>
+<td align="left">懒加载非首屏资源</td>
+</tr>
+<tr>
+<td align="left">首次绘制 (FP)</td>
+<td align="left">浏览器首次渲染像素的时间</td>
+<td align="left">performance.getEntriesByName(‘first-paint’)[0].startTime</td>
+<td align="left">&lt; 1s</td>
+<td align="left">优化关键渲染路径</td>
+</tr>
+<tr>
+<td align="left">首次内容绘制 (FCP)</td>
+<td align="left">首次渲染出文本/图片等内容的时间</td>
+<td align="left">performance.getEntriesByName(‘first-contentful-paint’)[0].startTime</td>
+<td align="left">&lt; 1.5s</td>
+<td align="left">内联关键 CSS</td>
+</tr>
+<tr>
+<td align="left">最大内容绘制 (LCP)</td>
+<td align="left">视口中最大内容元素的渲染时间</td>
+<td align="left">PerformanceObserver 监听 largest-contentful-paint</td>
+<td align="left">&lt; 2.5s</td>
+<td align="left">优化图片/字体加载</td>
+</tr>
+<tr>
+<td align="left">首次输入延迟 (FID)</td>
+<td align="left">用户首次交互到浏览器响应的延迟</td>
+<td align="left">PerformanceObserver 监听 first-input</td>
+<td align="left">&lt; 100ms</td>
+<td align="left">减少长任务</td>
+</tr>
+<tr>
+<td align="left">累积布局偏移 (CLS)</td>
+<td align="left">页面布局偏移的稳定性评分（0-1）</td>
+<td align="left">PerformanceObserver 监听 layout-shift</td>
+<td align="left">&lt; 0.1</td>
+<td align="left">预分配尺寸/避免动态插入</td>
+</tr>
+</tbody></table>
+<h3 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取 PerformanceNavigationTiming 条目</span></span><br><span class="line"><span class="keyword">const</span> [navigationEntry] = performance.getEntriesByType(<span class="string">&#x27;navigation&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算关键指标</span></span><br><span class="line"><span class="keyword">const</span> metrics = &#123;</span><br><span class="line">  DNS时间: navigationEntry.domainLookupEnd - navigationEntry.domainLookupStart,</span><br><span class="line">  TCP时间: navigationEntry.connectEnd - navigationEntry.connectStart,</span><br><span class="line">  <span class="attr">TTFB</span>: navigationEntry.responseStart - navigationEntry.requestStart,</span><br><span class="line">  DOM解析: navigationEntry.domComplete - navigationEntry.domInteractive,</span><br><span class="line">  完全加载: navigationEntry.loadEventEnd - navigationEntry.startTime,</span><br><span class="line">  <span class="attr">FP</span>: performance.getEntriesByName(<span class="string">&#x27;first-paint&#x27;</span>)[<span class="number">0</span>]?.startTime,</span><br><span class="line">  <span class="attr">FCP</span>: performance.getEntriesByName(<span class="string">&#x27;first-contentful-paint&#x27;</span>)[<span class="number">0</span>]?.startTime,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.table(metrics);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听 LCP（需在页面生命周期早期执行）</span></span><br><span class="line"><span class="keyword">new</span> PerformanceObserver(<span class="function">(<span class="params">entryList</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> entries = entryList.getEntries();</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;LCP:&#x27;</span>, entries[entries.length - <span class="number">1</span>].startTime);</span><br><span class="line">&#125;).observe(&#123; <span class="attr">type</span>: <span class="string">&#x27;largest-contentful-paint&#x27;</span>, <span class="attr">buffered</span>: <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2025/10/31/%E6%A0%B9%E6%8D%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AEsass%E5%8F%98%E9%87%8F/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">根据环境变量设置sass变量</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2025/04/27/css%E5%AE%9E%E7%8E%B0%E5%B1%95%E5%BC%80%E6%94%B6%E8%B5%B7%E8%BF%87%E5%BA%A6%E6%95%88%E6%9E%9C/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">css实现展开收起过度效果</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;Comments</i>
+    </div>
+    
+
+        
+            
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2026&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">chenshanshu</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            Powered by <a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;|&nbsp;Theme&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">关键性能指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C%E6%8C%87%E6%A0%87"><span class="nav-number">2.</span> <span class="nav-text">用户体验指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E5%8A%A0%E8%BD%BD%E6%8C%87%E6%A0%87"><span class="nav-number">3.</span> <span class="nav-text">资源加载指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87%EF%BC%88%E5%9F%BA%E4%BA%8E-PerformanceNavigationTiming%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">网页性能指标（基于 PerformanceNavigationTiming）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E4%BB%A3%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">关键代码</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/dark-light-toggle.js"></script>
+
+
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+
+    
+<script src="/js/code-copy.js"></script>
+
+
+
+
+    
+<script src="/js/lazyload.js"></script>
+
+
+
+<div class="post-scripts">
+    
+        
+<script src="/js/left-side-toggle.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+<script src="/js/toc.js"></script>
+
+    
+</div>
+
+
+
+</body>
+</html>
