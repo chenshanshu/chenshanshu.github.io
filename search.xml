@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>vue2双层缓存遇到的问题</title>
+      <link href="/2026/07/08/vue2%E5%8F%8C%E5%B1%82%E7%BC%93%E5%AD%98%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+      <url>/2026/07/08/vue2%E5%8F%8C%E5%B1%82%E7%BC%93%E5%AD%98%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>监控模块大致是这样结构：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">App.vue</span><br><span class="line">  keep-alive（缓存 MonitorLayout，key 固定为 /monitor）</span><br><span class="line">    MonitorLayout（布局：顶栏 + 底栏 + 子路由）</span><br><span class="line">      keep-alive（缓存各 Tab / 子页）</span><br><span class="line">        router-view</span><br></pre></td></tr></table></figure><p>外层缓存布局，是因为列表进的是 <strong><code>/monitor</code> 外面的详情</strong>；不冻布局的话，出模块后内层叶子实例一起没了，分页列表和滚动位置就回不来。</p><p>内层再缓存叶子页，用来做模块内 Tab 互切、以及「列表 → 站外详情 → 返回」时的现场恢复。</p><span id="more"></span><h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>从消息等站外页，深链进入监控的<strong>另一个</strong>子路由时（例如离开时是 <code>/monitor/overview</code>，再进 <code>/monitor/report-detail</code>）：</p><ul><li>顶栏标题、底栏显隐正常（它们直接读 <code>$route</code>）</li><li><code>router-view</code> 的 <code>:key</code> 日志也已经是新路由</li><li><strong>主体内容仍是离开前那一页</strong>（比如还是 overview）</li></ul><p>原因可以概括成：</p><ol><li>App 层用固定 key 复用了同一个 <code>MonitorLayout</code> 实例（不会重新 <code>mounted</code>）</li><li>布局失活期间，内层 <code>router-view</code> 随路由的换页<strong>没有真正落到 DOM</strong></li><li>唤醒后，内层 <code>keep-alive</code> 优先恢复失活前的「当前子树」，于是壳对了、内容还是旧的</li></ol><p>另外：不要给 <code>&lt;keep-alive&gt;</code> 本身绑 <code>:key</code> 来强制重建——抽象组件这样换 key，后续 Tab 切换容易出现 <strong>monitor-body 空白</strong>。</p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>在现有约束下（详情在模块外 → 必须 App 缓存布局），采用：</p><p><strong>同 path 返回 → 保留缓存；异 path 深链 → 重建内层缓存树</strong></p><p>具体做法：</p><ol><li><code>beforeRouteLeave</code> 用 <code>from.path</code> 记下离开时的子路由（不要在 <code>deactivated</code> 里读 <code>$route</code>，那时往往已经是目标页）</li><li><code>activated</code> 时对比：  <ul><li>当前 path === 离开 path → 原样唤醒（列表/滚动还在）  </li><li>当前 path !== 离开 path → 重建内层</li></ul></li><li>重建时：<strong>不要</strong>给 <code>keep-alive</code> 加 <code>:key</code>；给外面一层真实 DOM 换 key（或 <code>v-if</code> 卸载再挂载），例如：</li></ol><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div :key=&quot;innerCacheGeneration&quot; class=&quot;monitor-body-inner&quot;&gt;</span><br><span class="line">  &lt;keep-alive :include=&quot;monitorCacheIncludes&quot;&gt;</span><br><span class="line">    &lt;router-view :key=&quot;childViewKey&quot; /&gt;</span><br><span class="line">  &lt;/keep-alive&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure><p>异 path 时递增 <code>innerCacheGeneration</code>，整棵内层缓存树销毁后按当前 <code>$route</code> 重新挂载。</p><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><table><thead><tr><th>场景</th><th>策略</th></tr></thead><tbody><tr><td>列表 → 站外详情 → 返回同一列表</td><td>同 path，保留双层缓存</td></tr><tr><td>站外深链到另一子路由</td><td>异 path，重建内层</td></tr><tr><td>强制重建</td><td>换真实 DOM 包装层的 key，勿绑在 <code>keep-alive</code> 上</td></tr></tbody></table><p>双层 <code>keep-alive</code> 不是设计错误，而是「站外详情要回列表」逼出来的；坑在<strong>冻住的布局被深链到别的子页时，内层不会自动跟上</strong>。把「同 path / 异 path」规则写死即可，不必给每个列表页单独做一整套状态持久化。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> vue keep-alive </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>docker使用记录</title>
       <link href="/2026/03/12/docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/"/>
       <url>/2026/03/12/docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/</url>

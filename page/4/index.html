@@ -172,6 +172,46 @@
                 
 
                 <h3 class="home-article-title">
+                    <a href="/2022/07/28/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-07-28/">
+                        前端分享-2022-07-28
+                    </a>
+                </h3>
+
+                <div class="home-article-content markdown-body">
+                    
+                        <h2 id="NUXT"><a href="#NUXT" class="headerlink" title="NUXT"></a>NUXT</h2><h3 id="NUXT-简介"><a href="#NUXT-简介" class="headerlink" title="NUXT 简介"></a><code>NUXT</code> 简介</h3><ul>
+<li>Nuxt.js 是一个基于 Vue.js 的服务端渲染应用框架，它可以帮我们轻松的实现同构应用。</li>
+<li>SSR是英文server side render的缩写，即服务端描画。</li>
+</ul>
+<h3 id="NUXT-解决了什么问题"><a href="#NUXT-解决了什么问题" class="headerlink" title="NUXT 解决了什么问题"></a><code>NUXT</code> 解决了什么问题</h3><ul>
+<li>SPA随着工程不断变大，打包文件不断增长，页面的整体刷新加载速度慢。</li>
+<li>为了SEO</li>
+</ul>
+<h3 id="NUXT-会带来的问题"><a href="#NUXT-会带来的问题" class="headerlink" title="NUXT 会带来的问题"></a><code>NUXT</code> 会带来的问题</h3><ul>
+<li>更长的链路，之前是浏览器+nginx+后台服务，而现在就变成浏览器+nginx+nodejs+后台服务。</li>
+<li>nodejs中的阻塞型请求，容易成为性能的瓶颈。</li>
+<li>一套api，要考虑前后端的兼容性。</li>
+</ul>
+                    
+                </div>
+
+                <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Thu Jul 28 2022 15:13:49 GMT+0800">2022-07-28</span></span>
+        
+        
+    </div>
+
+    <a href="/2022/07/28/%E5%89%8D%E7%AB%AF%E5%88%86%E4%BA%AB-2022-07-28/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
+</div>
+
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                <h3 class="home-article-title">
                     <a href="/2022/07/15/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8Bvue3/">
                         快速上手vue3
                     </a>
@@ -643,49 +683,6 @@
     </div>
 
     <a href="/2022/01/19/js%E4%BA%8B%E4%BB%B6%E6%A8%A1%E5%9E%8B/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
-</div>
-
-            </li>
-        
-            <li class="home-article-item">
-
-                
-
-                <h3 class="home-article-title">
-                    <a href="/2022/01/11/GithubAction%E5%92%8CWebhook%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/">
-                        GithubAction和Webhook使用入门
-                    </a>
-                </h3>
-
-                <div class="home-article-content markdown-body">
-                    
-                        <h2 id="什么是Github-Action"><a href="#什么是Github-Action" class="headerlink" title="什么是Github Action"></a>什么是Github Action</h2><ul>
-<li><code>Github Action</code>是Github官方推出的持续集成/部署模块服务(CI/CD)。</li>
-<li>它是事件驱动的，而且与Github深度整合，可以运行很多Github事件，除了部署和发布，还可以做很多事情，例如压缩合并<code>css</code>和<code>JavaScript</code>。</li>
-</ul>
-<h2 id="什么是Webhook"><a href="#什么是Webhook" class="headerlink" title="什么是Webhook"></a>什么是Webhook</h2><ul>
-<li><code>Webhook</code>是一个<code>API</code>概念，术语“网络钩子”，有时也被称为“反向 API”。因为它提供了<code>API</code>规则，<code>Webhook</code>将向你的应用发起<code>http</code>请求。</li>
-<li>准确的说<code>Webhook</code>是一种web回调或者http的<code>push API</code>，可以使用<code>Webhook</code>“订阅”活动。</li>
-</ul>
-<h2 id="hexo自动打包发布通知流程"><a href="#hexo自动打包发布通知流程" class="headerlink" title="hexo自动打包发布通知流程"></a>hexo自动打包发布通知流程</h2><ol>
-<li>本地编写完，通过<code>git</code>提交到<code>Github</code>仓库</li>
-<li><code>Github Action</code>监听到<code>push event</code>事件触发<code>ci.yml</code>执行脚本</li>
-<li><code>build</code>打包生成部署文件推送到目标仓库</li>
-<li>设置<code>webhook</code>监听推送事件，执行<code>webhook.sh</code>脚本</li>
-<li>将结果进行邮件通知</li>
-</ol>
-<h3 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h3><p>第一步，在<code>github</code> <code>setting-&gt;Developer settings-&gt;Personal access tokens</code>创建新的token，并保存这个值；<br>第二步，进入源代码仓库，<code>Settings-&gt;Secrets</code>里将第一步的token添加进去，<code>SECRET_NAME</code>取名为<code>HEXO_DEPLOY</code>；<br>第三步，新建一个<code>Github仓库</code>，命名为<code>用户名.github.io</code>,启动<code>github-pages</code>,具体可参考官方文档；</p>
-                    
-                </div>
-
-                <div class="home-article-meta-info-container">
-    <div class="home-article-meta-info">
-        <span><i class="fas fa-history"></i>&nbsp;<span class="home-article-date" data-date="Tue Jan 11 2022 11:12:42 GMT+0800">2022-01-11</span></span>
-        
-        
-    </div>
-
-    <a href="/2022/01/11/GithubAction%E5%92%8CWebhook%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/">Read more&nbsp;<i class="fas fa-angle-right"></i></a>
 </div>
 
             </li>
