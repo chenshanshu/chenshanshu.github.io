@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageCropper 图片旋转裁剪插件</title>
+    <link rel="stylesheet" href="./image-cropper.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 32px 16px;
+            background: #f4f6fb;
+            font-family: system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            color: #1f2329;
+        }
+
+        .page {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* 返回入口页 */
+        .nav {
+            max-width: 1100px;
+            margin: 0 auto 16px;
+        }
+
+        .back {
+            color: #6b7280;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back:hover {
+            color: #4f6bff;
+        }
+
+        h1 {
+            max-width: 1100px;
+            margin: 0 auto 20px;
+            font-size: 24px;
+        }
+
+        .panel {
+            padding: 16px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .panel h2 {
+            margin: 0 0 12px;
+            font-size: 16px;
+        }
+
+        /* 裁剪结果预览 */
+        .result {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            color: #9ca3af;
+            background: repeating-conic-gradient(#f3f4f6 0 25%, #fff 0 50%) 0 0 / 16px 16px;
+            border-radius: 8px;
+        }
+
+        .result img {
+            display: block;
+            max-width: 100%;
+            max-height: 360px;
+        }
+
+        .result-info {
+            margin: 12px 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .download {
+            width: 100%;
+            height: 36px;
+            color: #4f6bff;
+            background: rgba(79, 107, 255, 0.1);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .download:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 800px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav"><a class="back" href="../index.html">← 返回工具列表</a></nav>
+    <h1>ImageCropper 图片旋转裁剪</h1>
+    <div class="page">
+        <!-- 插件挂载容器 -->
+        <div id="cropper"></div>
+
+        <div class="panel">
+            <h2>裁剪结果</h2>
+            <div class="result" id="result">点击「确认裁剪」后显示</div>
+            <p class="result-info" id="resultInfo"></p>
+            <button class="download" id="downloadBtn" disabled>下载图片</button>
+        </div>
+    </div>
+
+    <script src="./image-cropper.js"></script>
+    <script>
+        var resultEl = document.getElementById('result')
+        var infoEl = document.getElementById('resultInfo')
+        var downloadBtn = document.getElementById('downloadBtn')
+        var resultUrl = ''
+
+        // 初始化插件
+        var cropper = new ImageCropper('#cropper', {
+            height: 460,
+            aspectRatio: NaN,
+            output: { type: 'image/png' },
+            // 确认裁剪后展示结果
+            onCrop: function (canvas, data) {
+                resultUrl = canvas.toDataURL('image/png')
+                resultEl.innerHTML = '<img src="' + resultUrl + '" alt="裁剪结果">'
+                infoEl.textContent = '尺寸 ' + canvas.width + ' × ' + canvas.height +
+                    ' px ｜ 旋转 ' + Math.round(data.rotate) + '° ｜ 缩放 ' + Math.round(data.zoom * 100) + '%'
+                downloadBtn.disabled = false
+            },
+            onError: function (err) {
+                alert(err.message)
+            }
+        })
+
+        // 下载裁剪结果
+        downloadBtn.onclick = function () {
+            if (!resultUrl) return
+            var a = document.createElement('a')
+            a.href = resultUrl
+            a.download = 'clip-' + Date.now() + '.png'
+            a.click()
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,279 @@
+/* 小游戏公共样式：页面框架、卡片、按钮、分段选择、统计、结束遮罩 */
+:root {
+  --primary: #4f6bff;
+  --primary-hover: #3d58f0;
+  --primary-bg: rgba(79, 107, 255, 0.1);
+  --success: #16a34a;
+  --danger: #ef4444;
+  --text: #1f2329;
+  --text-2: #6b7280;
+  --border: #e5e7eb;
+  --bg: #f4f6fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 32px 16px 48px;
+  color: var(--text);
+  background: var(--bg);
+  font: 14px/1.6 system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.page {
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+/* 返回入口页 */
+.back {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.back:hover {
+  color: var(--primary);
+}
+
+.header h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+}
+
+.header p {
+  margin: 0 0 24px;
+  color: var(--text-2);
+}
+
+/* 左侧游戏区，右侧控制面板 */
+.container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 24px;
+  align-items: start;
+}
+
+.card {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.board-tip {
+  margin: 14px 0 0;
+  color: var(--text-2);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* 统计数字 */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  padding: 10px 4px;
+  text-align: center;
+  background: #f8f9fc;
+  border-radius: 8px;
+}
+
+.stat span {
+  display: block;
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.stat b {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field-label {
+  margin-bottom: 8px;
+  color: var(--text-2);
+}
+
+/* 分段选择 */
+.segmented {
+  display: flex;
+  padding: 3px;
+  background: #f0f2f7;
+  border-radius: 999px;
+}
+
+.segmented input {
+  display: none;
+}
+
+.segmented label {
+  flex: 1;
+  padding: 5px 0;
+  color: var(--text-2);
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.segmented input:checked + label {
+  color: var(--primary);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.segmented input:disabled + label {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 按钮 */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
+  color: #fff;
+  font: inherit;
+  background: var(--primary);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.btn-block {
+  grid-column: 1 / -1;
+}
+
+.btn-ghost {
+  color: var(--text-2);
+  background: #f3f4f6;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--primary);
+  background: var(--primary-bg);
+}
+
+.btn-ghost.is-active {
+  color: var(--primary);
+  background: var(--primary-bg);
+}
+
+.btn.is-stop {
+  color: #fff;
+  background: var(--danger);
+}
+
+.btn.is-stop:hover:not(:disabled) {
+  color: #fff;
+  background: #dc2626;
+}
+
+/* 规则说明 */
+.rules {
+  margin: 20px 0 0;
+  padding: 12px;
+  color: var(--text-2);
+  font-size: 12px;
+  background: #f8f9fc;
+  border-radius: 8px;
+}
+
+.rules p {
+  margin: 0;
+}
+
+.rules p + p {
+  margin-top: 6px;
+}
+
+/* 游戏结束遮罩：放在 position: relative 的容器内 */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #fff;
+  text-align: center;
+  background: rgba(31, 35, 41, 0.72);
+  border-radius: 12px;
+  backdrop-filter: blur(2px);
+}
+
+.overlay.is-show {
+  display: flex;
+}
+
+.overlay h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.overlay p {
+  margin: 0 0 12px;
+  opacity: 0.85;
+}
+
+.overlay .overlay-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.overlay .btn-ghost {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.overlay .btn-ghost:hover:not(:disabled) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 760px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 14px;
+  }
+}

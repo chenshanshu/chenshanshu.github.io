@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数独</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    .board-wrap {
+      position: relative;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* 9×9 棋盘，字号随宽度缩放 */
+    .sudoku {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      aspect-ratio: 1;
+      container-type: inline-size;
+      border: 2px solid #3b4252;
+      border-radius: 8px;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .cell {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6cqw;
+      color: var(--primary);
+      background: #fff;
+      border-right: 1px solid #d5d9e3;
+      border-bottom: 1px solid #d5d9e3;
+      cursor: pointer;
+    }
+
+    /* 宫与宫之间用粗线分隔 */
+    .cell.br { border-right: 2px solid #3b4252; }
+    .cell.bb { border-bottom: 2px solid #3b4252; }
+    .cell.given { color: #1f2329; font-weight: 600; }
+    .cell.hinted { color: var(--success); }
+    .cell.peer { background: #eef1fb; }
+    .cell.same { background: #d9e0ff; }
+    .cell.selected { background: #b9c6ff; }
+    .cell.wrong { color: var(--danger); }
+    .cell.wrong.selected, .cell.wrong.same { background: #fbd5d5; }
+
+    /* 笔记：3×3 小数字 */
+    .notes {
+      position: absolute;
+      inset: 2px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      font-size: 2.3cqw;
+      color: var(--text-2);
+      text-align: center;
+      line-height: 1;
+      align-items: center;
+    }
+
+    /* 数字键盘 */
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .num {
+      position: relative;
+      height: 46px;
+      font: inherit;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-bg);
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .num:hover:not(:disabled) { background: #dfe5ff; }
+    .num:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* 剩余可填数量 */
+    .num small {
+      position: absolute;
+      right: 5px;
+      bottom: 3px;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-2);
+    }
+
+    .num.erase { font-size: 14px; }
+  </style>
+  <script src="./sudoku.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>数独</h1>
+      <p>每行、每列、每个 3×3 宫内数字 1～9 均不重复</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="board-wrap">
+          <div class="sudoku" id="board"></div>
+          <div class="overlay" id="overlay">
+            <h2 id="overlayTitle"></h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn" id="againBtn">再来一局</button>
+            </div>
+          </div>
+        </div>
+        <p class="board-tip">键盘：数字键填写 · 方向键移动 · Backspace 擦除 · N 切换笔记 · Ctrl+Z 撤销</p>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>用时</span><b id="time">0:00</b></div>
+          <div class="stat"><span>错误</span><b id="mistakes">0</b></div>
+          <div class="stat"><span>最佳</span><b id="best">—</b></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">难度</div>
+          <div class="segmented" role="radiogroup" aria-label="难度">
+            <input type="radio" name="level" id="lv1" value="easy" checked><label for="lv1">简单</label>
+            <input type="radio" name="level" id="lv2" value="medium"><label for="lv2">中等</label>
+            <input type="radio" name="level" id="lv3" value="hard"><label for="lv3">困难</label>
+          </div>
+        </div>
+
+        <div class="numpad" id="numpad"></div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="noteBtn">笔记：关</button>
+          <button class="btn btn-ghost" id="undoBtn">撤销</button>
+          <button class="btn btn-ghost" id="hintBtn">提示</button>
+          <button class="btn btn-ghost" id="autoBtn">自动求解</button>
+          <button class="btn btn-block" id="newBtn">新游戏</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const boardEl = document.getElementById('board')
+    const numpadEl = document.getElementById('numpad')
+    const overlay = document.getElementById('overlay')
+    const autoBtn = document.getElementById('autoBtn')
+
+    /** 游戏状态 */
+    let solution = []
+    let given = []        // 是否为题目给出的数字
+    let values = []       // 当前填写的数字
+    let notes = []        // 笔记，按位存储候选数
+    let hinted = new Set()
+    let history = []
+    let selected = -1
+    let noteMode = false
+    let mistakes = 0
+    let seconds = 0
+    let timer = null
+    let autoTimer = null
+    let usedAuto = false
+    let over = false
+    const cellEls = []
+
+    const rowOf = (i) => Math.floor(i / 9)
+    const colOf = (i) => i % 9
+
+    /** 是否与 i 同行、同列或同宫 */
+    function isPeer(i, j) {
+      return rowOf(i) === rowOf(j) || colOf(i) === colOf(j) || Sudoku.box(i) === Sudoku.box(j)
+    }
+
+    function level() {
+      return document.querySelector('input[name="level"]:checked').value
+    }
+
+    function formatTime(s) {
+      return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0')
+    }
+
+    /** 初始化棋盘格子与数字键盘（只创建一次） */
+    function build() {
+      for (let i = 0; i < 81; i++) {
+        const el = document.createElement('div')
+        el.className = 'cell'
+        if (colOf(i) % 3 === 2 && colOf(i) !== 8) el.classList.add('br')
+        if (rowOf(i) % 3 === 2 && rowOf(i) !== 8) el.classList.add('bb')
+        el.onclick = () => select(i)
+        boardEl.appendChild(el)
+        cellEls.push(el)
+      }
+      for (let v = 1; v <= 9; v++) {
+        const btn = document.createElement('button')
+        btn.className = 'num'
+        btn.dataset.v = v
+        btn.onclick = () => input(v)
+        numpadEl.appendChild(btn)
+      }
+      const erase = document.createElement('button')
+      erase.className = 'num erase'
+      erase.textContent = '擦除'
+      erase.onclick = erase_
+      numpadEl.appendChild(erase)
+    }
+
+    function newGame() {
+      stopAuto()
+      clearInterval(timer)
+      const data = Sudoku.generate(level())
+      solution = data.solution
+      values = data.puzzle.slice()
+      given = data.puzzle.map(Boolean)
+      notes = new Array(81).fill(0)
+      hinted = new Set()
+      history = []
+      selected = -1
+      mistakes = 0
+      seconds = 0
+      usedAuto = false
+      over = false
+      overlay.classList.remove('is-show')
+      timer = setInterval(() => {
+        seconds++
+        document.getElementById('time').textContent = formatTime(seconds)
+      }, 1000)
+      render()
+    }
+
+    /** 根据状态刷新全部格子、统计与键盘 */
+    function render() {
+      const sv = selected >= 0 ? values[selected] : 0
+      for (let i = 0; i < 81; i++) {
+        const el = cellEls[i]
+        const v = values[i]
+        el.className = 'cell' + (colOf(i) % 3 === 2 && colOf(i) !== 8 ? ' br' : '') + (rowOf(i) % 3 === 2 && rowOf(i) !== 8 ? ' bb' : '')
+        if (given[i]) el.classList.add('given')
+        if (hinted.has(i)) el.classList.add('hinted')
+        if (v && v !== solution[i]) el.classList.add('wrong')
+        if (selected >= 0) {
+          if (i === selected) el.classList.add('selected')
+          else if (sv && v === sv) el.classList.add('same')
+          else if (isPeer(i, selected)) el.classList.add('peer')
+        }
+        if (v) {
+          el.textContent = v
+        } else if (notes[i]) {
+          let html = '<div class="notes">'
+          for (let n = 1; n <= 9; n++) html += `<span>${notes[i] & (1 << n) ? n : ''}</span>`
+          el.innerHTML = html + '</div>'
+        } else {
+          el.textContent = ''
+        }
+      }
+
+      // 每个数字已正确填入的个数，填满 9 个则禁用
+      const counts = new Array(10).fill(0)
+      values.forEach((v, i) => { if (v && v === solution[i]) counts[v]++ })
+      numpadEl.querySelectorAll('.num[data-v]').forEach((btn) => {
+        const v = Number(btn.dataset.v)
+        btn.innerHTML = `${v}<small>${9 - counts[v]}</small>`
+        btn.disabled = counts[v] >= 9 || over
+      })
+
+      document.getElementById('mistakes').textContent = mistakes
+      document.getElementById('time').textContent = formatTime(seconds)
+      const best = localStorage.getItem('sudoku-best-' + level())
+      document.getElementById('best').textContent = best ? formatTime(Number(best)) : '—'
+      document.getElementById('undoBtn').disabled = !history.length || over
+    }
+
+    function select(i) {
+      if (over) return
+      selected = i
+      render()
+    }
+
+    /** 记录一次修改前的状态，用于撤销 */
+    function pushHistory() {
+      history.push({ values: values.slice(), notes: notes.slice(), hinted: new Set(hinted) })
+      if (history.length > 200) history.shift()
+    }
+
+    /** 填入正确数字后，清除同行/列/宫里该数字的笔记 */
+    function clearPeerNotes(i, v) {
+      for (let j = 0; j < 81; j++) {
+        if (isPeer(i, j)) notes[j] &= ~(1 << v)
+      }
+    }
+
+    /** 在选中格输入数字（笔记模式下切换候选数） */
+    function input(v) {
+      const i = selected
+      if (over || i < 0 || given[i] || hinted.has(i)) return
+      if (noteMode) {
+        if (values[i]) return
+        pushHistory()
+        notes[i] ^= 1 << v
+      } else {
+        if (values[i] === v) return
+        pushHistory()
+        values[i] = v
+        notes[i] = 0
+        if (v !== solution[i]) mistakes++
+        else clearPeerNotes(i, v)
+      }
+      render()
+      checkWin()
+    }
+
+    /** 擦除选中格的数字与笔记 */
+    function erase_() {
+      const i = selected
+      if (over || i < 0 || given[i] || hinted.has(i)) return
+      if (!values[i] && !notes[i]) return
+      pushHistory()
+      values[i] = 0
+      notes[i] = 0
+      render()
+    }
+
+    function undo() {
+      if (over || !history.length) return
+      const last = history.pop()
+      values = last.values
+      notes = last.notes
+      hinted = last.hinted
+      render()
+    }
+
+    /** 找一个待填写的格子：优先当前选中格，否则选第一个空格或填错的格 */
+    function hintTarget() {
+      const need = (i) => !given[i] && values[i] !== solution[i]
+      if (selected >= 0 && need(selected)) return selected
+      for (let i = 0; i < 81; i++) if (need(i)) return i
+      return -1
+    }
+
+    /** 提示：直接填入一个正确数字 */
+    function hint() {
+      if (over) return
+      const i = hintTarget()
+      if (i < 0) return
+      pushHistory()
+      values[i] = solution[i]
+      notes[i] = 0
+      hinted.add(i)
+      clearPeerNotes(i, solution[i])
+      selected = i
+      render()
+      checkWin()
+    }
+
+    /** 自动求解：逐格动画填入答案 */
+    function autoSolve() {
+      if (autoTimer) return stopAuto()
+      if (over) return
+      usedAuto = true
+      autoBtn.textContent = '停止'
+      autoBtn.classList.add('is-stop')
+      autoTimer = setInterval(() => {
+        const i = hintTarget()
+        if (i < 0) return stopAuto()
+        selected = i
+        hint()
+      }, 60)
+    }
+
+    function stopAuto() {
+      clearInterval(autoTimer)
+      autoTimer = null
+      autoBtn.textContent = '自动求解'
+      autoBtn.classList.remove('is-stop')
+    }
+
+    function checkWin() {
+      if (values.some((v, i) => v !== solution[i])) return
+      over = true
+      stopAuto()
+      clearInterval(timer)
+      selected = -1
+      // 使用自动求解不计入最佳成绩
+      let title = '完成！'
+      if (!usedAuto) {
+        const key = 'sudoku-best-' + level()
+        const best = Number(localStorage.getItem(key) || 0)
+        if (!best || seconds < best) {
+          localStorage.setItem(key, seconds)
+          title = '新纪录！'
+        }
+      } else {
+        title = '已自动求解'
+      }
+      render()
+      document.getElementById('overlayTitle').textContent = title
+      document.getElementById('overlayText').textContent = `用时 ${formatTime(seconds)}，错误 ${mistakes} 次，提示 ${hinted.size} 次`
+      setTimeout(() => overlay.classList.add('is-show'), 300)
+    }
+
+    function toggleNote() {
+      noteMode = !noteMode
+      const btn = document.getElementById('noteBtn')
+      btn.textContent = '笔记：' + (noteMode ? '开' : '关')
+      btn.classList.toggle('is-active', noteMode)
+    }
+
+    // 键盘操作
+    document.addEventListener('keydown', (e) => {
+      if (over) return
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault()
+        return undo()
+      }
+      if (/^[1-9]$/.test(e.key)) return input(Number(e.key))
+      if (['Backspace', 'Delete', '0'].includes(e.key)) return erase_()
+      if (e.key.toLowerCase() === 'n') return toggleNote()
+      const moves = { ArrowUp: -9, ArrowDown: 9, ArrowLeft: -1, ArrowRight: 1 }
+      if (moves[e.key] !== undefined) {
+        e.preventDefault()
+        if (selected < 0) return select(0)
+        const next = selected + moves[e.key]
+        // 左右移动不跨行
+        if (Math.abs(moves[e.key]) === 1 && rowOf(next) !== rowOf(selected)) return
+        if (next >= 0 && next < 81) select(next)
+      }
+    })
+
+    document.getElementById('noteBtn').onclick = toggleNote
+    document.getElementById('undoBtn').onclick = undo
+    document.getElementById('hintBtn').onclick = hint
+    autoBtn.onclick = autoSolve
+    document.getElementById('newBtn').onclick = newGame
+    document.getElementById('againBtn').onclick = newGame
+    document.querySelectorAll('input[name="level"]').forEach((r) => { r.onchange = newGame })
+
+    build()
+    newGame()
+  </script>
+</body>
+
+</html>

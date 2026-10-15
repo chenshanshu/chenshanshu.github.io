@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>点灯游戏</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    .board-wrap {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .lights {
+      display: grid;
+      grid-template-columns: repeat(var(--n), 1fr);
+      gap: 8px;
+      aspect-ratio: 1;
+      padding: 12px;
+      background: #1e2433;
+      border-radius: 14px;
+    }
+
+    .light {
+      position: relative;
+      padding: 0;
+      background: #343c52;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+    }
+
+    .light:hover { filter: brightness(1.12); }
+    .light:active { transform: scale(0.94); }
+
+    /* 亮灯 */
+    .light.on {
+      background: radial-gradient(circle at 50% 40%, #fff7c2, #ffd23f 60%, #f5a623);
+      box-shadow: 0 0 18px rgba(255, 210, 63, 0.65);
+    }
+
+    /* 提示：需要按下的格子外圈闪烁 */
+    .light.hint::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 3px solid #5ee0a0;
+      border-radius: 13px;
+      animation: pulse 0.9s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      50% { opacity: 0.25; }
+    }
+  </style>
+  <script src="./lights.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>点灯游戏</h1>
+      <p>点击一盏灯会切换它和上下左右相邻灯的状态，目标是关掉所有灯</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="board-wrap">
+          <div class="lights" id="board"></div>
+          <div class="overlay" id="overlay">
+            <h2 id="overlayTitle"></h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn" id="againBtn">下一题</button>
+            </div>
+          </div>
+        </div>
+        <p class="board-tip">提示会用绿框标出一盏应该按下的灯</p>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>步数</span><b id="steps">0</b></div>
+          <div class="stat"><span>最少步数</span><b id="optimal">0</b></div>
+          <div class="stat"><span>剩余亮灯</span><b id="remain">0</b></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">尺寸</div>
+          <div class="segmented" role="radiogroup" aria-label="尺寸">
+            <input type="radio" name="size" id="s3" value="3"><label for="s3">3×3</label>
+            <input type="radio" name="size" id="s4" value="4"><label for="s4">4×4</label>
+            <input type="radio" name="size" id="s5" value="5" checked><label for="s5">5×5</label>
+            <input type="radio" name="size" id="s6" value="6"><label for="s6">6×6</label>
+            <input type="radio" name="size" id="s7" value="7"><label for="s7">7×7</label>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="hintBtn">提示</button>
+          <button class="btn btn-ghost" id="autoBtn">自动求解</button>
+          <button class="btn btn-ghost" id="restartBtn">重玩本题</button>
+          <button class="btn" id="newBtn">新题目</button>
+        </div>
+
+        <div class="rules">
+          <p>每道题都由随机按键生成，保证有解。</p>
+          <p>「最少步数」由线性方程组（GF(2) 高斯消元）计算得出。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const boardEl = document.getElementById('board')
+    const overlay = document.getElementById('overlay')
+    const autoBtn = document.getElementById('autoBtn')
+
+    let n = 5
+    let initial = []   // 题目初始状态（用于重玩）
+    let board = []
+    let steps = 0
+    let optimal = 0
+    let hintIndex = -1
+    let autoTimer = null
+    let usedHelp = false
+    let over = false
+    let lightEls = []
+
+    function size() {
+      return Number(document.querySelector('input[name="size"]:checked').value)
+    }
+
+    /** 开始一局；same 为 true 时重玩当前题 */
+    function start(same) {
+      stopAuto()
+      n = size()
+      if (!same || initial.length !== n * n) initial = LightsOut.generate(n)
+      board = initial.slice()
+      optimal = LightsOut.solve(board, n).length
+      steps = 0
+      hintIndex = -1
+      usedHelp = false
+      over = false
+      overlay.classList.remove('is-show')
+
+      boardEl.style.setProperty('--n', n)
+      boardEl.innerHTML = ''
+      lightEls = []
+      for (let i = 0; i < n * n; i++) {
+        const el = document.createElement('button')
+        el.className = 'light'
+        el.setAttribute('aria-label', `第 ${Math.floor(i / n) + 1} 行第 ${i % n + 1} 列`)
+        el.onclick = () => {
+          if (!autoTimer) press(i)
+        }
+        boardEl.appendChild(el)
+        lightEls.push(el)
+      }
+      render()
+    }
+
+    function render() {
+      lightEls.forEach((el, i) => {
+        el.classList.toggle('on', !!board[i])
+        el.classList.toggle('hint', i === hintIndex)
+      })
+      document.getElementById('steps').textContent = steps
+      document.getElementById('optimal').textContent = optimal
+      document.getElementById('remain').textContent = board.filter(Boolean).length
+    }
+
+    /** 按下一盏灯 */
+    function press(i) {
+      if (over) return
+      LightsOut.press(board, i, n)
+      steps++
+      hintIndex = -1
+      render()
+      if (board.every((v) => !v)) win()
+    }
+
+    /** 提示：从当前状态求最优解，标出其中一盏 */
+    function hint() {
+      if (over) return
+      const sol = LightsOut.solve(board, n)
+      if (!sol || !sol.length) return
+      usedHelp = true
+      hintIndex = sol[0]
+      render()
+    }
+
+    /** 自动求解：按最优解依次按下 */
+    function autoSolve() {
+      if (autoTimer) return stopAuto()
+      if (over) return
+      const queue = LightsOut.solve(board, n) || []
+      if (!queue.length) return
+      usedHelp = true
+      autoBtn.textContent = '停止'
+      autoBtn.classList.add('is-stop')
+      const step = () => {
+        if (!queue.length) return stopAuto()
+        hintIndex = queue[0]
+        render()
+        // 先高亮再按下，便于看清顺序
+        autoTimer = setTimeout(() => {
+          press(queue.shift())
+          autoTimer = setTimeout(step, 180)
+        }, 260)
+      }
+      step()
+    }
+
+    function stopAuto() {
+      clearTimeout(autoTimer)
+      autoTimer = null
+      autoBtn.textContent = '自动求解'
+      autoBtn.classList.remove('is-stop')
+    }
+
+    function win() {
+      over = true
+      stopAuto()
+      const perfect = steps <= optimal
+      document.getElementById('overlayTitle').textContent = usedHelp ? '灯已全部熄灭' : perfect ? '完美通关！' : '通关！'
+      document.getElementById('overlayText').textContent = `用了 ${steps} 步，最少需要 ${optimal} 步`
+      setTimeout(() => overlay.classList.add('is-show'), 300)
+    }
+
+    document.getElementById('hintBtn').onclick = hint
+    autoBtn.onclick = autoSolve
+    document.getElementById('restartBtn').onclick = () => start(true)
+    document.getElementById('newBtn').onclick = () => start(false)
+    document.getElementById('againBtn').onclick = () => start(false)
+    document.querySelectorAll('input[name="size"]').forEach((r) => { r.onchange = () => start(false) })
+
+    start(false)
+  </script>
+</body>
+
+</html>

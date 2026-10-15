@@ -1,46 +1,512 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数字游戏</title>
-    <style>
-        body {
-            margin: 0;
-            width: 100vw;
-            height: 100vh;
-            text-align: center;
-            font-size: 16px;
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数字华容道</title>
+  <style>
+    :root {
+      --primary: #4f6bff;
+      --primary-hover: #3d58f0;
+      --primary-bg: rgba(79, 107, 255, 0.1);
+      --success: #16a34a;
+      --text: #1f2329;
+      --text-2: #6b7280;
+      --border: #e5e7eb;
+      --bg: #f4f6fb;
+    }
 
-        #gameBox {
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 100px;
-            cursor: pointer;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        #gameTip {
-            margin-top: 40px;
-            font-size: 20px;
-        }
-    </style>
+    body {
+      margin: 0;
+      padding: 32px 16px 48px;
+      color: var(--text);
+      background: var(--bg);
+      font: 14px/1.6 system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    /* 返回入口页 */
+    .back {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--text-2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back:hover {
+      color: var(--primary);
+    }
+
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+
+    .header p {
+      margin: 0 0 24px;
+      color: var(--text-2);
+    }
+
+    /* 左侧棋盘，右侧面板 */
+    .container {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      padding: 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    /* ---------- 棋盘 ---------- */
+    .board-wrap {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 8px;
+      background: #e8ebf3;
+      border-radius: 14px;
+    }
+
+    .board {
+      position: relative;
+      aspect-ratio: 1;
+      container-type: inline-size;
+      user-select: none;
+    }
+
+    /* 每个方块占 1/n 宽高，通过 transform 定位，过渡产生滑动动画 */
+    .tile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: calc(100% / var(--n));
+      height: calc(100% / var(--n));
+      padding: 4px;
+      cursor: pointer;
+      transition: transform var(--speed, 0.15s) ease;
+    }
+
+    .tile span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      color: var(--text);
+      font-size: calc(100cqw / var(--n) * 0.36);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      background: linear-gradient(180deg, #fff, #f3f5fb);
+      border-radius: 10px;
+      box-shadow: 0 2px 0 #d5daea, 0 4px 10px rgba(15, 23, 42, 0.06);
+      transition: background 0.2s, color 0.2s, transform 0.1s;
+    }
+
+    .tile:hover span {
+      background: #fff;
+    }
+
+    .tile:active span {
+      transform: scale(0.96);
+    }
+
+    /* 已在正确位置的方块 */
+    .tile.is-correct span {
+      color: #fff;
+      background: linear-gradient(180deg, #6b82ff, var(--primary));
+      box-shadow: 0 2px 0 #3a52d6, 0 4px 10px rgba(79, 107, 255, 0.25);
+    }
+
+    /* 提示闪烁 */
+    .tile.is-hint span {
+      animation: hint 0.5s ease 3;
+    }
+
+    @keyframes hint {
+      50% {
+        background: #fde68a;
+        color: var(--text);
+        transform: scale(1.06);
+      }
+    }
+
+    /* 完成遮罩 */
+    .win {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #fff;
+      text-align: center;
+      background: rgba(31, 35, 41, 0.72);
+      border-radius: 14px;
+      backdrop-filter: blur(2px);
+    }
+
+    .win.is-show {
+      display: flex;
+    }
+
+    .win h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .win p {
+      margin: 0 0 12px;
+      opacity: 0.85;
+    }
+
+    .board-tip {
+      margin: 14px 0 0;
+      color: var(--text-2);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* ---------- 面板 ---------- */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      padding: 10px 4px;
+      text-align: center;
+      background: #f8f9fc;
+      border-radius: 8px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--text-2);
+      font-size: 12px;
+    }
+
+    .stat b {
+      font-size: 18px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      margin-bottom: 8px;
+      color: var(--text-2);
+    }
+
+    .segmented {
+      display: flex;
+      padding: 3px;
+      background: #f0f2f7;
+      border-radius: 999px;
+    }
+
+    .segmented input {
+      display: none;
+    }
+
+    .segmented label {
+      flex: 1;
+      padding: 5px 0;
+      color: var(--text-2);
+      font-weight: 500;
+      text-align: center;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .segmented input:checked+label {
+      color: var(--primary);
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .segmented input:disabled+label {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 16px;
+      color: #fff;
+      font: inherit;
+      background: var(--primary);
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .btn-block {
+      grid-column: 1 / -1;
+    }
+
+    .btn-ghost {
+      color: var(--text-2);
+      background: #f3f4f6;
+    }
+
+    .btn-ghost:hover:not(:disabled) {
+      color: var(--primary);
+      background: var(--primary-bg);
+    }
+
+    .btn.is-stop {
+      background: #ef4444;
+    }
+
+    .btn.is-stop:hover {
+      background: #dc2626;
+    }
+
+    .rules {
+      margin: 20px 0 0;
+      padding: 12px;
+      color: var(--text-2);
+      font-size: 12px;
+      background: #f8f9fc;
+      border-radius: 8px;
+    }
+
+    .rules p {
+      margin: 0;
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div id="gameBox"></div>
-    <div id="gameTip"></div>
-    <!-- <input type="text" id="orderNo"> -->
-    <script type="text/javascript" src="./index.js"></script>
-    <script>
-        const game = new DigitalGames({
-            rank: 4,
-            width: 100
-        })
-        game.init()
-        game.autoMove()
-    </script>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>数字华容道</h1>
+      <p>把数字按 1、2、3… 顺序排好，空格留在右下角即为完成</p>
+    </header>
+
+    <div class="container">
+      <!-- 棋盘 -->
+      <section class="card">
+        <div class="board-wrap">
+          <div class="board" id="board"></div>
+          <div class="win" id="win">
+            <h2 id="winTitle">完成！</h2>
+            <p id="winText"></p>
+            <button class="btn" id="againBtn">再来一局</button>
+          </div>
+        </div>
+        <p class="board-tip">点击数字滑动（同行/同列可整排滑动），也可使用键盘方向键</p>
+      </section>
+
+      <!-- 控制面板 -->
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>步数</span><b id="steps">0</b></div>
+          <div class="stat"><span>用时</span><b id="time">00:00</b></div>
+          <div class="stat"><span>最佳</span><b id="best">—</b></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">难度</div>
+          <div class="segmented" role="radiogroup" aria-label="难度">
+            <input type="radio" name="rank" id="rank3" value="3"><label for="rank3">3×3</label>
+            <input type="radio" name="rank" id="rank4" value="4" checked><label for="rank4">4×4</label>
+            <input type="radio" name="rank" id="rank5" value="5"><label for="rank5">5×5</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">自动还原速度</div>
+          <div class="segmented" role="radiogroup" aria-label="自动还原速度">
+            <input type="radio" name="speed" id="speedSlow" value="400"><label for="speedSlow">慢</label>
+            <input type="radio" name="speed" id="speedMid" value="180" checked><label for="speedMid">中</label>
+            <input type="radio" name="speed" id="speedFast" value="60"><label for="speedFast">快</label>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-block" id="autoBtn">自动还原</button>
+          <button class="btn btn-ghost" id="hintBtn">提示一步</button>
+          <button class="btn btn-ghost" id="restartBtn">重新打乱</button>
+        </div>
+
+        <div class="rules">
+          <p>蓝色方块表示已在正确位置。自动还原会从当前盘面开始演示，使用后本局不计入最佳成绩。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./index.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id)
+    const autoBtn = $('autoBtn')
+    const winEl = $('win')
+
+    // 计时器：首次手动移动时开始
+    let startTime = 0
+    let timer = null
+
+    /** 秒数格式化为 mm:ss */
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0')
+      const s = String(sec % 60).padStart(2, '0')
+      return `${m}:${s}`
+    }
+
+    function elapsed() {
+      return startTime ? Math.floor((Date.now() - startTime) / 1000) : 0
+    }
+
+    function startTimer() {
+      if (timer) return
+      startTime = Date.now()
+      timer = setInterval(() => { $('time').textContent = formatTime(elapsed()) }, 500)
+    }
+
+    function stopTimer() {
+      clearInterval(timer)
+      timer = null
+    }
+
+    function currentRank() {
+      return Number(document.querySelector('input[name="rank"]:checked').value)
+    }
+
+    function currentSpeed() {
+      return Number(document.querySelector('input[name="speed"]:checked').value)
+    }
+
+    /** 读取 / 显示当前难度的最佳成绩（步数最少） */
+    function bestKey() {
+      return 'digital-games-best-' + currentRank()
+    }
+
+    function showBest() {
+      const best = JSON.parse(localStorage.getItem(bestKey()) || 'null')
+      $('best').textContent = best ? best.steps : '—'
+      $('best').title = best ? `${best.steps} 步 · ${formatTime(best.time)}` : ''
+    }
+
+    const game = new DigitalGames($('board'), {
+      onMove(steps) {
+        $('steps').textContent = steps
+        if (steps > 0) startTimer()
+      },
+      onWin({ steps, auto }) {
+        stopTimer()
+        const time = elapsed()
+        let title = auto ? '自动还原完成' : '恭喜完成！'
+        if (!auto) {
+          const best = JSON.parse(localStorage.getItem(bestKey()) || 'null')
+          if (!best || steps < best.steps) {
+            localStorage.setItem(bestKey(), JSON.stringify({ steps, time }))
+            title = '新纪录！'
+            showBest()
+          }
+        }
+        $('winTitle').textContent = title
+        $('winText').textContent = `共 ${steps} 步 · 用时 ${formatTime(time)}`
+        winEl.classList.add('is-show')
+        updateButtons()
+      },
+      onAutoChange: updateButtons
+    })
+
+    /** 根据游戏状态更新按钮和选项的可用状态 */
+    function updateButtons() {
+      const running = !!game.autoTimer
+      autoBtn.textContent = running ? '停止自动还原' : '自动还原'
+      autoBtn.classList.toggle('is-stop', running)
+      autoBtn.disabled = game.finished
+      $('hintBtn').disabled = running || game.finished
+      document.querySelectorAll('input[name="rank"], input[name="speed"]').forEach((input) => {
+        input.disabled = running
+      })
+    }
+
+    /** 开始新的一局 */
+    function newGame() {
+      stopTimer()
+      startTime = 0
+      $('time').textContent = '00:00'
+      winEl.classList.remove('is-show')
+      game.start(currentRank())
+      showBest()
+      updateButtons()
+    }
+
+    autoBtn.onclick = () => {
+      if (game.autoTimer) game.stopAuto()
+      else game.autoSolve(currentSpeed())
+    }
+    $('hintBtn').onclick = () => game.hint()
+    $('restartBtn').onclick = newGame
+    $('againBtn').onclick = newGame
+    document.querySelectorAll('input[name="rank"]').forEach((radio) => {
+      radio.onchange = newGame
+    })
+
+    // 键盘方向键
+    const KEY_DIR = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' }
+    document.addEventListener('keydown', (e) => {
+      const dir = KEY_DIR[e.key]
+      if (!dir) return
+      e.preventDefault()
+      game.move(dir)
+    })
+
+    newGame()
+  </script>
 </body>
 
 </html>

@@ -208,11 +208,10 @@
         }, e.prototype.getBlock = function (t, e) {
             return t >= 0 && t < this.w && e >= 0 && e < this.h ? this.blocks[t][e] : null
         }, e.prototype.playerClick = function (t, e) {
-            if (this.cat.anims.isPlaying && this.cat.anims.stop(), this.state !== i.PLAYING) return this.setStatusText(f.default("游戏已经结束，重新开局")), document.getElementById("time").innerHTML = 0, this.reset(), !1;
+            if (this.cat.anims.isPlaying && this.cat.anims.stop(), this.state !== i.PLAYING) return this.setStatusText(f.default("游戏已经结束，重新开局")), this.reset(), !1;
             var n = this.getBlock(t, e);
             return n ? n.isWall ? (this.setStatusText(f.default("点击位置已经是墙了，禁止点击")), !1) : this.cat.i === t && this.cat.j === e ? (this.setStatusText(f.default("点击位置是猫当前位置，禁止点击")), !1) : (n.isWall = !0, this.cat.isCaught() ? (this.setStatusText(f.default("猫已经无路可走，你赢了")), this.state = i.WIN, !1) : (this.setStatusText(f.default("您点击了 ") + "(" + t + ", " + e + ")"), this.cat.step() || (this.setStatusText(f.default("猫认输，你赢了！")), this.state = i.WIN), !0)) : (this.setStatusText(f.default("代码错误，当前位置不存在")), !1)
         }, e.prototype.reset = function () {
-            time = 0;
             this.cat.reset(), this.resetBlocks(), this.randomWall(), this.state = i.PLAYING, this.setStatusText(f.default("点击小圆点，围住小猫"))
         }, e.prototype.setStatusText = function (t) {
             this.statusBar.setText(t)
@@ -263,7 +262,6 @@
                 e = new d.
             default(this);
             this.add.existing(e), e.on("pointerup", function () {
-                time = 0;
                 t.reset()
             })
         }, e.prototype.createCreditText = function () {

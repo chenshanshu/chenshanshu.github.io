@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>五子棋</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    .board-wrap {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(120, 80, 30, 0.25);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    /* 当前状态提示 */
+    .status {
+      margin-top: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .status.thinking { color: var(--text-2); }
+  </style>
+  <script src="./gomoku-ai.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>五子棋</h1>
+      <p>与电脑对弈，横、竖、斜任意方向先连成五子者获胜</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="board-wrap">
+          <canvas id="board"></canvas>
+          <div class="overlay" id="overlay">
+            <h2 id="overlayTitle"></h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn btn-ghost" id="viewBtn">查看棋局</button>
+              <button class="btn" id="againBtn">再来一局</button>
+            </div>
+          </div>
+        </div>
+        <div class="status" id="status"></div>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>胜</span><b id="winCount">0</b></div>
+          <div class="stat"><span>负</span><b id="loseCount">0</b></div>
+          <div class="stat"><span>和</span><b id="drawCount">0</b></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">先后手</div>
+          <div class="segmented" role="radiogroup" aria-label="先后手">
+            <input type="radio" name="first" id="f1" value="player" checked><label for="f1">我先手（黑）</label>
+            <input type="radio" name="first" id="f2" value="ai"><label for="f2">电脑先手</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">难度</div>
+          <div class="segmented" role="radiogroup" aria-label="难度">
+            <input type="radio" name="level" id="lv1" value="easy"><label for="lv1">简单</label>
+            <input type="radio" name="level" id="lv2" value="hard" checked><label for="lv2">困难</label>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="undoBtn">悔棋</button>
+          <button class="btn" id="newBtn">新对局</button>
+        </div>
+
+        <div class="rules">
+          <p>黑棋先行，不设禁手。</p>
+          <p>悔棋会同时撤回你和电脑的最后一步。红点标记最后一手。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const SIZE = 15
+    const canvas = document.getElementById('board')
+    const ctx = canvas.getContext('2d')
+    const overlay = document.getElementById('overlay')
+    const statusEl = document.getElementById('status')
+    const STORE_KEY = 'gomoku-record'
+
+    const record = JSON.parse(localStorage.getItem(STORE_KEY) || '{"win":0,"lose":0,"draw":0}')
+
+    let board = []
+    let moves = []        // 落子顺序，用于悔棋和标记最后一手
+    let playerColor = 1   // 1 黑 / 2 白
+    let turn = 1
+    let winLine = null
+    let over = false
+    let thinking = false
+    let hover = -1
+    let aiTimer = null
+
+    // 画布尺寸（CSS 像素）与格距
+    let px = 0
+    let cell = 0
+    let margin = 0
+
+    /** 按容器宽度和设备像素比调整画布 */
+    function resize() {
+      px = canvas.clientWidth
+      const dpr = window.devicePixelRatio || 1
+      canvas.width = px * dpr
+      canvas.height = px * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      cell = px / (SIZE - 1 + 1.6)
+      margin = cell * 0.8
+      draw()
+    }
+
+    const posX = (i) => margin + (i % SIZE) * cell
+    const posY = (i) => margin + Math.floor(i / SIZE) * cell
+
+    /** 绘制棋盘、棋子与标记 */
+    function draw() {
+      ctx.clearRect(0, 0, px, px)
+      ctx.fillStyle = '#e6c18b'
+      ctx.fillRect(0, 0, px, px)
+
+      // 网格线
+      ctx.strokeStyle = '#7a5a2e'
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      for (let k = 0; k < SIZE; k++) {
+        const p = margin + k * cell
+        ctx.moveTo(margin, p)
+        ctx.lineTo(margin + (SIZE - 1) * cell, p)
+        ctx.moveTo(p, margin)
+        ctx.lineTo(p, margin + (SIZE - 1) * cell)
+      }
+      ctx.stroke()
+
+      // 星位
+      ctx.fillStyle = '#7a5a2e'
+      ;[3 * SIZE + 3, 3 * SIZE + 11, 7 * SIZE + 7, 11 * SIZE + 3, 11 * SIZE + 11].forEach((i) => {
+        ctx.beginPath()
+        ctx.arc(posX(i), posY(i), cell * 0.1, 0, Math.PI * 2)
+        ctx.fill()
+      })
+
+      // 棋子
+      board.forEach((v, i) => { if (v) drawStone(i, v, 1) })
+
+      // 鼠标悬停预览
+      if (hover >= 0 && !board[hover] && canPlay()) drawStone(hover, playerColor, 0.35)
+
+      // 最后一手标记
+      const last = moves[moves.length - 1]
+      if (last !== undefined) {
+        ctx.fillStyle = '#ef4444'
+        ctx.beginPath()
+        ctx.arc(posX(last), posY(last), cell * 0.1, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // 连成五子的棋子加描边
+      if (winLine) {
+        ctx.strokeStyle = '#ef4444'
+        ctx.lineWidth = 2.5
+        winLine.forEach((i) => {
+          ctx.beginPath()
+          ctx.arc(posX(i), posY(i), cell * 0.46, 0, Math.PI * 2)
+          ctx.stroke()
+        })
+      }
+    }
+
+    /** 绘制一颗带渐变光泽的棋子 */
+    function drawStone(i, color, alpha) {
+      const x = posX(i)
+      const y = posY(i)
+      const r = cell * 0.43
+      const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r)
+      if (color === 1) {
+        g.addColorStop(0, '#666')
+        g.addColorStop(1, '#111')
+      } else {
+        g.addColorStop(0, '#fff')
+        g.addColorStop(1, '#d4d4d4')
+      }
+      ctx.globalAlpha = alpha
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)'
+      ctx.shadowBlur = alpha === 1 ? 3 : 0
+      ctx.shadowOffsetY = alpha === 1 ? 1.5 : 0
+      ctx.fillStyle = g
+      ctx.beginPath()
+      ctx.arc(x, y, r, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.globalAlpha = 1
+      ctx.shadowColor = 'transparent'
+    }
+
+    function canPlay() {
+      return !over && !thinking && turn === playerColor
+    }
+
+    function setting(name) {
+      return document.querySelector(`input[name="${name}"]:checked`).value
+    }
+
+    function updateUI() {
+      document.getElementById('winCount').textContent = record.win
+      document.getElementById('loseCount').textContent = record.lose
+      document.getElementById('drawCount').textContent = record.draw
+      // 至少要有一手自己的棋才能悔
+      document.getElementById('undoBtn').disabled = over || thinking || !moves.some((_, k) => (k % 2 === 0 ? 1 : 2) === playerColor)
+
+      const colorName = playerColor === 1 ? '黑' : '白'
+      statusEl.classList.toggle('thinking', thinking)
+      if (over) statusEl.textContent = '对局结束'
+      else if (thinking) statusEl.textContent = '电脑思考中…'
+      else statusEl.textContent = `轮到你了（执${colorName}）`
+    }
+
+    function newGame() {
+      clearTimeout(aiTimer)
+      board = new Array(SIZE * SIZE).fill(0)
+      moves = []
+      winLine = null
+      over = false
+      thinking = false
+      turn = 1
+      playerColor = setting('first') === 'player' ? 1 : 2
+      overlay.classList.remove('is-show')
+      draw()
+      updateUI()
+      if (playerColor !== 1) aiMove()
+    }
+
+    /** 落子并判断胜负，返回对局是否结束 */
+    function put(i) {
+      board[i] = turn
+      moves.push(i)
+      const line = GomokuAI.checkWin(board, SIZE, i)
+      if (line) {
+        winLine = line
+        finish(turn === playerColor ? 'win' : 'lose')
+        return true
+      }
+      if (moves.length === SIZE * SIZE) {
+        finish('draw')
+        return true
+      }
+      turn = 3 - turn
+      return false
+    }
+
+    /** 电脑落子（稍作延时，避免界面卡顿并给出思考感） */
+    function aiMove() {
+      thinking = true
+      updateUI()
+      aiTimer = setTimeout(() => {
+        const i = GomokuAI.bestMove(board, SIZE, 3 - playerColor, setting('level'))
+        thinking = false
+        put(i)
+        draw()
+        updateUI()
+      }, 250)
+    }
+
+    function finish(result) {
+      over = true
+      record[result]++
+      localStorage.setItem(STORE_KEY, JSON.stringify(record))
+      const titles = { win: '你赢了！', lose: '电脑获胜', draw: '平局' }
+      document.getElementById('overlayTitle').textContent = titles[result]
+      document.getElementById('overlayText').textContent = `共 ${moves.length} 手`
+      setTimeout(() => overlay.classList.add('is-show'), 500)
+    }
+
+    /** 悔棋：撤回到上一次轮到玩家时的局面 */
+    function undo() {
+      if (over || thinking) return
+      do {
+        board[moves.pop()] = 0
+      } while (moves.length && moves.length % 2 !== (playerColor === 1 ? 0 : 1))
+      turn = playerColor
+      draw()
+      updateUI()
+    }
+
+    /** 根据鼠标位置换算到最近的交叉点，超出范围返回 -1 */
+    function pointToIndex(e) {
+      const rect = canvas.getBoundingClientRect()
+      const c = Math.round((e.clientX - rect.left - margin) / cell)
+      const r = Math.round((e.clientY - rect.top - margin) / cell)
+      if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) return -1
+      return r * SIZE + c
+    }
+
+    canvas.addEventListener('click', (e) => {
+      if (!canPlay()) return
+      const i = pointToIndex(e)
+      if (i < 0 || board[i]) return
+      hover = -1
+      const ended = put(i)
+      draw()
+      updateUI()
+      if (!ended) aiMove()
+    })
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return
+      const i = pointToIndex(e)
+      if (i !== hover) {
+        hover = i
+        draw()
+      }
+    })
+
+    canvas.addEventListener('pointerleave', () => {
+      hover = -1
+      draw()
+    })
+
+    document.getElementById('undoBtn').onclick = undo
+    document.getElementById('newBtn').onclick = newGame
+    document.getElementById('againBtn').onclick = newGame
+    document.getElementById('viewBtn').onclick = () => overlay.classList.remove('is-show')
+    document.querySelectorAll('input[name="first"], input[name="level"]').forEach((r) => { r.onchange = newGame })
+    window.addEventListener('resize', resize)
+
+    resize()
+    newGame()
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>扫雷</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    /* 雷区可横向滚动（高级难度在手机上较宽） */
+    .field-wrap {
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .mine-board {
+      --size: 30px;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), var(--size));
+      gap: 2px;
+      width: max-content;
+      margin: 0 auto;
+      padding: 6px;
+      background: #e3e7f0;
+      border-radius: 10px;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--size);
+      height: var(--size);
+      padding: 0;
+      font: inherit;
+      font-size: calc(var(--size) * 0.5);
+      font-weight: 700;
+      background: linear-gradient(180deg, #b9c4e6, #a5b2dc);
+      border: 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .cell:hover:not(.is-open) {
+      background: linear-gradient(180deg, #c9d2ef, #b4c0e6);
+    }
+
+    .cell.is-open {
+      background: #f8f9fc;
+      cursor: default;
+    }
+
+    .cell.is-boom {
+      background: var(--danger);
+    }
+
+    .cell.is-wrong {
+      background: #fde68a;
+    }
+
+    /* 数字配色 */
+    .n1 { color: #2563eb; }
+    .n2 { color: #16a34a; }
+    .n3 { color: #dc2626; }
+    .n4 { color: #7c3aed; }
+    .n5 { color: #b45309; }
+    .n6 { color: #0891b2; }
+    .n7 { color: #1f2329; }
+    .n8 { color: #6b7280; }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>扫雷</h1>
+      <p>根据数字推理地雷位置，打开所有安全格子即获胜</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="field-wrap" id="wrap">
+          <div class="mine-board" id="board"></div>
+          <div class="overlay" id="overlay">
+            <h2 id="overlayTitle"></h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn btn-ghost" id="viewBtn">查看雷区</button>
+              <button class="btn" id="againBtn">再来一局</button>
+            </div>
+          </div>
+        </div>
+        <p class="board-tip">左键打开 · 右键插旗 · 点击已打开的数字可快速展开周围 · 手机长按插旗</p>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>剩余雷数</span><b id="left">0</b></div>
+          <div class="stat"><span>用时</span><b id="time">0</b></div>
+          <div class="stat"><span>最佳</span><b id="best">—</b></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">难度</div>
+          <div class="segmented" role="radiogroup" aria-label="难度">
+            <input type="radio" name="level" id="lv1" value="easy" checked><label for="lv1">初级</label>
+            <input type="radio" name="level" id="lv2" value="medium"><label for="lv2">中级</label>
+            <input type="radio" name="level" id="lv3" value="hard"><label for="lv3">高级</label>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-block" id="newBtn">新游戏</button>
+          <button class="btn btn-ghost btn-block" id="flagModeBtn">插旗模式：关</button>
+        </div>
+
+        <div class="rules">
+          <p>数字表示周围 8 格中地雷的数量。</p>
+          <p>第一次点击一定安全。手机上可开启「插旗模式」，点击即插旗。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    /** 难度配置：行、列、雷数 */
+    const LEVELS = {
+      easy: { rows: 9, cols: 9, mines: 10 },
+      medium: { rows: 16, cols: 16, mines: 40 },
+      hard: { rows: 16, cols: 30, mines: 99 }
+    }
+
+    const boardEl = document.getElementById('board')
+    const wrapEl = document.getElementById('wrap')
+    const overlay = document.getElementById('overlay')
+
+    let cfg = LEVELS.easy
+    let cells = []
+    let started = false
+    let over = false
+    let opened = 0
+    let flags = 0
+    let flagMode = false
+    let timer = null
+    let seconds = 0
+
+    function level() {
+      return document.querySelector('input[name="level"]:checked').value
+    }
+
+    /** 某格周围 8 格的下标 */
+    function neighbors(i) {
+      const r = Math.floor(i / cfg.cols)
+      const c = i % cfg.cols
+      const list = []
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (!dr && !dc) continue
+          const nr = r + dr
+          const nc = c + dc
+          if (nr >= 0 && nr < cfg.rows && nc >= 0 && nc < cfg.cols) list.push(nr * cfg.cols + nc)
+        }
+      }
+      return list
+    }
+
+    /** 根据容器宽度计算格子大小 */
+    function fitSize() {
+      const size = Math.max(22, Math.min(34, Math.floor((wrapEl.clientWidth - 12) / cfg.cols) - 2))
+      boardEl.style.setProperty('--size', size + 'px')
+    }
+
+    function newGame() {
+      cfg = LEVELS[level()]
+      clearInterval(timer)
+      timer = null
+      seconds = 0
+      started = false
+      over = false
+      opened = 0
+      flags = 0
+      overlay.classList.remove('is-show')
+
+      boardEl.style.setProperty('--cols', cfg.cols)
+      boardEl.innerHTML = ''
+      cells = []
+      for (let i = 0; i < cfg.rows * cfg.cols; i++) {
+        const el = document.createElement('button')
+        el.className = 'cell'
+        el.dataset.i = i
+        boardEl.appendChild(el)
+        cells.push({ mine: false, count: 0, open: false, flag: false, el })
+      }
+      fitSize()
+      updateStats()
+    }
+
+    /** 首次点击后布雷，避开点击格及其周围，保证开局能展开一片 */
+    function placeMines(safe) {
+      const banned = new Set([safe, ...neighbors(safe)])
+      const pool = cells.map((_, i) => i).filter((i) => !banned.has(i))
+      for (let k = 0; k < cfg.mines; k++) {
+        const j = k + Math.floor(Math.random() * (pool.length - k))
+        ;[pool[k], pool[j]] = [pool[j], pool[k]]
+        cells[pool[k]].mine = true
+      }
+      cells.forEach((cell, i) => {
+        cell.count = neighbors(i).filter((n) => cells[n].mine).length
+      })
+    }
+
+    function startTimer() {
+      started = true
+      timer = setInterval(() => {
+        seconds++
+        document.getElementById('time').textContent = seconds
+      }, 1000)
+    }
+
+    function updateStats() {
+      document.getElementById('left').textContent = cfg.mines - flags
+      document.getElementById('time').textContent = seconds
+      const best = localStorage.getItem('minesweeper-best-' + level())
+      document.getElementById('best').textContent = best ? best + 's' : '—'
+    }
+
+    /** 打开格子；空白格（周围无雷）会自动向外展开 */
+    function open(i) {
+      const start = cells[i]
+      if (start.open || start.flag) return
+      if (start.mine) return lose(i)
+      const stack = [i]
+      while (stack.length) {
+        const k = stack.pop()
+        const cell = cells[k]
+        if (cell.open || cell.flag) continue
+        cell.open = true
+        opened++
+        cell.el.classList.add('is-open')
+        if (cell.count) {
+          cell.el.textContent = cell.count
+          cell.el.classList.add('n' + cell.count)
+        } else {
+          neighbors(k).forEach((n) => { if (!cells[n].open) stack.push(n) })
+        }
+      }
+      if (opened === cells.length - cfg.mines) win()
+    }
+
+    /** 快速展开：已打开的数字周围旗子数等于数字时，打开其余相邻格 */
+    function chord(i) {
+      const around = neighbors(i)
+      const flagged = around.filter((n) => cells[n].flag).length
+      if (flagged !== cells[i].count) return
+      around.forEach((n) => { if (!over) open(n) })
+    }
+
+    function toggleFlag(i) {
+      const cell = cells[i]
+      if (cell.open || over) return
+      cell.flag = !cell.flag
+      flags += cell.flag ? 1 : -1
+      cell.el.textContent = cell.flag ? '🚩' : ''
+      updateStats()
+    }
+
+    /** 处理一次点击（打开 / 插旗 / 快速展开） */
+    function handleClick(i, asFlag) {
+      if (over) return
+      const cell = cells[i]
+      if (asFlag) return toggleFlag(i)
+      if (!started) {
+        placeMines(i)
+        startTimer()
+      }
+      if (cell.open) chord(i)
+      else open(i)
+    }
+
+    function finish() {
+      over = true
+      clearInterval(timer)
+    }
+
+    function lose(i) {
+      finish()
+      cells.forEach((cell) => {
+        if (cell.mine && !cell.flag) cell.el.textContent = '💣'
+        if (!cell.mine && cell.flag) cell.el.classList.add('is-wrong')
+      })
+      cells[i].el.classList.add('is-boom')
+      showOverlay('踩到地雷了', `用时 ${seconds} 秒，再接再厉`)
+    }
+
+    function win() {
+      finish()
+      // 获胜后自动标出所有地雷
+      cells.forEach((cell) => { if (cell.mine) cell.el.textContent = '🚩' })
+      flags = cfg.mines
+      const key = 'minesweeper-best-' + level()
+      const best = Number(localStorage.getItem(key) || 0)
+      const isRecord = !best || seconds < best
+      if (isRecord) localStorage.setItem(key, seconds)
+      updateStats()
+      showOverlay(isRecord ? '新纪录！' : '扫雷成功！', `用时 ${seconds} 秒`)
+    }
+
+    function showOverlay(title, text) {
+      document.getElementById('overlayTitle').textContent = title
+      document.getElementById('overlayText').textContent = text
+      setTimeout(() => overlay.classList.add('is-show'), 400)
+    }
+
+    // 左键：打开（插旗模式下为插旗）
+    boardEl.addEventListener('click', (e) => {
+      const el = e.target.closest('.cell')
+      if (!el || suppressClick) return
+      handleClick(Number(el.dataset.i), flagMode)
+    })
+
+    // 右键：插旗
+    boardEl.addEventListener('contextmenu', (e) => {
+      e.preventDefault()
+      const el = e.target.closest('.cell')
+      if (el) toggleFlag(Number(el.dataset.i))
+    })
+
+    // 触屏长按 400ms 插旗，并屏蔽随后的 click
+    let pressTimer = null
+    let suppressClick = false
+    boardEl.addEventListener('pointerdown', (e) => {
+      suppressClick = false
+      if (e.pointerType !== 'touch') return
+      const el = e.target.closest('.cell')
+      if (!el) return
+      pressTimer = setTimeout(() => {
+        suppressClick = true
+        toggleFlag(Number(el.dataset.i))
+        if (navigator.vibrate) navigator.vibrate(30)
+      }, 400)
+    })
+    ;['pointerup', 'pointerleave', 'pointercancel'].forEach((type) => {
+      boardEl.addEventListener(type, () => clearTimeout(pressTimer))
+    })
+
+    document.getElementById('flagModeBtn').onclick = (e) => {
+      flagMode = !flagMode
+      e.currentTarget.textContent = '插旗模式：' + (flagMode ? '开' : '关')
+      e.currentTarget.classList.toggle('is-active', flagMode)
+    }
+    document.getElementById('newBtn').onclick = newGame
+    document.getElementById('againBtn').onclick = newGame
+    document.getElementById('viewBtn').onclick = () => overlay.classList.remove('is-show')
+    document.querySelectorAll('input[name="level"]').forEach((r) => { r.onchange = newGame })
+    window.addEventListener('resize', fitSize)
+
+    newGame()
+  </script>
+</body>
+
+</html>

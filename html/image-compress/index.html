@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片压缩</title>
+<style>
+:root{
+  --primary:#4f6bff;
+  --primary-hover:#3d58f0;
+  --primary-bg:rgba(79,107,255,.1);
+  --success:#16a34a;
+  --text:#1f2329;
+  --text-2:#6b7280;
+  --border:#e5e7eb;
+  --bg:#f4f6fb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:32px 16px 48px;
+  color:var(--text);
+  background:var(--bg);
+  font:14px/1.6 system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+}
+.page{max-width:1100px;margin:0 auto}
+
+/* 返回入口页 */
+.back{display:inline-block;margin-bottom:16px;color:var(--text-2);text-decoration:none;transition:color .2s}
+.back:hover{color:var(--primary)}
+
+.header h1{margin:0 0 6px;font-size:24px}
+.header p{margin:0 0 24px;color:var(--text-2)}
+
+/* 两栏：左侧设置，右侧上传与结果 */
+.container{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:start}
+.card{padding:20px;background:#fff;border:1px solid var(--border);border-radius:12px}
+.card-title{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:16px}
+
+/* 设置项 */
+.field{margin-bottom:20px}
+.field:last-child{margin-bottom:0}
+.field-label{display:flex;justify-content:space-between;margin-bottom:8px;color:var(--text-2)}
+.field-label b{color:var(--text);font-variant-numeric:tabular-nums}
+.field-tip{margin:6px 0 0;color:var(--text-2);font-size:12px}
+
+input[type=range]{
+  width:100%;height:4px;margin:0;
+  background:#e5e7eb;border-radius:2px;outline:none;
+  appearance:none;-webkit-appearance:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  width:16px;height:16px;
+  background:#fff;border:2px solid var(--primary);border-radius:50%;
+  cursor:pointer;-webkit-appearance:none;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;background:#fff;border:2px solid var(--primary);border-radius:50%;cursor:pointer}
+
+.segmented{display:flex;padding:3px;background:#f0f2f7;border-radius:999px}
+.segmented input{display:none}
+.segmented label{flex:1;padding:5px 0;color:var(--text-2);font-weight:500;text-align:center;border-radius:999px;cursor:pointer;transition:color .2s,background-color .2s,box-shadow .2s}
+.segmented input:checked+label{color:var(--primary);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+.number{
+  width:100%;height:36px;padding:0 12px;
+  font:inherit;color:var(--text);
+  border:1px solid var(--border);border-radius:8px;outline:none;
+  transition:border-color .2s;
+}
+.number:focus{border-color:var(--primary)}
+/* 上传区域 */
+.upload{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  min-height:180px;padding:24px;
+  color:var(--text-2);text-align:center;
+  background:#fafbff;border:2px dashed #cfd6f5;border-radius:10px;
+  cursor:pointer;transition:border-color .2s,background .2s;
+}
+.upload:hover,.upload.is-dragover{border-color:var(--primary);background:var(--primary-bg)}
+.upload input{display:none}
+.upload svg{width:40px;height:40px;padding:8px;color:var(--primary);background:var(--primary-bg);border-radius:50%}
+.upload strong{color:var(--text);font-weight:500}
+.upload small{font-size:12px;opacity:.8}
+
+/* 汇总栏 */
+.summary{display:none;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 12px}
+.summary.is-show{display:flex}
+.summary-text{color:var(--text-2)}
+.summary-text b{color:var(--success)}
+.actions{display:flex;gap:8px}
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  height:34px;padding:0 16px;
+  color:#fff;font:inherit;
+  background:var(--primary);border:0;border-radius:8px;
+  cursor:pointer;transition:background .2s;
+}
+.btn:hover:not(:disabled){background:var(--primary-hover)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:16px;height:16px}
+.btn-ghost{color:var(--text-2);background:#f3f4f6}
+.btn-ghost:hover:not(:disabled){color:var(--primary);background:var(--primary-bg)}
+
+/* 结果列表 */
+.list{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.item{
+  display:grid;grid-template-columns:56px minmax(0,1fr) auto;align-items:center;gap:14px;
+  padding:10px 12px;border:1px solid var(--border);border-radius:10px;
+}
+.thumb{width:56px;height:56px;object-fit:cover;background:#f3f4f6;border-radius:6px}
+.name{overflow:hidden;font-weight:500;white-space:nowrap;text-overflow:ellipsis}
+.meta{color:var(--text-2);font-size:12px}
+.meta .arrow{margin:0 4px}
+.badge{display:inline-block;margin-left:6px;padding:0 8px;font-size:12px;border-radius:999px}
+.badge.is-down{color:var(--success);background:rgba(22,163,74,.1)}
+.badge.is-keep{color:var(--text-2);background:#f3f4f6}
+.item .btn{height:30px;padding:0 12px}
+
+@media (max-width:800px){
+  .container{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← 返回工具列表</a>
+  <header class="header">
+    <h1>图片压缩</h1>
+    <p>批量压缩 JPG / PNG / WEBP，尺寸保持不变，图片只在本地浏览器处理，不会上传</p>
+  </header>
+
+  <div class="container">
+    <!-- 压缩设置 -->
+    <section class="card">
+      <h3 class="card-title">压缩设置</h3>
+      <div class="field">
+        <div class="field-label">输出格式</div>
+        <div class="segmented" role="radiogroup" aria-label="输出格式">
+          <input type="radio" name="format" id="fmtAuto" value="auto" checked><label for="fmtAuto">原格式</label>
+          <input type="radio" name="format" id="fmtJpg" value="image/jpeg"><label for="fmtJpg">JPG</label>
+          <input type="radio" name="format" id="fmtWebp" value="image/webp"><label for="fmtWebp">WEBP</label>
+        </div>
+        <p class="field-tip">PNG 是无损格式，原格式下压缩空间有限，转 JPG / WEBP 体积更小</p>
+      </div>
+      <div class="field">
+        <div class="field-label">压缩质量 <b id="qualityText">80%</b></div>
+        <input type="range" id="quality" min="10" max="100" step="5" value="80">
+        <p class="field-tip">数值越小文件越小，70%～85% 画质与体积较平衡</p>
+      </div>
+    </section>
+
+    <!-- 上传与结果 -->
+    <section class="card">
+      <label class="upload" id="uploadBox">
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <strong>点击或拖拽图片到这里</strong>
+        <small>可一次选择多张，修改设置后自动重新压缩</small>
+      </label>
+
+      <div class="summary" id="summary">
+        <span class="summary-text" id="summaryText"></span>
+        <div class="actions">
+          <button class="btn btn-ghost" id="clearBtn">清空</button>
+          <button class="btn" id="downloadAllBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>
+            全部下载
+          </button>
+        </div>
+      </div>
+      <ul class="list" id="list"></ul>
+    </section>
+  </div>
+</div>
+
+<script>
+// 格式对应的文件扩展名
+const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+
+const fileInput = document.getElementById('fileInput');
+const uploadBox = document.getElementById('uploadBox');
+const qualityInput = document.getElementById('quality');
+const listEl = document.getElementById('list');
+const summaryEl = document.getElementById('summary');
+
+/**
+ * 待压缩的图片列表
+ * 每项：{ id, file, img, blob, url, el }
+ */
+let items = [];
+let uid = 0;
+
+/**
+ * 字节数格式化为 KB / MB
+ */
+function formatSize(bytes){
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+}
+
+/**
+ * 读取当前压缩设置
+ */
+function getOptions(){
+  const format = document.querySelector('input[name="format"]:checked').value;
+  return {
+    format,
+    quality: Number(qualityInput.value) / 100
+  };
+}
+
+/**
+ * 加载图片文件为 Image 对象
+ */
+function loadImage(file){
+  return new Promise((resolve, reject)=>{
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{ URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error('图片读取失败')); };
+    img.src = url;
+  });
+}
+
+/**
+ * 按设置压缩单张图片（尺寸保持不变），返回压缩后的 Blob
+ * 若格式未变且压缩结果反而更大，则保留原文件
+ */
+function compress(item, opts){
+  const { img, file } = item;
+  const type = opts.format === 'auto' ? file.type : opts.format;
+  const w = img.naturalWidth;
+  const h = img.naturalHeight;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  // JPG 不支持透明，先铺白底，避免透明区域变黑
+  if(type === 'image/jpeg'){
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, w, h);
+  }
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, 0, 0, w, h);
+
+  return new Promise((resolve)=>{
+    canvas.toBlob((blob)=>{
+      const unchanged = type === file.type;
+      resolve({
+        blob: blob && !(unchanged && blob.size >= file.size) ? blob : file,
+        width: w,
+        height: h
+      });
+    }, type, opts.quality);
+  });
+}
+
+/**
+ * 生成下载文件名：原名 + 新扩展名
+ */
+function outputName(item){
+  const ext = EXT[item.blob.type] || 'jpg';
+  return item.file.name.replace(/\.[^.]+$/, '') + '-compressed.' + ext;
+}
+
+/**
+ * 创建列表项 DOM
+ */
+function createItemEl(item){
+  const li = document.createElement('li');
+  li.className = 'item';
+  li.innerHTML = `
+    <img class="thumb" alt="">
+    <div>
+      <div class="name"></div>
+      <div class="meta">压缩中…</div>
+    </div>
+    <button class="btn btn-ghost" disabled>下载</button>
+  `;
+  li.querySelector('.name').textContent = item.file.name;
+  li.querySelector('.name').title = item.file.name;
+  li.querySelector('button').onclick = ()=>download(item);
+  return li;
+}
+
+/**
+ * 刷新单个列表项的压缩结果
+ */
+function renderItem(item, result){
+  const el = item.el;
+  const origin = item.file.size;
+  const size = item.blob.size;
+  const percent = Math.round((1 - size / origin) * 100);
+  const badge = percent > 0
+    ? `<span class="badge is-down">-${percent}%</span>`
+    : '<span class="badge is-keep">已是最优</span>';
+  el.querySelector('.thumb').src = item.url;
+  el.querySelector('.meta').innerHTML =
+    `${formatSize(origin)}<span class="arrow">→</span>${formatSize(size)}${badge}` +
+    `<br>${result.width} × ${result.height} · ${(EXT[item.blob.type] || '').toUpperCase()}`;
+  el.querySelector('button').disabled = false;
+}
+
+/**
+ * 压缩单个列表项并更新界面
+ */
+async function processItem(item, opts){
+  const result = await compress(item, opts);
+  if(item.url) URL.revokeObjectURL(item.url);
+  item.blob = result.blob;
+  item.url = URL.createObjectURL(result.blob);
+  renderItem(item, result);
+}
+
+/**
+ * 按当前设置重新压缩全部图片
+ */
+async function processAll(){
+  const opts = getOptions();
+  items.forEach((item)=>{ item.el.querySelector('.meta').textContent = '压缩中…'; });
+  for(const item of items){
+    await processItem(item, opts);
+  }
+  updateSummary();
+}
+
+/**
+ * 更新汇总信息：总原始大小、压缩后大小、节省比例
+ */
+function updateSummary(){
+  summaryEl.classList.toggle('is-show', items.length > 0);
+  if(!items.length) return;
+  const origin = items.reduce((sum, item)=>sum + item.file.size, 0);
+  const size = items.reduce((sum, item)=>sum + (item.blob ? item.blob.size : item.file.size), 0);
+  const percent = Math.max(0, Math.round((1 - size / origin) * 100));
+  document.getElementById('summaryText').innerHTML =
+    `共 ${items.length} 张，${formatSize(origin)} → ${formatSize(size)}，节省 <b>${percent}%</b>`;
+}
+
+/**
+ * 添加图片并压缩
+ */
+async function addFiles(fileList){
+  const files = Array.from(fileList).filter((f)=>/^image\/(jpeg|png|webp)$/.test(f.type));
+  if(!files.length) return;
+  const opts = getOptions();
+  for(const file of files){
+    const item = { id: ++uid, file, img: null, blob: null, url: '', el: null };
+    item.el = createItemEl(item);
+    listEl.appendChild(item.el);
+    try{
+      item.img = await loadImage(file);
+      items.push(item);
+      await processItem(item, opts);
+    }catch(err){
+      item.el.querySelector('.meta').textContent = err.message;
+    }
+  }
+  updateSummary();
+}
+
+/**
+ * 下载单张压缩结果
+ */
+function download(item){
+  if(!item.url) return;
+  const a = document.createElement('a');
+  a.href = item.url;
+  a.download = outputName(item);
+  a.click();
+}
+
+// 点击上传
+fileInput.onchange = (e)=>{
+  addFiles(e.target.files);
+  e.target.value = '';
+};
+
+// 拖拽上传
+uploadBox.addEventListener('dragover', (e)=>{
+  e.preventDefault();
+  uploadBox.classList.add('is-dragover');
+});
+uploadBox.addEventListener('dragleave', ()=>uploadBox.classList.remove('is-dragover'));
+uploadBox.addEventListener('drop', (e)=>{
+  e.preventDefault();
+  uploadBox.classList.remove('is-dragover');
+  addFiles(e.dataTransfer.files);
+});
+
+// 质量滑块：拖动时更新数值，松手后重新压缩
+qualityInput.addEventListener('input', ()=>{
+  document.getElementById('qualityText').textContent = qualityInput.value + '%';
+});
+qualityInput.addEventListener('change', processAll);
+document.querySelectorAll('input[name="format"]').forEach((radio)=>{
+  radio.onchange = processAll;
+});
+// 全部下载：逐个触发下载，间隔一下避免浏览器拦截
+document.getElementById('downloadAllBtn').onclick = ()=>{
+  items.forEach((item, i)=>setTimeout(()=>download(item), i * 300));
+};
+
+// 清空列表并释放内存
+document.getElementById('clearBtn').onclick = ()=>{
+  items.forEach((item)=>{ if(item.url) URL.revokeObjectURL(item.url); });
+  items = [];
+  listEl.innerHTML = '';
+  updateSummary();
+};
+</script>
+</body>
+</html>

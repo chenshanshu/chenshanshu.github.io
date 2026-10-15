@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2048</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    /* 棋盘：方块用 CSS 变量 --r / --c 定位，变化时通过 transform 过渡产生滑动动画 */
+    .board {
+      --gap: 2.4cqw;
+      --cell: calc((100cqw - 5 * var(--gap)) / 4);
+      position: relative;
+      max-width: 460px;
+      margin: 0 auto;
+      aspect-ratio: 1;
+      container-type: inline-size;
+      background: #bbada0;
+      border-radius: 12px;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .cell,
+    .tile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--cell);
+      height: var(--cell);
+      border-radius: 1.6cqw;
+      transform: translate(calc(var(--gap) + var(--c) * (var(--cell) + var(--gap))),
+          calc(var(--gap) + var(--r) * (var(--cell) + var(--gap))));
+    }
+
+    .cell {
+      background: rgba(238, 228, 218, 0.35);
+    }
+
+    .tile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      color: #776e65;
+      font-size: 7.6cqw;
+      font-weight: 700;
+      transition: transform 0.1s ease-in-out;
+    }
+
+    .tile.is-small {
+      font-size: 6.2cqw;
+    }
+
+    .tile.is-tiny {
+      font-size: 4.8cqw;
+    }
+
+    /* 被合并掉的方块滑到目标格后移除，层级放低 */
+    .tile.is-removing {
+      z-index: 1;
+    }
+
+    .tile.is-new {
+      animation: appear 0.2s ease 0.1s backwards;
+    }
+
+    .tile.is-merged {
+      z-index: 3;
+      animation: pop 0.2s ease 0.1s backwards;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        scale: 0;
+      }
+    }
+
+    @keyframes pop {
+      0% {
+        scale: 0;
+      }
+
+      50% {
+        scale: 1.15;
+      }
+    }
+
+    /* 方块配色 */
+    .v2 { background: #eee4da; }
+    .v4 { background: #ede0c8; }
+    .v8 { background: #f2b179; color: #fff; }
+    .v16 { background: #f59563; color: #fff; }
+    .v32 { background: #f67c5f; color: #fff; }
+    .v64 { background: #f65e3b; color: #fff; }
+    .v128 { background: #edcf72; color: #fff; box-shadow: 0 0 12px rgba(237, 207, 114, 0.4); }
+    .v256 { background: #edcc61; color: #fff; box-shadow: 0 0 14px rgba(237, 204, 97, 0.5); }
+    .v512 { background: #edc850; color: #fff; box-shadow: 0 0 16px rgba(237, 200, 80, 0.55); }
+    .v1024 { background: #edc53f; color: #fff; box-shadow: 0 0 18px rgba(237, 197, 63, 0.6); }
+    .v2048 { background: #edc22e; color: #fff; box-shadow: 0 0 22px rgba(237, 194, 46, 0.7); }
+    .vbig { background: #3c3a32; color: #fff; }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>2048</h1>
+      <p>滑动方块，相同数字碰撞后合并，凑出 2048 即获胜</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="board" id="board">
+          <div class="overlay" id="overlay">
+            <h2 id="overlayTitle"></h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn btn-ghost" id="continueBtn">继续挑战</button>
+              <button class="btn" id="againBtn">新游戏</button>
+            </div>
+          </div>
+        </div>
+        <p class="board-tip">键盘方向键 / WASD，或在棋盘上滑动</p>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>分数</span><b id="score">0</b></div>
+          <div class="stat"><span>最高分</span><b id="best">0</b></div>
+          <div class="stat"><span>步数</span><b id="moves">0</b></div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-block" id="newBtn">新游戏</button>
+          <button class="btn btn-ghost btn-block" id="undoBtn" disabled>撤销一步</button>
+        </div>
+        <div class="rules">
+          <p>每次移动后会随机出现一个 2 或 4。</p>
+          <p>合并得到的数字会计入分数，无法移动时游戏结束。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const SIZE = 4
+    const BEST_KEY = 'game-2048-best'
+    const board = document.getElementById('board')
+    const overlay = document.getElementById('overlay')
+    const undoBtn = document.getElementById('undoBtn')
+
+    // grid[r][c] 存方块 id；tiles 记录 id → { value, r, c, el }
+    let grid = []
+    let tiles = new Map()
+    let uid = 0
+    let score = 0
+    let moves = 0
+    let won = false
+    let over = false
+    let history = null
+    let animating = false
+
+    // 背景格子只创建一次
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const cell = document.createElement('div')
+        cell.className = 'cell'
+        cell.style.setProperty('--r', r)
+        cell.style.setProperty('--c', c)
+        board.appendChild(cell)
+      }
+    }
+
+    /** 根据数值设置方块样式（颜色、字号） */
+    function paint(el, value) {
+      el.textContent = value
+      el.className = 'tile ' + (value > 2048 ? 'vbig' : 'v' + value)
+      if (value >= 1024) el.classList.add('is-tiny')
+      else if (value >= 128) el.classList.add('is-small')
+    }
+
+    /** 创建方块并放入棋盘 */
+    function addTile(value, r, c, anim) {
+      const el = document.createElement('div')
+      paint(el, value)
+      if (anim) el.classList.add(anim)
+      el.style.setProperty('--r', r)
+      el.style.setProperty('--c', c)
+      board.appendChild(el)
+      const tile = { id: ++uid, value, r, c, el }
+      tiles.set(tile.id, tile)
+      grid[r][c] = tile.id
+      return tile
+    }
+
+    /** 在随机空格生成 2（90%）或 4（10%） */
+    function spawn() {
+      const empty = []
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) if (!grid[r][c]) empty.push([r, c])
+      }
+      if (!empty.length) return
+      const [r, c] = empty[Math.floor(Math.random() * empty.length)]
+      addTile(Math.random() < 0.9 ? 2 : 4, r, c, 'is-new')
+    }
+
+    /** 按数值矩阵重建棋盘（新游戏、撤销时使用） */
+    function rebuild(values) {
+      tiles.forEach((t) => t.el.remove())
+      tiles.clear()
+      grid = Array.from({ length: SIZE }, () => Array(SIZE).fill(null))
+      values.forEach((row, r) => row.forEach((v, c) => { if (v) addTile(v, r, c) }))
+    }
+
+    /** 当前盘面的数值矩阵 */
+    function snapshot() {
+      return grid.map((row) => row.map((id) => (id ? tiles.get(id).value : 0)))
+    }
+
+    function updateStats() {
+      document.getElementById('score').textContent = score
+      document.getElementById('moves').textContent = moves
+      const best = Math.max(score, Number(localStorage.getItem(BEST_KEY) || 0))
+      localStorage.setItem(BEST_KEY, best)
+      document.getElementById('best').textContent = best
+      undoBtn.disabled = !history || over
+    }
+
+    function newGame() {
+      score = 0
+      moves = 0
+      won = false
+      over = false
+      history = null
+      overlay.classList.remove('is-show')
+      rebuild(Array.from({ length: SIZE }, () => Array(SIZE).fill(0)))
+      spawn()
+      spawn()
+      updateStats()
+    }
+
+    /** 是否还有可移动的方向 */
+    function canMove() {
+      const v = snapshot()
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (!v[r][c]) return true
+          if (c < SIZE - 1 && v[r][c] === v[r][c + 1]) return true
+          if (r < SIZE - 1 && v[r][c] === v[r + 1][c]) return true
+        }
+      }
+      return false
+    }
+
+    /**
+     * 向指定方向移动
+     * 按移动方向从前往后处理每个方块：先滑到最远空位，遇到同值且本轮未合并过的方块则合并
+     */
+    function move(dir) {
+      if (over || animating || overlay.classList.contains('is-show')) return
+      const [dr, dc] = { up: [-1, 0], down: [1, 0], left: [0, -1], right: [0, 1] }[dir]
+      const order = [...Array(SIZE).keys()]
+      const rows = dr === 1 ? order.slice().reverse() : order
+      const cols = dc === 1 ? order.slice().reverse() : order
+
+      const before = { values: snapshot(), score, moves }
+      const mergedIds = new Set()
+      const removing = []
+      let moved = false
+
+      for (const r of rows) {
+        for (const c of cols) {
+          const id = grid[r][c]
+          if (!id) continue
+          const tile = tiles.get(id)
+          let nr = r
+          let nc = c
+          let mergedInto = null
+          while (true) {
+            const tr = nr + dr
+            const tc = nc + dc
+            if (tr < 0 || tr >= SIZE || tc < 0 || tc >= SIZE) break
+            const otherId = grid[tr][tc]
+            if (!otherId) {
+              nr = tr
+              nc = tc
+              continue
+            }
+            const other = tiles.get(otherId)
+            if (other.value === tile.value && !mergedIds.has(otherId)) mergedInto = other
+            break
+          }
+
+          grid[r][c] = null
+          if (mergedInto) {
+            // 两个方块都滑到目标格后移除，原地生成合并后的新方块
+            tile.r = mergedInto.r
+            tile.c = mergedInto.c
+            removing.push(tile, mergedInto)
+            tiles.delete(tile.id)
+            tiles.delete(mergedInto.id)
+            const merged = addTile(tile.value * 2, mergedInto.r, mergedInto.c, 'is-merged')
+            mergedIds.add(merged.id)
+            score += merged.value
+            if (merged.value === 2048 && !won) won = true
+            moved = true
+          } else {
+            grid[nr][nc] = id
+            if (nr !== r || nc !== c) moved = true
+            tile.r = nr
+            tile.c = nc
+          }
+        }
+      }
+
+      if (!moved) return
+      history = before
+      moves++
+
+      // 更新位置触发滑动动画；被合并的方块动画结束后移除
+      removing.forEach((t) => {
+        t.el.classList.add('is-removing')
+        t.el.style.setProperty('--r', t.r)
+        t.el.style.setProperty('--c', t.c)
+      })
+      tiles.forEach((t) => {
+        t.el.style.setProperty('--r', t.r)
+        t.el.style.setProperty('--c', t.c)
+      })
+      animating = true
+      setTimeout(() => {
+        removing.forEach((t) => t.el.remove())
+        animating = false
+      }, 110)
+
+      spawn()
+      updateStats()
+      checkEnd()
+    }
+
+    /** 检查是否获胜或无路可走 */
+    function checkEnd() {
+      const continueBtn = document.getElementById('continueBtn')
+      if (won && won !== 'shown') {
+        won = 'shown'
+        showOverlay('你赢了！', `得分 ${score} · ${moves} 步`, true)
+      } else if (!canMove()) {
+        over = true
+        updateStats()
+        showOverlay('游戏结束', `得分 ${score} · ${moves} 步`, false)
+      }
+
+      function showOverlay(title, text, canContinue) {
+        document.getElementById('overlayTitle').textContent = title
+        document.getElementById('overlayText').textContent = text
+        continueBtn.style.display = canContinue ? '' : 'none'
+        // 等合并动画播放完再显示
+        setTimeout(() => overlay.classList.add('is-show'), 300)
+      }
+    }
+
+    /** 撤销到上一步 */
+    function undo() {
+      if (!history || over) return
+      rebuild(history.values)
+      score = history.score
+      moves = history.moves
+      history = null
+      updateStats()
+    }
+
+    // 键盘：方向键与 WASD
+    const KEYS = {
+      ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
+      w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right'
+    }
+    document.addEventListener('keydown', (e) => {
+      const dir = KEYS[e.key]
+      if (!dir) return
+      e.preventDefault()
+      move(dir)
+    })
+
+    // 触屏 / 鼠标滑动，位移超过 30px 才算一次滑动
+    let start = null
+    board.addEventListener('pointerdown', (e) => { start = { x: e.clientX, y: e.clientY } })
+    board.addEventListener('pointerup', (e) => {
+      if (!start) return
+      const dx = e.clientX - start.x
+      const dy = e.clientY - start.y
+      start = null
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 30) return
+      if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'right' : 'left')
+      else move(dy > 0 ? 'down' : 'up')
+    })
+
+    document.getElementById('newBtn').onclick = newGame
+    document.getElementById('againBtn').onclick = newGame
+    document.getElementById('continueBtn').onclick = () => overlay.classList.remove('is-show')
+    undoBtn.onclick = undo
+
+    newGame()
+  </script>
+</body>
+
+</html>

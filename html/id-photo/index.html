@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1寸证件照排版（小米1S 6寸/3寸相纸）</title>
+<style>
+:root{
+  --primary:#4f6bff;
+  --primary-hover:#3d58f0;
+  --primary-bg:rgba(79,107,255,.1);
+  --text:#1f2329;
+  --text-2:#6b7280;
+  --border:#e5e7eb;
+  --bg:#f4f6fb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:32px 16px 48px;
+  color:var(--text);
+  background:var(--bg);
+  font:14px/1.6 system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+}
+.page{max-width:1100px;margin:0 auto}
+
+/* 返回入口页 */
+.back{display:inline-block;margin-bottom:16px;color:var(--text-2);text-decoration:none;transition:color .2s}
+.back:hover{color:var(--primary)}
+
+/* 页头 */
+.header h1{margin:0 0 6px;font-size:24px}
+.header p{margin:0;color:var(--text-2)}
+.specs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 24px}
+.spec{padding:4px 12px;color:var(--text-2);font-size:13px;background:#fff;border:1px solid var(--border);border-radius:999px}
+.spec b{color:var(--text);font-weight:600}
+
+/* 两栏布局 */
+.container{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:24px;align-items:stretch}
+/* 卡片纵向弹性布局，左右两栏等高 */
+.card{display:flex;flex-direction:column;padding:20px;background:#fff;border:1px solid var(--border);border-radius:12px}
+.card-title{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:16px}
+.step{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;color:#fff;font-size:13px;background:var(--primary);border-radius:50%}
+
+/* 上传区域 */
+.upload{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  aspect-ratio:25/35;
+  width:100%;
+  max-width:280px;
+  /* 在等高卡片中上下居中 */
+  margin:auto;
+  color:var(--text-2);
+  text-align:center;
+  background:#fafbff;
+  border:2px dashed #cfd6f5;
+  border-radius:10px;
+  cursor:pointer;
+  overflow:hidden;
+  transition:border-color .2s,background .2s;
+}
+.upload:hover,.upload.is-dragover{border-color:var(--primary);background:var(--primary-bg)}
+.upload input{display:none}
+.upload-empty{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px}
+.upload svg{width:40px;height:40px;padding:8px;color:var(--primary);background:var(--primary-bg);border-radius:50%}
+.upload strong{color:var(--text);font-weight:500}
+.upload small{font-size:12px;opacity:.8}
+/* 已上传：显示裁剪后的一寸照 */
+.upload.has-photo{border-style:solid;border-color:var(--border);background:#fff}
+.upload.has-photo .upload-empty{display:none}
+#previewCanvas{display:none;width:100%;height:100%}
+.upload.has-photo #previewCanvas{display:block}
+.upload-mask{
+  position:absolute;inset:auto 0 0;
+  display:none;
+  padding:8px;
+  color:#fff;font-size:13px;
+  background:linear-gradient(transparent,rgba(0,0,0,.55));
+}
+.upload.has-photo .upload-mask{display:block}
+.hint{margin:12px 0 0;color:var(--text-2);font-size:12px;text-align:center}
+
+/* 相纸切换（分段控件） */
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+/* 照片尺寸与相纸选项并排 */
+.options{display:flex;flex-wrap:wrap;gap:10px}
+.segmented{display:inline-flex;padding:3px;background:#f0f2f7;border-radius:999px}
+.segmented input{display:none}
+/* 字重固定，避免选中时文字变宽导致按钮抖动 */
+.segmented label{padding:5px 16px;color:var(--text-2);font-weight:500;border-radius:999px;cursor:pointer;transition:color .2s,background-color .2s,box-shadow .2s}
+.segmented input:checked+label{color:var(--primary);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  height:36px;padding:0 20px;
+  color:#fff;font:inherit;
+  background:var(--primary);
+  border:0;border-radius:8px;
+  cursor:pointer;
+  transition:background .2s;
+}
+.btn:hover:not(:disabled){background:var(--primary-hover)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:16px;height:16px}
+
+/* 相纸预览：灰色台面上放一张带阴影的“纸” */
+/* 铺满卡片剩余高度；画布绝对定位不参与撑高，切换相纸时高度不变 */
+.desk{
+  position:relative;
+  flex:1;
+  min-height:320px;
+  background:#eef0f5;
+  border-radius:10px;
+}
+/* 在预览区内居中，按比例完整显示相纸（四周留 28px） */
+#layoutCanvas{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:calc(100% - 56px);
+  max-height:calc(100% - 56px);
+  background:#fff;
+  border-radius:2px;
+  box-shadow:0 6px 20px rgba(15,23,42,.12),0 1px 3px rgba(15,23,42,.08);
+}
+/* 3寸相纸实际更小，预览时按比例缩窄，避免看起来和6寸一样大 */
+.desk.is-small #layoutCanvas{max-width:calc((100% - 56px) * .58);max-height:calc((100% - 56px) * .58)}
+.tip{margin:10px 0 0;color:var(--text-2);font-size:12px;text-align:right}
+
+@media (max-width:800px){
+  .container{grid-template-columns:1fr}
+  .desk{min-height:260px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← 返回工具列表</a>
+  <header class="header">
+    <h1>证件照排版</h1>
+    <p>上传照片自动裁成一寸 / 二寸并排版，适配小米照片打印机 1S</p>
+  </header>
+  <div class="specs">
+    <span class="spec">一寸 <b>25 × 35 mm</b></span>
+    <span class="spec">二寸 <b>35 × 49 mm</b></span>
+    <span class="spec">分辨率 <b>300 DPI</b></span>
+    <span class="spec">6寸相纸 <b>152 × 102 mm</b></span>
+    <span class="spec">3寸相纸 <b>89 × 64 mm</b></span>
+  </div>
+
+  <div class="container">
+    <!-- 上传 -->
+    <section class="card">
+      <h3 class="card-title"><span class="step">1</span>上传照片</h3>
+      <label class="upload" id="uploadBox">
+        <input type="file" id="fileInput" accept="image/*">
+        <div class="upload-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+          <strong>点击或拖拽上传照片</strong>
+          <small>自动居中裁剪为证件照比例</small>
+        </div>
+        <canvas id="previewCanvas"></canvas>
+        <div class="upload-mask">点击更换照片</div>
+      </label>
+      <p class="hint">建议使用纯色背景、头部居中的正面照</p>
+    </section>
+
+    <!-- 排版预览 -->
+    <section class="card">
+      <h3 class="card-title"><span class="step">2</span>排版预览 &amp; 下载</h3>
+      <div class="toolbar">
+        <div class="options">
+          <div class="segmented" role="radiogroup" aria-label="照片尺寸">
+            <input type="radio" name="photo" id="photo1" value="1" checked><label for="photo1">一寸</label>
+            <input type="radio" name="photo" id="photo2" value="2"><label for="photo2">二寸</label>
+          </div>
+          <div class="segmented" role="radiogroup" aria-label="相纸尺寸">
+            <input type="radio" name="paper" id="paper6" value="6" checked><label for="paper6">6寸 · <span data-count="6">8</span>张</label>
+            <input type="radio" name="paper" id="paper3" value="3"><label for="paper3">3寸 · <span data-count="3">3</span>张</label>
+          </div>
+        </div>
+        <button class="btn" id="downloadBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>
+          下载排版图
+        </button>
+      </div>
+      <div class="desk" id="desk">
+        <canvas id="layoutCanvas"></canvas>
+      </div>
+      <p class="tip" id="paperTip"></p>
+    </section>
+  </div>
+</div>
+
+<script>
+// 打印分辨率 300DPI
+const DPI = 300;
+/**
+ * 证件照尺寸 mm（一寸与二寸宽高比相同）
+ */
+const PHOTOS = {
+  '1': { name: '一寸', w: 25, h: 35 },
+  '2': { name: '二寸', w: 35, h: 49 }
+};
+
+/**
+ * 相纸配置（均为横向）：宽高 mm，以及每种照片的列数、行数
+ * 照片在相纸内按行列均匀分布，四周和照片间留白相等
+ */
+const PAPERS = {
+  '6': { name: '6寸', w: 152, h: 102, layout: { '1': { cols: 4, rows: 2 }, '2': { cols: 4, rows: 1 } } },
+  '3': { name: '3寸', w: 89, h: 64, layout: { '1': { cols: 3, rows: 1 }, '2': { cols: 2, rows: 1 } } }
+};
+
+// mm 转像素
+function mm2px(mm){
+  return Math.round(mm / 25.4 * DPI);
+}
+
+const uploadBox = document.getElementById('uploadBox');
+const previewCanvas = document.getElementById('previewCanvas');
+const previewCtx = previewCanvas.getContext('2d');
+const layoutCanvas = document.getElementById('layoutCanvas');
+const layoutCtx = layoutCanvas.getContext('2d');
+const downloadBtn = document.getElementById('downloadBtn');
+const desk = document.getElementById('desk');
+
+// 原始上传图片，切换照片尺寸时用于重新裁剪
+let srcImg = null;
+// 是否已上传并裁剪好照片
+let hasPhoto = false;
+
+/**
+ * 获取当前选中的相纸配置
+ */
+function currentPaper(){
+  return PAPERS[document.querySelector('input[name="paper"]:checked').value];
+}
+
+/**
+ * 获取当前选中的照片尺寸 key
+ */
+function currentPhotoKey(){
+  return document.querySelector('input[name="photo"]:checked').value;
+}
+
+/**
+ * 按当前照片尺寸更新相纸选项上的张数
+ */
+function updatePaperCounts(){
+  const key = currentPhotoKey();
+  document.querySelectorAll('[data-count]').forEach((el)=>{
+    const layout = PAPERS[el.dataset.count].layout[key];
+    el.textContent = layout.cols * layout.rows;
+  });
+}
+
+/**
+ * 按当前相纸初始化画布尺寸并铺白底
+ */
+function resetLayoutCanvas(){
+  const paper = currentPaper();
+  layoutCanvas.width = mm2px(paper.w);
+  layoutCanvas.height = mm2px(paper.h);
+  layoutCtx.fillStyle = '#ffffff';
+  layoutCtx.fillRect(0, 0, layoutCanvas.width, layoutCanvas.height);
+  desk.classList.toggle('is-small', paper.w < 100);
+  document.getElementById('paperTip').textContent =
+    `*请使用${paper.name}相纸打印（${paper.w}mm × ${paper.h}mm）`;
+}
+
+/**
+ * 将原图居中裁剪为当前照片尺寸，按 300DPI 输出到预览画布
+ */
+function cropPhoto(){
+  if(!srcImg) return;
+  const photo = PHOTOS[currentPhotoKey()];
+  const targetRatio = photo.w / photo.h;
+  let sx, sy, sw, sh;
+  const imgRatio = srcImg.width / srcImg.height;
+  if(imgRatio > targetRatio){
+    sw = srcImg.height * targetRatio;
+    sh = srcImg.height;
+    sx = (srcImg.width - sw) / 2;
+    sy = 0;
+  }else{
+    sw = srcImg.width;
+    sh = srcImg.width / targetRatio;
+    sx = 0;
+    sy = (srcImg.height - sh) / 2;
+  }
+  previewCanvas.width = mm2px(photo.w);
+  previewCanvas.height = mm2px(photo.h);
+  previewCtx.drawImage(srcImg, sx, sy, sw, sh, 0, 0, previewCanvas.width, previewCanvas.height);
+}
+
+/**
+ * 读取图片文件，裁剪后重新排版
+ */
+function loadPhoto(file){
+  if(!file || !/^image\//.test(file.type)) return;
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
+  img.onload = ()=>{
+    URL.revokeObjectURL(img.src);
+    srcImg = img;
+    cropPhoto();
+    hasPhoto = true;
+    uploadBox.classList.add('has-photo');
+    downloadBtn.disabled = false;
+    makeLayout();
+  };
+}
+
+// 点击上传
+document.getElementById('fileInput').onchange = (e)=>{
+  loadPhoto(e.target.files[0]);
+  e.target.value = '';
+};
+
+// 拖拽上传
+uploadBox.addEventListener('dragover', (e)=>{
+  e.preventDefault();
+  uploadBox.classList.add('is-dragover');
+});
+uploadBox.addEventListener('dragleave', ()=>uploadBox.classList.remove('is-dragover'));
+uploadBox.addEventListener('drop', (e)=>{
+  e.preventDefault();
+  uploadBox.classList.remove('is-dragover');
+  loadPhoto(e.dataTransfer.files[0]);
+});
+
+/**
+ * 生成排版：照片在横向相纸中水平、垂直均匀分布，并绘制虚线裁切框
+ */
+function makeLayout(){
+  resetLayoutCanvas();
+  if(!hasPhoto) return;
+  const paper = currentPaper();
+  const { cols, rows } = paper.layout[currentPhotoKey()];
+  const photoW = previewCanvas.width;
+  const photoH = previewCanvas.height;
+  const W = layoutCanvas.width;
+  const H = layoutCanvas.height;
+  // 均分剩余空间作为边距/间距
+  const gapX = (W - cols * photoW) / (cols + 1);
+  const gapY = (H - rows * photoH) / (rows + 1);
+
+  layoutCtx.strokeStyle = '#bbbbbb';
+  layoutCtx.lineWidth = 2;
+  layoutCtx.setLineDash([12, 8]);
+
+  for(let r = 0; r < rows; r++){
+    for(let c = 0; c < cols; c++){
+      const px = Math.round(gapX + c * (photoW + gapX));
+      const py = Math.round(gapY + r * (photoH + gapY));
+      layoutCtx.drawImage(previewCanvas, px, py, photoW, photoH);
+      // 裁切参考线
+      layoutCtx.strokeRect(px - 1, py - 1, photoW + 2, photoH + 2);
+    }
+  }
+  layoutCtx.setLineDash([]);
+}
+
+// 切换相纸后立即重新排版
+document.querySelectorAll('input[name="paper"]').forEach((radio)=>{
+  radio.onchange = makeLayout;
+});
+
+// 切换照片尺寸：更新张数，重新裁剪并排版
+document.querySelectorAll('input[name="photo"]').forEach((radio)=>{
+  radio.onchange = ()=>{
+    updatePaperCounts();
+    cropPhoto();
+    makeLayout();
+  };
+});
+
+// 下载（普通 canvas 使用 toBlob）
+downloadBtn.onclick = ()=>{
+  if(!hasPhoto) return;
+  const paper = currentPaper();
+  layoutCanvas.toBlob((blob)=>{
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${PHOTOS[currentPhotoKey()].name}证件照_${paper.name}排版_小米打印机.jpg`;
+    a.click();
+    // 延迟释放，避免部分浏览器下载未开始就失效
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+  }, 'image/jpeg', 0.92);
+};
+
+// 初始化张数与空白相纸
+updatePaperCounts();
+resetLayoutCanvas();
+</script>
+</body>
+</html>

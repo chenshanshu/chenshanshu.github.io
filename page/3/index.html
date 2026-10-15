@@ -558,7 +558,7 @@ Event Loop：所有同步任务在主线程上执行，形成一个执行栈—-
                 <div class="home-article-content markdown-body">
                     
                         <h2 id="node版本管理工具"><a href="#node版本管理工具" class="headerlink" title="node版本管理工具"></a>node版本管理工具</h2><p><code>nvm</code> 是 Node.js 的版本管理工具，可以创建不同版本 Node 的隔离环境，从而避免不同版本包之间的干扰<br><code>mac</code>环境推荐使用<code>n</code></p>
-<h2 id="图片裁剪"><a href="#图片裁剪" class="headerlink" title="图片裁剪"></a>图片裁剪</h2><p><a href="/html/imgClip1">地址</a></p>
+<h2 id="图片裁剪"><a href="#图片裁剪" class="headerlink" title="图片裁剪"></a>图片裁剪</h2><p><a href="/html/image-cropper">地址</a></p>
 <h2 id="js大数字问题"><a href="#js大数字问题" class="headerlink" title="js大数字问题"></a>js大数字问题</h2><p>超出 2 的 53 次方之后，一个数就不精确了</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span>.MAX_SAFE_INTEGER === <span class="number">9007199254740991</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">handleResData</span>(<span class="params">str</span>)</span>&#123;</span><br><span class="line">    str = str.replace(<span class="regexp">/[:]([0-9]&#123;18,&#125;)[,]?/g</span>,<span class="string">`:&quot;$1&quot;,`</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(str)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
                     

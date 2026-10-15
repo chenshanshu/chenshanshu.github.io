@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>推箱子</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    .stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+      padding: 12px;
+      background: #2b3142;
+      border-radius: 12px;
+      touch-action: none;
+      user-select: none;
+    }
+
+    /* 地图：所有元素按格子坐标绝对定位 */
+    .map {
+      --tile: 44px;
+      position: relative;
+      width: calc(var(--w) * var(--tile));
+      height: calc(var(--h) * var(--tile));
+    }
+
+    .tile,
+    .box,
+    .player {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--tile);
+      height: var(--tile);
+      transform: translate(calc(var(--x) * var(--tile)), calc(var(--y) * var(--tile)));
+    }
+
+    .tile.floor { background: #e9e3d4; }
+    .tile.wall {
+      background: #6b7387;
+      border-radius: 4px;
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    /* 目标点 */
+    .tile.goal::after {
+      content: '';
+      position: absolute;
+      inset: 34%;
+      background: #ef4444;
+      border-radius: 50%;
+      opacity: 0.75;
+    }
+
+    .box,
+    .player {
+      transition: transform 0.12s ease;
+    }
+
+    .box::before {
+      content: '';
+      position: absolute;
+      inset: 8%;
+      background: #d99a4e;
+      border: 3px solid #a86a2c;
+      border-radius: 6px;
+      box-shadow: inset 0 0 0 3px #e9b673;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    /* 箱子到达目标点 */
+    .box.on-goal::before {
+      background: #4ade80;
+      border-color: #15803d;
+      box-shadow: inset 0 0 0 3px #86efac;
+    }
+
+    .player::before {
+      content: '';
+      position: absolute;
+      inset: 16%;
+      background: var(--primary);
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    }
+
+    /* 关卡选择 */
+    .levels {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .level-btn {
+      height: 34px;
+      font: inherit;
+      color: var(--text-2);
+      background: #f3f4f6;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .level-btn.done { color: var(--success); background: #e8f8ef; }
+    .level-btn.current { color: #fff; background: var(--primary); }
+
+    /* 方向键（移动端） */
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 46px);
+      grid-template-rows: repeat(2, 46px);
+      gap: 6px;
+      justify-content: center;
+      margin: 14px 0;
+    }
+
+    .dpad button {
+      font-size: 18px;
+      color: var(--primary);
+      background: var(--primary-bg);
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .dpad .up { grid-column: 2; }
+    .dpad .left { grid-column: 1; grid-row: 2; }
+    .dpad .down { grid-column: 2; grid-row: 2; }
+    .dpad .right { grid-column: 3; grid-row: 2; }
+  </style>
+  <script src="./levels.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>推箱子</h1>
+      <p>把所有箱子推到红色目标点上，箱子只能推不能拉</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="stage" id="stage">
+          <div class="map" id="map"></div>
+          <div class="overlay" id="overlay">
+            <h2 id="overlayTitle">过关！</h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn btn-ghost" id="replayBtn">重玩</button>
+              <button class="btn" id="nextBtn">下一关</button>
+            </div>
+          </div>
+        </div>
+        <p class="board-tip">方向键 / WASD 移动 · Z 或 Backspace 撤销 · R 重开 · 手机可在地图上滑动</p>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>关卡</span><b id="levelNo">1</b></div>
+          <div class="stat"><span>步数</span><b id="moves">0</b></div>
+          <div class="stat"><span>推动</span><b id="pushes">0</b></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">选择关卡</div>
+          <div class="levels" id="levels"></div>
+        </div>
+
+        <div class="dpad">
+          <button class="up" data-dir="up" aria-label="上">▲</button>
+          <button class="left" data-dir="left" aria-label="左">◀</button>
+          <button class="down" data-dir="down" aria-label="下">▼</button>
+          <button class="right" data-dir="right" aria-label="右">▶</button>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="undoBtn">撤销</button>
+          <button class="btn" id="restartBtn">重开本关</button>
+        </div>
+
+        <div class="rules">
+          <p>关卡选自 David W. Skinner 的 Microban 关卡集，均已验证可解。</p>
+          <p>绿色关卡号表示已通关，会记录最少步数。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const stage = document.getElementById('stage')
+    const mapEl = document.getElementById('map')
+    const overlay = document.getElementById('overlay')
+    const STORE_KEY = 'sokoban-records'
+
+    /** 已通关记录：{ 关卡下标: 最少步数 } */
+    const records = JSON.parse(localStorage.getItem(STORE_KEY) || '{}')
+
+    let levelIndex = 0
+    let w = 0
+    let h = 0
+    let walls = new Set()
+    let goals = new Set()
+    let boxes = []       // 箱子所在格子下标
+    let player = 0
+    let moves = 0
+    let pushes = 0
+    let history = []
+    let won = false
+    let boxEls = []
+    let playerEl = null
+
+    const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }
+
+    /** 设置元素在地图上的坐标 */
+    function place(el, i) {
+      el.style.setProperty('--x', i % w)
+      el.style.setProperty('--y', Math.floor(i / w))
+    }
+
+    /** 解析 XSB 关卡并绘制地图 */
+    function loadLevel(index) {
+      levelIndex = index
+      const rows = SOKOBAN_LEVELS[index]
+      h = rows.length
+      w = Math.max(...rows.map((r) => r.length))
+      walls = new Set()
+      goals = new Set()
+      boxes = []
+      rows.forEach((row, r) => {
+        for (let c = 0; c < w; c++) {
+          const ch = row[c] || ' '
+          const i = r * w + c
+          if (ch === '#') walls.add(i)
+          if ('.+*'.includes(ch)) goals.add(i)
+          if ('$*'.includes(ch)) boxes.push(i)
+          if ('@+'.includes(ch)) player = i
+        }
+      })
+
+      // 从人所在位置向外填充，得到墙内的地板（墙外的空格不绘制）
+      const floor = new Set([player])
+      const stack = [player]
+      while (stack.length) {
+        const i = stack.pop()
+        const r = Math.floor(i / w)
+        const c = i % w
+        const next = []
+        if (r > 0) next.push(i - w)
+        if (r < h - 1) next.push(i + w)
+        if (c > 0) next.push(i - 1)
+        if (c < w - 1) next.push(i + 1)
+        next.forEach((n) => {
+          if (!walls.has(n) && !floor.has(n)) {
+            floor.add(n)
+            stack.push(n)
+          }
+        })
+      }
+
+      mapEl.innerHTML = ''
+      mapEl.style.setProperty('--w', w)
+      mapEl.style.setProperty('--h', h)
+      const addTile = (cls, i) => {
+        const el = document.createElement('div')
+        el.className = 'tile ' + cls
+        place(el, i)
+        mapEl.appendChild(el)
+      }
+      floor.forEach((i) => addTile('floor' + (goals.has(i) ? ' goal' : ''), i))
+      walls.forEach((i) => addTile('wall', i))
+
+      boxEls = boxes.map((i) => {
+        const el = document.createElement('div')
+        el.className = 'box'
+        mapEl.appendChild(el)
+        return el
+      })
+      playerEl = document.createElement('div')
+      playerEl.className = 'player'
+      mapEl.appendChild(playerEl)
+
+      moves = 0
+      pushes = 0
+      history = []
+      won = false
+      overlay.classList.remove('is-show')
+      fitTile()
+      render()
+    }
+
+    /** 根据舞台宽度计算格子大小 */
+    function fitTile() {
+      const tile = Math.max(24, Math.min(48, Math.floor((stage.clientWidth - 24) / w)))
+      mapEl.style.setProperty('--tile', tile + 'px')
+    }
+
+    /** 刷新箱子、人物位置与统计信息 */
+    function render() {
+      boxes.forEach((i, k) => {
+        place(boxEls[k], i)
+        boxEls[k].classList.toggle('on-goal', goals.has(i))
+      })
+      place(playerEl, player)
+      document.getElementById('levelNo').textContent = levelIndex + 1
+      document.getElementById('moves').textContent = moves
+      document.getElementById('pushes').textContent = pushes
+      document.getElementById('undoBtn').disabled = !history.length || won
+      renderLevels()
+    }
+
+    function renderLevels() {
+      const wrap = document.getElementById('levels')
+      wrap.innerHTML = ''
+      SOKOBAN_LEVELS.forEach((_, i) => {
+        const btn = document.createElement('button')
+        btn.className = 'level-btn' + (records[i] ? ' done' : '') + (i === levelIndex ? ' current' : '')
+        btn.textContent = i + 1
+        btn.title = records[i] ? `最少 ${records[i]} 步` : '未通关'
+        btn.onclick = () => loadLevel(i)
+        wrap.appendChild(btn)
+      })
+    }
+
+    /** 向某个方向移动一步，前方是箱子则尝试推动 */
+    function move(dir) {
+      if (won) return
+      const [dx, dy] = DIRS[dir]
+      const px = player % w
+      const py = Math.floor(player / w)
+      const nx = px + dx
+      const ny = py + dy
+      if (nx < 0 || nx >= w || ny < 0 || ny >= h) return
+      const next = ny * w + nx
+      if (walls.has(next)) return
+
+      const boxIdx = boxes.indexOf(next)
+      if (boxIdx >= 0) {
+        const bx = nx + dx
+        const by = ny + dy
+        if (bx < 0 || bx >= w || by < 0 || by >= h) return
+        const beyond = by * w + bx
+        // 箱子前方是墙或另一个箱子则推不动
+        if (walls.has(beyond) || boxes.includes(beyond)) return
+        history.push({ player, boxes: boxes.slice(), moves, pushes })
+        boxes[boxIdx] = beyond
+        pushes++
+      } else {
+        history.push({ player, boxes: boxes.slice(), moves, pushes })
+      }
+      player = next
+      moves++
+      render()
+      checkWin()
+    }
+
+    function undo() {
+      if (won || !history.length) return
+      const last = history.pop()
+      player = last.player
+      boxes = last.boxes
+      moves = last.moves
+      pushes = last.pushes
+      render()
+    }
+
+    function checkWin() {
+      if (!boxes.every((i) => goals.has(i))) return
+      won = true
+      const best = records[levelIndex]
+      const isRecord = !best || moves < best
+      if (isRecord) {
+        records[levelIndex] = moves
+        localStorage.setItem(STORE_KEY, JSON.stringify(records))
+      }
+      render()
+      const isLast = levelIndex === SOKOBAN_LEVELS.length - 1
+      document.getElementById('overlayTitle').textContent = isLast ? '全部通关！' : '过关！'
+      document.getElementById('overlayText').textContent = `步数 ${moves}，推动 ${pushes}` + (isRecord ? '（新纪录）' : `，最佳 ${best} 步`)
+      document.getElementById('nextBtn').style.display = isLast ? 'none' : ''
+      setTimeout(() => overlay.classList.add('is-show'), 250)
+    }
+
+    // 键盘
+    document.addEventListener('keydown', (e) => {
+      const keyMap = {
+        ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
+        w: 'up', s: 'down', a: 'left', d: 'right'
+      }
+      const dir = keyMap[e.key] || keyMap[e.key.toLowerCase()]
+      if (dir) {
+        e.preventDefault()
+        return move(dir)
+      }
+      const k = e.key.toLowerCase()
+      if (k === 'z' || e.key === 'Backspace') undo()
+      if (k === 'r') loadLevel(levelIndex)
+    })
+
+    // 地图上滑动
+    let touchStart = null
+    stage.addEventListener('pointerdown', (e) => { touchStart = { x: e.clientX, y: e.clientY } })
+    stage.addEventListener('pointerup', (e) => {
+      if (!touchStart) return
+      const dx = e.clientX - touchStart.x
+      const dy = e.clientY - touchStart.y
+      touchStart = null
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return
+      if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'right' : 'left')
+      else move(dy > 0 ? 'down' : 'up')
+    })
+
+    document.querySelectorAll('.dpad button').forEach((btn) => {
+      btn.onclick = () => move(btn.dataset.dir)
+    })
+    document.getElementById('undoBtn').onclick = undo
+    document.getElementById('restartBtn').onclick = () => loadLevel(levelIndex)
+    document.getElementById('replayBtn').onclick = () => loadLevel(levelIndex)
+    document.getElementById('nextBtn').onclick = () => loadLevel(levelIndex + 1)
+    window.addEventListener('resize', fitTile)
+
+    // 默认进入第一个未通关的关卡
+    const firstTodo = SOKOBAN_LEVELS.findIndex((_, i) => !records[i])
+    loadLevel(firstTodo === -1 ? 0 : firstTodo)
+  </script>
+</body>
+
+</html>
