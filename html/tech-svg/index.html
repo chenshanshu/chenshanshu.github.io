@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>棱核 AETHER · SVG 科技动效</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Manrope:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #03070c;
+      --panel: rgba(8, 18, 28, 0.72);
+      --line: rgba(94, 234, 212, 0.22);
+      --cyan: #5eead4;
+      --cyan-dim: #2dd4bf;
+      --lime: #bef264;
+      --amber: #fbbf24;
+      --text: #e8f4f1;
+      --muted: #7a9390;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+      background: var(--bg);
+      font: 400 15px/1.65 Manrope, "Noto Sans SC", "PingFang SC", sans-serif;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ---------- 全屏 SVG 底图 ---------- */
+    .stage {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      isolation: isolate;
+    }
+
+    .bg-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .nav {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 28px;
+    }
+
+    .nav .back {
+      color: var(--muted);
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav .back:hover { color: var(--cyan); }
+
+    .nav .mark {
+      font-family: Orbitron, Manrope, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--cyan);
+    }
+
+    /* ---------- Hero 内容 ---------- */
+    .hero {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 32px;
+      align-items: center;
+      width: min(1140px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 24px 0 64px;
+      min-height: calc(100vh - 72px);
+      min-height: calc(100dvh - 72px);
+    }
+
+    .brand {
+      margin: 0 0 14px;
+      font-family: Orbitron, "Noto Sans SC", sans-serif;
+      font-size: clamp(2.6rem, 6vw, 4.4rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      background: linear-gradient(120deg, #fff 20%, var(--cyan) 55%, var(--lime));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 24px rgba(94, 234, 212, 0.25));
+      animation: brandIn 1s ease both;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-family: Manrope, sans-serif;
+      font-size: 0.28em;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      -webkit-text-fill-color: var(--muted);
+    }
+
+    .hero h2 {
+      margin: 0 0 12px;
+      max-width: 16em;
+      font-family: "Noto Sans SC", sans-serif;
+      font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+      font-weight: 500;
+      animation: brandIn 1s 0.1s ease both;
+    }
+
+    .hero p.lead {
+      margin: 0 0 26px;
+      max-width: 28rem;
+      color: var(--muted);
+      animation: brandIn 1s 0.18s ease both;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      animation: brandIn 1s 0.26s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      padding: 0 20px;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      color: #031016;
+      background: linear-gradient(135deg, var(--cyan), var(--lime));
+      box-shadow: 0 0 28px rgba(94, 234, 212, 0.35);
+    }
+
+    .btn-ghost {
+      color: var(--text);
+      background: rgba(94, 234, 212, 0.06);
+      border-color: var(--line);
+    }
+
+    @keyframes brandIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* 右侧核心 SVG 舞台 */
+    .core-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      max-height: min(72vh, 560px);
+      margin-left: auto;
+      width: min(100%, 560px);
+      animation: brandIn 1.1s 0.12s ease both;
+    }
+
+    .core-wrap svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 0 30px rgba(45, 212, 191, 0.2));
+      transform-origin: center;
+      will-change: transform;
+    }
+
+    /* ---------- HUD 指标条 ---------- */
+    .hud {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      width: min(1140px, calc(100% - 40px));
+      margin: -24px auto 56px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .hud-item {
+      padding: 18px 16px;
+      background: var(--panel);
+    }
+
+    .hud-item .label {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hud-item .value {
+      margin-top: 6px;
+      font-family: Orbitron, monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    .hud-item .value em {
+      font-style: normal;
+      color: var(--lime);
+      font-size: 0.7em;
+    }
+
+    /* ---------- 特性区 ---------- */
+    .section {
+      position: relative;
+      z-index: 2;
+      width: min(1140px, calc(100% - 40px));
+      margin: 0 auto 80px;
+    }
+
+    .section .eyebrow {
+      margin-bottom: 10px;
+      color: var(--cyan-dim);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .section > h2 {
+      margin: 0 0 28px;
+      font-family: "Noto Sans SC", sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      position: relative;
+      padding: 22px 20px 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .card:hover {
+      border-color: rgba(94, 234, 212, 0.45);
+      transform: translateY(-3px);
+    }
+
+    .card svg.icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    /* ---------- 交互雷达区 ---------- */
+    .radar-panel {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+      padding: 28px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+    }
+
+    .radar-panel .viz {
+      aspect-ratio: 1;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .radar-panel .viz svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .stat-list {
+      list-style: none;
+    }
+
+    .stat-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stat-list li:first-child { border-top: 0; }
+
+    .stat-list strong {
+      color: var(--text);
+      font-family: Orbitron, monospace;
+      font-size: 0.95rem;
+    }
+
+    .meter {
+      flex: 1;
+      height: 4px;
+      margin: 0 14px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+    }
+
+    .meter > i {
+      display: block;
+      height: 100%;
+      width: var(--w, 50%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan-dim), var(--lime));
+      box-shadow: 0 0 10px rgba(94, 234, 212, 0.5);
+      transform-origin: left center;
+      animation: meterIn 1.4s ease both;
+    }
+
+    @keyframes meterIn {
+      from { transform: scaleX(0); }
+    }
+
+    .foot {
+      position: relative;
+      z-index: 2;
+      padding: 0 20px 40px;
+      color: rgba(122, 147, 144, 0.7);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* SVG 动画关键类 */
+    .dash {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .flow {
+      stroke-dasharray: 8 14;
+      animation: flow 2.4s linear infinite;
+    }
+
+    .flow-slow {
+      stroke-dasharray: 4 18;
+      animation: flow 4.5s linear infinite reverse;
+    }
+
+    @keyframes flow {
+      to { stroke-dashoffset: -120; }
+    }
+
+    .spin {
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: spin 24s linear infinite;
+    }
+
+    .spin-rev {
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: spin 16s linear infinite reverse;
+    }
+
+    .spin-fast {
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: spin 8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .pulse {
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: pulse 2.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.35; transform: scale(0.92); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    .blink {
+      animation: blink 1.8s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+
+    .scan {
+      animation: scanY 3.5s ease-in-out infinite;
+    }
+
+    @keyframes scanY {
+      0%, 100% { transform: translateY(-18px); opacity: 0.2; }
+      50% { transform: translateY(18px); opacity: 0.85; }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-top: 12px;
+      }
+
+      .hero p.lead { margin-left: auto; margin-right: auto; }
+      .cta-row { justify-content: center; }
+      .core-wrap { margin: 0 auto; max-height: 380px; }
+
+      .hud { grid-template-columns: repeat(2, 1fr); }
+      .cards { grid-template-columns: 1fr; }
+      .radar-panel { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .flow, .flow-slow, .spin, .spin-rev, .spin-fast, .pulse, .blink, .scan, .meter > i {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stage">
+    <!-- 全屏背景：网格 + 电路 + 粒子 -->
+    <svg class="bg-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="bgGlow" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="#0b3d3a" stop-opacity="0.55" />
+          <stop offset="55%" stop-color="#061820" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#03070c" stop-opacity="1" />
+        </radialGradient>
+        <linearGradient id="gridFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5eead4" stop-opacity="0.18" />
+          <stop offset="100%" stop-color="#5eead4" stop-opacity="0" />
+        </linearGradient>
+        <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="3" result="b" />
+          <feMerge>
+            <feMergeNode in="b" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      <rect width="1440" height="900" fill="url(#bgGlow)" />
+
+      <!-- 透视网格 -->
+      <g stroke="url(#gridFade)" stroke-width="1" opacity="0.7">
+        <path d="M0 520 L720 380 L1440 520" fill="none" />
+        <path d="M0 580 L720 420 L1440 580" fill="none" />
+        <path d="M0 650 L720 470 L1440 650" fill="none" />
+        <path d="M0 730 L720 530 L1440 730" fill="none" />
+        <path d="M0 820 L720 600 L1440 820" fill="none" />
+        <path d="M180 900 L720 380 L1260 900" fill="none" />
+        <path d="M360 900 L720 380 L1080 900" fill="none" />
+        <path d="M540 900 L720 380 L900 900" fill="none" />
+      </g>
+
+      <!-- 电路走线 -->
+      <g class="dash" stroke="#5eead4" stroke-width="1.2" opacity="0.45" filter="url(#softGlow)">
+        <path class="flow" d="M80 120 H260 L320 180 H480" />
+        <path class="flow-slow" d="M1360 160 H1180 L1120 220 H980" />
+        <path class="flow" d="M60 760 H220 L280 700 H420 L480 740" />
+        <path class="flow-slow" d="M1380 780 H1200 L1140 720 H1000" />
+      </g>
+
+      <!-- 节点 -->
+      <g fill="#5eead4">
+        <circle class="pulse" cx="320" cy="180" r="3" />
+        <circle class="pulse" cx="1120" cy="220" r="3" style="animation-delay:0.6s" />
+        <circle class="blink" cx="280" cy="700" r="2.5" />
+        <circle class="blink" cx="1140" cy="720" r="2.5" style="animation-delay:0.9s" />
+      </g>
+
+      <!-- 扫描线 -->
+      <rect class="scan" x="0" y="200" width="1440" height="2" fill="#5eead4" opacity="0.25" />
+    </svg>
+
+    <nav class="nav">
+      <a class="back" href="../index.html">← 返回工具列表</a>
+      <div class="mark">AETHER / SVG LAB</div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <h1 class="brand">棱核<small>AETHER CORE</small></h1>
+        <h2>用矢量线条，搭一座会呼吸的计算内核。</h2>
+        <p class="lead">本页全部视觉由 SVG 绘制：旋转环、能量轨道、数据流动与雷达扫描——无位图，纯代码驱动的科技感界面。</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#modules">查看模块</a>
+          <a class="btn btn-ghost" href="#radar">打开雷达</a>
+        </div>
+      </div>
+
+      <!-- 核心动效：六边形 + 双环 + 能量弧 -->
+      <div class="core-wrap" id="coreWrap">
+        <svg id="coreSvg" viewBox="0 0 400 400" role="img" aria-label="棱核动态示意图">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#5eead4" />
+              <stop offset="50%" stop-color="#bef264" />
+              <stop offset="100%" stop-color="#5eead4" stop-opacity="0.2" />
+            </linearGradient>
+            <linearGradient id="coreFill" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%" stop-color="#134e4a" />
+              <stop offset="100%" stop-color="#042f2e" />
+            </linearGradient>
+            <filter id="coreGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="b" />
+              <feMerge>
+                <feMergeNode in="b" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- 外虚线环 -->
+          <circle class="spin dash" cx="200" cy="200" r="168" stroke="url(#ringGrad)" stroke-width="1.2"
+            stroke-dasharray="4 10" fill="none" opacity="0.7" />
+
+          <!-- 刻度环 -->
+          <g class="spin-rev" opacity="0.85">
+            <circle cx="200" cy="200" r="148" fill="none" stroke="#5eead4" stroke-width="1" opacity="0.25" />
+            <!-- 12 个刻度 -->
+            <g stroke="#5eead4" stroke-width="2" stroke-linecap="round">
+              <line x1="200" y1="52" x2="200" y2="64" />
+              <line x1="200" y1="336" x2="200" y2="348" />
+              <line x1="52" y1="200" x2="64" y2="200" />
+              <line x1="336" y1="200" x2="348" y2="200" />
+              <line x1="95" y1="95" x2="104" y2="104" />
+              <line x1="296" y1="296" x2="305" y2="305" />
+              <line x1="305" y1="95" x2="296" y2="104" />
+              <line x1="104" y1="296" x2="95" y2="305" />
+            </g>
+          </g>
+
+          <!-- 能量弧 -->
+          <circle class="spin-fast dash" cx="200" cy="200" r="128" fill="none" stroke="#bef264"
+            stroke-width="3" stroke-dasharray="60 320" stroke-linecap="round" filter="url(#coreGlow)" opacity="0.9" />
+          <circle class="spin dash" cx="200" cy="200" r="118" fill="none" stroke="#5eead4"
+            stroke-width="2" stroke-dasharray="40 280" stroke-linecap="round" opacity="0.7" />
+
+          <!-- 六边形骨架 -->
+          <g filter="url(#coreGlow)">
+            <polygon points="200,78 302,137 302,263 200,322 98,263 98,137"
+              fill="url(#coreFill)" stroke="#5eead4" stroke-width="1.5" opacity="0.92" />
+            <polygon class="pulse" points="200,108 278,153 278,247 200,292 122,247 122,153"
+              fill="none" stroke="#bef264" stroke-width="1" opacity="0.55" />
+          </g>
+
+          <!-- 内部交叉链路 -->
+          <g class="dash" stroke="#5eead4" stroke-width="1.2" opacity="0.75">
+            <path class="flow" d="M140 170 L200 140 L260 170" />
+            <path class="flow-slow" d="M140 230 L200 260 L260 230" />
+            <path class="flow" d="M155 200 H245" />
+          </g>
+
+          <!-- 中心核 -->
+          <circle cx="200" cy="200" r="28" fill="#042f2e" stroke="#5eead4" stroke-width="2" filter="url(#coreGlow)" />
+          <circle class="pulse" cx="200" cy="200" r="14" fill="#5eead4" opacity="0.85" />
+          <circle class="blink" cx="200" cy="200" r="4" fill="#bef264" />
+
+          <!-- 轨道卫星点 -->
+          <g class="spin-fast">
+            <circle cx="200" cy="72" r="4" fill="#bef264" filter="url(#coreGlow)" />
+          </g>
+          <g class="spin-rev">
+            <circle cx="330" cy="200" r="3.5" fill="#5eead4" filter="url(#coreGlow)" />
+          </g>
+
+          <!-- 四角括号装饰 -->
+          <g fill="none" stroke="#5eead4" stroke-width="1.5" opacity="0.55">
+            <path d="M40 70 V40 H70" />
+            <path d="M360 70 V40 H330" />
+            <path d="M40 330 V360 H70" />
+            <path d="M360 330 V360 H330" />
+          </g>
+
+          <text x="200" y="378" text-anchor="middle" fill="#7a9390"
+            font-family="Orbitron, monospace" font-size="11" letter-spacing="3">CORE SYNC 98.4%</text>
+        </svg>
+      </div>
+    </header>
+
+    <!-- 实时指标（数字由脚本缓动） -->
+    <div class="hud" id="hud">
+      <div class="hud-item">
+        <div class="label">Throughput</div>
+        <div class="value"><span data-count="1280">0</span><em> GB/s</em></div>
+      </div>
+      <div class="hud-item">
+        <div class="label">Latency</div>
+        <div class="value"><span data-count="12">0</span><em> ms</em></div>
+      </div>
+      <div class="hud-item">
+        <div class="label">Nodes</div>
+        <div class="value"><span data-count="4096">0</span></div>
+      </div>
+      <div class="hud-item">
+        <div class="label">Uptime</div>
+        <div class="value"><span data-count="99">0</span><em>.99%</em></div>
+      </div>
+    </div>
+
+    <section class="section" id="modules">
+      <p class="eyebrow">SVG Modules</p>
+      <h2>三条矢量链路，组成界面的「呼吸感」。</h2>
+      <div class="cards">
+        <article class="card">
+          <svg class="icon" viewBox="0 0 64 64" aria-hidden="true">
+            <circle class="spin dash" cx="32" cy="32" r="26" fill="none" stroke="#5eead4" stroke-width="1.5" stroke-dasharray="6 8" />
+            <circle class="pulse" cx="32" cy="32" r="10" fill="none" stroke="#bef264" stroke-width="2" />
+            <circle cx="32" cy="32" r="3" fill="#5eead4" />
+          </svg>
+          <h3>轨道旋转</h3>
+          <p>用 CSS 驱动 SVG 的 transform-box，虚线环与实线环反向旋转，形成深度。</p>
+        </article>
+        <article class="card">
+          <svg class="icon" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="dash flow" d="M8 32 H24 L32 20 L40 44 L48 32 H56" fill="none" stroke="#5eead4" stroke-width="2" />
+            <circle class="blink" cx="32" cy="20" r="3" fill="#bef264" />
+            <circle class="blink" cx="40" cy="44" r="3" fill="#5eead4" style="animation-delay:0.5s" />
+          </svg>
+          <h3>数据流动</h3>
+          <p>stroke-dasharray + dashoffset 循环，让折线像信号在管线里跑。</p>
+        </article>
+        <article class="card">
+          <svg class="icon" viewBox="0 0 64 64" aria-hidden="true">
+            <polygon points="32,8 56,20 56,44 32,56 8,44 8,20" fill="none" stroke="#5eead4" stroke-width="1.5" />
+            <polygon class="pulse" points="32,18 48,27 48,41 32,50 16,41 16,27" fill="none" stroke="#bef264" stroke-width="1.2" />
+            <rect class="scan" x="14" y="30" width="36" height="2" fill="#5eead4" opacity="0.7" />
+          </svg>
+          <h3>扫描脉冲</h3>
+          <p>六边形骨架配合横向扫描线，模拟 HUD 探测与锁定反馈。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="radar">
+      <p class="eyebrow">Interactive Radar</p>
+      <h2>移动指针，雷达会跟着偏转。</h2>
+      <div class="radar-panel">
+        <div class="viz" id="radarViz">
+          <svg id="radarSvg" viewBox="0 0 360 360" role="img" aria-label="交互雷达">
+            <defs>
+              <radialGradient id="radarGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#5eead4" stop-opacity="0.25" />
+                <stop offset="70%" stop-color="#5eead4" stop-opacity="0.05" />
+                <stop offset="100%" stop-color="#5eead4" stop-opacity="0" />
+              </radialGradient>
+              <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#5eead4" stop-opacity="0" />
+                <stop offset="100%" stop-color="#bef264" stop-opacity="0.65" />
+              </linearGradient>
+            </defs>
+
+            <circle cx="180" cy="180" r="170" fill="url(#radarGlow)" />
+            <circle cx="180" cy="180" r="150" fill="none" stroke="#5eead4" stroke-width="1" opacity="0.3" />
+            <circle cx="180" cy="180" r="100" fill="none" stroke="#5eead4" stroke-width="1" opacity="0.25" />
+            <circle cx="180" cy="180" r="50" fill="none" stroke="#5eead4" stroke-width="1" opacity="0.2" />
+            <line x1="30" y1="180" x2="330" y2="180" stroke="#5eead4" stroke-width="0.8" opacity="0.2" />
+            <line x1="180" y1="30" x2="180" y2="330" stroke="#5eead4" stroke-width="0.8" opacity="0.2" />
+
+            <!-- 扫描扇叶：脚本改 rotate -->
+            <g id="sweep" style="transform-origin: 180px 180px;">
+              <path d="M180 180 L180 30 A150 150 0 0 1 290 80 Z" fill="url(#sweepGrad)" opacity="0.85" />
+              <line x1="180" y1="180" x2="180" y2="30" stroke="#bef264" stroke-width="2" />
+            </g>
+
+            <!-- 目标点 -->
+            <g id="blips" fill="#bef264">
+              <circle class="pulse" cx="240" cy="110" r="4" />
+              <circle class="pulse" cx="120" cy="250" r="3.5" style="animation-delay:0.4s" />
+              <circle class="blink" cx="260" cy="230" r="3" />
+              <circle class="blink" cx="100" cy="120" r="3" style="animation-delay:0.7s" />
+            </g>
+
+            <circle cx="180" cy="180" r="6" fill="#5eead4" />
+            <circle cx="180" cy="180" r="2" fill="#031016" />
+          </svg>
+        </div>
+
+        <div>
+          <ul class="stat-list">
+            <li>
+              <span>信号强度</span>
+              <div class="meter" style="--w:86%"><i style="animation-delay:0.1s"></i></div>
+              <strong>86%</strong>
+            </li>
+            <li>
+              <span>链路稳定</span>
+              <div class="meter" style="--w:94%"><i style="animation-delay:0.2s"></i></div>
+              <strong>94%</strong>
+            </li>
+            <li>
+              <span>加密信道</span>
+              <div class="meter" style="--w:72%"><i style="animation-delay:0.3s"></i></div>
+              <strong>72%</strong>
+            </li>
+            <li>
+              <span>冗余节点</span>
+              <div class="meter" style="--w:61%"><i style="animation-delay:0.4s"></i></div>
+              <strong>61%</strong>
+            </li>
+          </ul>
+          <p style="margin-top:18px;color:var(--muted);font-size:0.9rem;">
+            指针靠近雷达时，扫描束会朝向指针；离开后恢复匀速旋转。核心六边形也会做轻微 3D 倾转。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <p class="foot">演示品牌「棱核 AETHER」· 页面图形均为手写 SVG + CSS / 少量 JS 动效</p>
+  </div>
+
+  <script>
+    ;(function () {
+      'use strict'
+
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      /* ---------- HUD 数字缓动 ---------- */
+      function animateCount(el, target, duration) {
+        var start = performance.now()
+        function frame(now) {
+          var t = Math.min(1, (now - start) / duration)
+          var eased = 1 - Math.pow(1 - t, 3)
+          el.textContent = Math.round(target * eased)
+          if (t < 1) requestAnimationFrame(frame)
+        }
+        requestAnimationFrame(frame)
+      }
+
+      document.querySelectorAll('[data-count]').forEach(function (el, i) {
+        var target = Number(el.getAttribute('data-count'))
+        if (reduce) {
+          el.textContent = target
+          return
+        }
+        setTimeout(function () { animateCount(el, target, 1200) }, 200 + i * 120)
+      })
+
+      /* ---------- 核心 SVG：鼠标倾转 ---------- */
+      var coreWrap = document.getElementById('coreWrap')
+      var coreSvg = document.getElementById('coreSvg')
+      var tilt = { x: 0, y: 0 }
+      var target = { x: 0, y: 0 }
+
+      if (coreWrap && coreSvg && !reduce) {
+        coreWrap.addEventListener('pointermove', function (e) {
+          var r = coreWrap.getBoundingClientRect()
+          var nx = ((e.clientX - r.left) / r.width) * 2 - 1
+          var ny = ((e.clientY - r.top) / r.height) * 2 - 1
+          target.y = Math.max(-1, Math.min(1, nx)) * 10
+          target.x = Math.max(-1, Math.min(1, -ny)) * 8
+        })
+        coreWrap.addEventListener('pointerleave', function () {
+          target.x = 0
+          target.y = 0
+        })
+
+        ;(function tick() {
+          tilt.x += (target.x - tilt.x) * 0.08
+          tilt.y += (target.y - tilt.y) * 0.08
+          coreSvg.style.transform =
+            'rotateX(' + tilt.x.toFixed(2) + 'deg) rotateY(' + tilt.y.toFixed(2) + 'deg)'
+          requestAnimationFrame(tick)
+        })()
+      }
+
+      /* ---------- 雷达：自动扫 + 指针吸引 ---------- */
+      var sweep = document.getElementById('sweep')
+      var radarViz = document.getElementById('radarViz')
+      var angle = 0
+      var follow = null
+
+      if (radarViz && sweep && !reduce) {
+        radarViz.addEventListener('pointermove', function (e) {
+          var r = radarViz.getBoundingClientRect()
+          var cx = r.left + r.width / 2
+          var cy = r.top + r.height / 2
+          follow = Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI + 90
+        })
+        radarViz.addEventListener('pointerleave', function () { follow = null })
+
+        ;(function radarTick() {
+          if (follow == null) {
+            angle = (angle + 1.2) % 360
+          } else {
+            // 向指针角度靠拢
+            var diff = ((follow - angle + 540) % 360) - 180
+            angle += diff * 0.08
+          }
+          sweep.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)'
+          requestAnimationFrame(radarTick)
+        })()
+      } else if (sweep) {
+        sweep.style.transform = 'rotate(35deg)'
+      }
+    })()
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中国象棋</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    .board-wrap {
+      position: relative;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      /* 10 行格 + 上下边距，接近 10/9 */
+      aspect-ratio: 9 / 10.4;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(90, 50, 20, 0.28);
+      cursor: pointer;
+      touch-action: manipulation;
+      background: #e8c990;
+    }
+
+    .status {
+      margin-top: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .status.thinking {
+      color: var(--text-2);
+    }
+
+    .status.check {
+      color: var(--danger);
+    }
+
+    .captured {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      min-height: 28px;
+      margin-top: 8px;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .captured .red {
+      color: #c0392b;
+    }
+
+    .captured .black {
+      color: #1f2329;
+    }
+  </style>
+  <script src="./xiangqi.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>中国象棋</h1>
+      <p>与电脑对弈，点击棋子再点目标位置走子；红方先手</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="board-wrap">
+          <canvas id="board"></canvas>
+          <div class="overlay" id="overlay">
+            <h2 id="overlayTitle"></h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn btn-ghost" id="viewBtn">查看棋局</button>
+              <button class="btn" id="againBtn">再来一局</button>
+            </div>
+          </div>
+        </div>
+        <div class="status" id="status">红方行棋</div>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>胜</span><b id="winCount">0</b></div>
+          <div class="stat"><span>负</span><b id="loseCount">0</b></div>
+          <div class="stat"><span>和</span><b id="drawCount">0</b></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">执方</div>
+          <div class="segmented" role="radiogroup" aria-label="执方">
+            <input type="radio" name="side" id="s1" value="red" checked><label for="s1">我执红</label>
+            <input type="radio" name="side" id="s2" value="black"><label for="s2">我执黑</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">难度</div>
+          <div class="segmented" role="radiogroup" aria-label="难度">
+            <input type="radio" name="level" id="lv1" value="easy" checked><label for="lv1">简单</label>
+            <input type="radio" name="level" id="lv2" value="hard"><label for="lv2">困难</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">吃子</div>
+          <div class="captured" id="captured"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="undoBtn">悔棋</button>
+          <button class="btn" id="newBtn">新对局</button>
+        </div>
+
+        <div class="rules">
+          <p>点击己方棋子选中，再点击高亮点落子；点空白或其它己方棋子可取消 / 重选。</p>
+          <p>悔棋会同时撤回你和电脑各一步。困毙按对方获胜处理。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    ;(function () {
+      'use strict'
+
+      var COLS = Xiangqi.COLS
+      var ROWS = Xiangqi.ROWS
+      var NAMES = Xiangqi.NAMES
+      var STORE_KEY = 'xiangqi-record'
+
+      var game = new Xiangqi()
+      var canvas = document.getElementById('board')
+      var ctx = canvas.getContext('2d')
+      var overlay = document.getElementById('overlay')
+      var statusEl = document.getElementById('status')
+
+      var record = JSON.parse(localStorage.getItem(STORE_KEY) || '{"win":0,"lose":0,"draw":0}')
+      var playerSide = 'red'
+      var selected = null
+      var hints = []
+      var lastMove = null
+      var thinking = false
+      var aiTimer = null
+
+      // 布局参数（CSS 像素）
+      var W = 0
+      var H = 0
+      var pad = 0
+      var cell = 0
+      var flip = false // 执黑时棋盘翻转，己方始终在下方
+
+      function setting(name) {
+        return document.querySelector('input[name="' + name + '"]:checked').value
+      }
+
+      function resize() {
+        W = canvas.clientWidth
+        H = canvas.clientHeight
+        var dpr = window.devicePixelRatio || 1
+        canvas.width = W * dpr
+        canvas.height = H * dpr
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+        // 按宽高共同约束格子大小，避免上下棋子被裁切
+        var margin = Math.min(W, H) * 0.07
+        cell = Math.min((W - margin * 2) / (COLS - 1), (H - margin * 2) / (ROWS - 1))
+        pad = (W - cell * (COLS - 1)) / 2
+        padY = (H - cell * (ROWS - 1)) / 2
+        draw()
+      }
+
+      var padY = 0
+
+      function px(x) {
+        return pad + x * cell
+      }
+
+      function py(y) {
+        var gy = flip ? ROWS - 1 - y : y
+        return padY + gy * cell
+      }
+
+      /** 屏幕坐标 → 最近交叉点 */
+      function hitSquare(clientX, clientY) {
+        var rect = canvas.getBoundingClientRect()
+        var x = clientX - rect.left
+        var y = clientY - rect.top
+        var gx = Math.round((x - pad) / cell)
+        var gy = Math.round((y - padY) / cell)
+        if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS) return null
+        var by = flip ? ROWS - 1 - gy : gy
+        return { x: gx, y: by }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H)
+        var bg = ctx.createLinearGradient(0, 0, 0, H)
+        bg.addColorStop(0, '#f3dfb0')
+        bg.addColorStop(1, '#e4c48a')
+        ctx.fillStyle = bg
+        ctx.fillRect(0, 0, W, H)
+
+        // 棋盘线：河界处中间竖线断开
+        ctx.strokeStyle = '#5c3a1e'
+        ctx.lineWidth = 1.2
+        for (var i = 0; i < COLS; i++) {
+          ctx.beginPath()
+          if (i === 0 || i === COLS - 1) {
+            ctx.moveTo(px(i), py(0))
+            ctx.lineTo(px(i), py(ROWS - 1))
+          } else {
+            ctx.moveTo(px(i), py(0))
+            ctx.lineTo(px(i), py(4))
+            ctx.moveTo(px(i), py(5))
+            ctx.lineTo(px(i), py(ROWS - 1))
+          }
+          ctx.stroke()
+        }
+        for (var j = 0; j < ROWS; j++) {
+          ctx.beginPath()
+          ctx.moveTo(px(0), py(j))
+          ctx.lineTo(px(COLS - 1), py(j))
+          ctx.stroke()
+        }
+
+        // 九宫斜线
+        drawPalace(3, 0)
+        drawPalace(3, 7)
+
+        // 炮兵位记号
+        ;[[2, 1], [2, 7], [6, 1], [6, 7],
+          [0, 3], [2, 3], [4, 3], [6, 3], [8, 3],
+          [0, 6], [2, 6], [4, 6], [6, 6], [8, 6]].forEach(function (p) {
+          drawMark(p[0], p[1])
+        })
+
+        // 楚河汉界文字
+        ctx.save()
+        ctx.fillStyle = 'rgba(92, 58, 30, 0.45)'
+        ctx.font = 'bold ' + Math.floor(cell * 0.42) + 'px "KaiTi", "STKaiti", "Songti SC", serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        var midY = (py(4) + py(5)) / 2
+        if (!flip) {
+          ctx.fillText('楚 河', px(1.5), midY)
+          ctx.fillText('汉 界', px(6.5), midY)
+        } else {
+          ctx.fillText('汉 界', px(1.5), midY)
+          ctx.fillText('楚 河', px(6.5), midY)
+        }
+        ctx.restore()
+
+        // 最后一手高亮
+        if (lastMove) {
+          highlightSquare(lastMove.from.x, lastMove.from.y, 'rgba(255, 200, 0, 0.35)')
+          highlightSquare(lastMove.to.x, lastMove.to.y, 'rgba(255, 200, 0, 0.5)')
+        }
+
+        // 选中与可走点
+        if (selected) {
+          highlightSquare(selected.x, selected.y, 'rgba(79, 107, 255, 0.35)')
+          hints.forEach(function (m) {
+            var cx = px(m.to.x)
+            var cy = py(m.to.y)
+            ctx.beginPath()
+            if (m.capture) {
+              ctx.strokeStyle = 'rgba(220, 38, 38, 0.85)'
+              ctx.lineWidth = 2
+              ctx.arc(cx, cy, cell * 0.38, 0, Math.PI * 2)
+              ctx.stroke()
+            } else {
+              ctx.fillStyle = 'rgba(31, 35, 41, 0.28)'
+              ctx.arc(cx, cy, cell * 0.12, 0, Math.PI * 2)
+              ctx.fill()
+            }
+          })
+        }
+
+        // 棋子
+        for (var y = 0; y < ROWS; y++) {
+          for (var x = 0; x < COLS; x++) {
+            var p = game.board[y][x]
+            if (p) drawPiece(x, y, p)
+          }
+        }
+      }
+
+      function drawPalace(x0, y0) {
+        ctx.beginPath()
+        ctx.moveTo(px(x0), py(y0))
+        ctx.lineTo(px(x0 + 2), py(y0 + 2))
+        ctx.moveTo(px(x0 + 2), py(y0))
+        ctx.lineTo(px(x0), py(y0 + 2))
+        ctx.stroke()
+      }
+
+      function drawMark(x, y) {
+        var s = cell * 0.12
+        var cx = px(x)
+        var cy = py(y)
+        ctx.strokeStyle = '#5c3a1e'
+        ctx.lineWidth = 1
+        var corners = []
+        if (x > 0) {
+          corners.push([-1, -1], [-1, 1])
+        }
+        if (x < COLS - 1) {
+          corners.push([1, -1], [1, 1])
+        }
+        corners.forEach(function (d) {
+          ctx.beginPath()
+          ctx.moveTo(cx + d[0] * 3, cy + d[1] * s)
+          ctx.lineTo(cx + d[0] * 3, cy + d[1] * 3)
+          ctx.lineTo(cx + d[0] * s, cy + d[1] * 3)
+          ctx.stroke()
+        })
+      }
+
+      function highlightSquare(x, y, color) {
+        var r = cell * 0.42
+        ctx.fillStyle = color
+        ctx.beginPath()
+        ctx.arc(px(x), py(y), r, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      function drawPiece(x, y, p) {
+        var cx = px(x)
+        var cy = py(y)
+        var r = cell * 0.4
+        var red = p === p.toUpperCase()
+
+        ctx.beginPath()
+        ctx.arc(cx, cy, r, 0, Math.PI * 2)
+        var grad = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r)
+        grad.addColorStop(0, '#fff8e7')
+        grad.addColorStop(1, '#f0d9a0')
+        ctx.fillStyle = grad
+        ctx.fill()
+        ctx.lineWidth = 2
+        ctx.strokeStyle = red ? '#c0392b' : '#1f2329'
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(cx, cy, r * 0.78, 0, Math.PI * 2)
+        ctx.stroke()
+
+        ctx.fillStyle = red ? '#c0392b' : '#1f2329'
+        ctx.font = 'bold ' + Math.floor(r * 1.15) + 'px "KaiTi", "STKaiti", "Songti SC", "SimSun", serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(NAMES[p], cx, cy + 1)
+      }
+
+      function updateUI() {
+        document.getElementById('winCount').textContent = record.win
+        document.getElementById('loseCount').textContent = record.lose
+        document.getElementById('drawCount').textContent = record.draw
+
+        var canUndo = !thinking && !game.winner && game.history.length > 0
+        document.getElementById('undoBtn').disabled = !canUndo
+
+        // 吃子展示
+        var box = document.getElementById('captured')
+        box.innerHTML = ''
+        game.history.forEach(function (h) {
+          if (!h.capture) return
+          var span = document.createElement('span')
+          span.className = h.capture === h.capture.toUpperCase() ? 'red' : 'black'
+          span.textContent = NAMES[h.capture]
+          box.appendChild(span)
+        })
+        if (!box.childNodes.length) box.textContent = '—'
+
+        statusEl.classList.remove('thinking', 'check')
+        if (game.winner) {
+          var winText = game.winner === 'red' ? '红方胜' : '黑方胜'
+          statusEl.textContent = winText
+        } else if (thinking) {
+          statusEl.classList.add('thinking')
+          statusEl.textContent = '电脑思考中…'
+        } else {
+          var side = game.turn === 'red' ? '红方' : '黑方'
+          var yours = game.turn === playerSide
+          statusEl.textContent = side + '行棋' + (yours ? '（轮到你）' : '')
+          if (game.isCheck()) {
+            statusEl.classList.add('check')
+            statusEl.textContent += ' · 将军！'
+          }
+        }
+      }
+
+      function newGame() {
+        clearTimeout(aiTimer)
+        game.reset()
+        playerSide = setting('side')
+        flip = playerSide === 'black'
+        selected = null
+        hints = []
+        lastMove = null
+        thinking = false
+        overlay.classList.remove('is-show')
+        draw()
+        updateUI()
+        if (game.turn !== playerSide) aiMove()
+      }
+
+      function finish(result) {
+        // result: win | lose | draw —— 相对玩家
+        record[result]++
+        localStorage.setItem(STORE_KEY, JSON.stringify(record))
+        var titles = { win: '你赢了！', lose: '电脑获胜', draw: '和棋' }
+        document.getElementById('overlayTitle').textContent = titles[result]
+        document.getElementById('overlayText').textContent =
+          '共 ' + game.history.length + ' 手'
+        updateUI()
+        setTimeout(function () { overlay.classList.add('is-show') }, 350)
+      }
+
+      function afterMove() {
+        lastMove = game.history[game.history.length - 1]
+        selected = null
+        hints = []
+        draw()
+        updateUI()
+        if (game.winner) {
+          var playerWin = game.winner === playerSide
+          finish(playerWin ? 'win' : 'lose')
+          return
+        }
+        if (game.turn !== playerSide) aiMove()
+      }
+
+      function aiMove() {
+        thinking = true
+        updateUI()
+        aiTimer = setTimeout(function () {
+          var mv = game.bestMove(setting('level'))
+          thinking = false
+          if (mv) {
+            game.move(mv.from.x, mv.from.y, mv.to.x, mv.to.y)
+            afterMove()
+          } else {
+            updateUI()
+          }
+        }, 220)
+      }
+
+      function trySelectOrMove(sq) {
+        if (thinking || game.winner) return
+        if (game.turn !== playerSide) return
+
+        var piece = game.board[sq.y][sq.x]
+        var isMine = piece && ((piece === piece.toUpperCase()) === (playerSide === 'red'))
+
+        // 已选中：尝试走子
+        if (selected) {
+          var hit = hints.some(function (m) {
+            return m.to.x === sq.x && m.to.y === sq.y
+          })
+          if (hit) {
+            if (game.move(selected.x, selected.y, sq.x, sq.y)) afterMove()
+            return
+          }
+          // 点到其它己方棋子 → 改选
+          if (isMine) {
+            selected = sq
+            hints = game.legalFrom(sq.x, sq.y)
+            draw()
+            return
+          }
+          // 取消选择
+          selected = null
+          hints = []
+          draw()
+          return
+        }
+
+        if (isMine) {
+          selected = sq
+          hints = game.legalFrom(sq.x, sq.y)
+          draw()
+        }
+      }
+
+      function undo() {
+        if (thinking || game.winner) return
+        // 撤回到轮到玩家
+        var guard = 0
+        do {
+          if (!game.undo()) break
+          guard++
+        } while (game.turn !== playerSide && game.history.length && guard < 4)
+
+        lastMove = game.history.length ? game.history[game.history.length - 1] : null
+        selected = null
+        hints = []
+        draw()
+        updateUI()
+      }
+
+      canvas.addEventListener('click', function (e) {
+        var sq = hitSquare(e.clientX, e.clientY)
+        if (sq) trySelectOrMove(sq)
+      })
+
+      document.getElementById('undoBtn').onclick = undo
+      document.getElementById('newBtn').onclick = newGame
+      document.getElementById('againBtn').onclick = newGame
+      document.getElementById('viewBtn').onclick = function () {
+        overlay.classList.remove('is-show')
+      }
+      document.querySelectorAll('input[name="side"], input[name="level"]').forEach(function (r) {
+        r.onchange = newGame
+      })
+      window.addEventListener('resize', resize)
+
+      resize()
+      newGame()
+    })()
+  </script>
+</body>
+
+</html>

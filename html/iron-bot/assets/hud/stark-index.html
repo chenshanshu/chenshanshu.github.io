@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STARK SYSTEMS — AI Command Interface</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== BOOT SEQUENCE OVERLAY ===== -->
+  <div class="boot-overlay" id="boot-overlay">
+    <div class="boot-text" id="boot-text"></div>
+    <div class="boot-progress">
+      <div class="boot-progress-fill" id="boot-progress-fill"></div>
+    </div>
+    <div class="boot-percent" id="boot-percent">0%</div>
+  </div>
+
+  <!-- ===== ANIMATED BACKGROUND ===== -->
+  <div class="background"></div>
+
+  <!-- ===== SYSTEM FAILURE OVERLAY (hidden easter egg) ===== -->
+  <div class="failure-overlay"></div>
+
+  <!-- ===== MAIN INTERFACE ===== -->
+  <main class="interface" id="interface">
+
+    <!-- Stark Industries Branding -->
+    <header class="branding">
+      <h1>Stark Industries</h1>
+      <p class="subtitle">Advanced AI Systems</p>
+    </header>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="theme-toggle">THEME: BLUE</button>
+
+    <!-- Arc Reactor Centerpiece -->
+    <section class="reactor-container" aria-label="Arc Reactor">
+      <div class="outer-ring" id="outer-ring"></div>
+      <div class="inner-core"></div>
+      <div class="reactor-glow"></div>
+    </section>
+
+    <!-- HUD Panels -->
+    <div class="panels">
+      <!-- Panel 1: System Status -->
+      <article class="panel panel--status" style="transform: translateX(-40px);">
+        <h2>System Status</h2>
+        <p>Core: <span class="value highlight">Online</span></p>
+        <p>Uptime: <span class="value">99.97%</span></p>
+        <p>Integrity: <span class="value highlight">Nominal</span></p>
+      </article>
+
+      <!-- Panel 2: Threat Level -->
+      <article class="panel panel--threat" style="transform: translateX(40px);">
+        <h2>Threat Level</h2>
+        <p>Status: <span class="value highlight" id="threat-status">LOW</span></p>
+        <p>Perimeter: <span class="value" id="threat-perimeter">Secured</span></p>
+        <p>Active Alerts: <span class="value" id="threat-alerts">0</span></p>
+      </article>
+
+      <!-- Panel 3: Energy Output -->
+      <article class="panel panel--energy" style="transform: translateX(-40px);">
+        <h2>Energy Output</h2>
+        <p>Arc Reactor: <span class="value highlight" id="energy-value">0%</span></p>
+        <div class="energy-bar">
+          <div class="energy-bar-fill" id="energy-fill"></div>
+        </div>
+      </article>
+
+      <!-- Panel 4: Global Location -->
+      <article class="panel panel--location" style="transform: translateX(40px);">
+        <h2>Global Location</h2>
+        <p>Region: <span class="value">North Atlantic</span></p>
+        <p>Coordinates: <span class="value highlight">40.7° N, 74.0° W</span></p>
+        <p>Altitude: <span class="value">Ground Level</span></p>
+      </article>
+    </div>
+
+    <!-- Engage AI Button -->
+    <button class="engage-btn" id="engage-btn">Engage AI</button>
+
+    <!-- Live Data: Clock & System Messages -->
+    <footer class="live-data">
+      <div class="clock" id="clock">00:00:00</div>
+      <div class="system-message" id="system-message"></div>
+    </footer>
+
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

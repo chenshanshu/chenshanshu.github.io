@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>观穹 ORBIT · 随身空间影像</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #071018;
+      --fog: #9eb0c0;
+      --paper: #e8eef4;
+      --sand: #d4a574;
+      --sand-hot: #e8b86a;
+      --teal: #2dd4bf;
+      --line: rgba(232, 238, 244, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      color: var(--paper);
+      background: var(--ink);
+      font: 400 16px/1.65 Manrope, "PingFang SC", "Microsoft YaHei", sans-serif;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ---------- 顶部导航 ---------- */
+    .nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px;
+      background: linear-gradient(to bottom, rgba(7, 16, 24, 0.85), transparent);
+      backdrop-filter: blur(0px);
+      transition: background 0.3s, backdrop-filter 0.3s;
+    }
+
+    .nav.is-solid {
+      background: rgba(7, 16, 24, 0.78);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav a.back {
+      color: var(--fog);
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav a.back:hover { color: var(--paper); }
+
+    .nav .brand-mini {
+      font-family: Fraunces, "Noto Serif SC", serif;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* ---------- Hero：一屏一构图 ---------- */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-layer {
+      position: absolute;
+      inset: -18% -10%;
+      background-size: cover;
+      background-position: center;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .hero-sky {
+      background-image: url('./images/hero-sky.jpg');
+      filter: saturate(1.15) contrast(1.05);
+    }
+
+    .hero-sky::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 40%, transparent 20%, rgba(7, 16, 24, 0.55) 70%, rgba(7, 16, 24, 0.92) 100%),
+        linear-gradient(180deg, rgba(7, 16, 24, 0.35), rgba(7, 16, 24, 0.75));
+    }
+
+    .hero-stars {
+      background-image:
+        radial-gradient(1.5px 1.5px at 12% 22%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(1px 1px at 78% 18%, rgba(255, 255, 255, 0.55), transparent),
+        radial-gradient(1.5px 1.5px at 62% 48%, rgba(45, 212, 191, 0.65), transparent),
+        radial-gradient(1px 1px at 30% 70%, rgba(255, 255, 255, 0.4), transparent);
+      opacity: 0.7;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
+      align-items: center;
+      width: min(1120px, calc(100% - 48px));
+      padding: 96px 0 72px;
+      will-change: transform, opacity;
+    }
+
+    .hero-copy {
+      max-width: 34rem;
+    }
+
+    .hero-brand {
+      margin: 0 0 18px;
+      color: var(--sand-hot);
+      font-family: Fraunces, "Noto Serif SC", serif;
+      font-size: clamp(3.2rem, 7vw, 5.4rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      text-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      animation: rise 0.9s ease both;
+    }
+
+    .hero-brand small {
+      display: block;
+      margin-top: 8px;
+      color: var(--fog);
+      font-family: Manrope, sans-serif;
+      font-size: 0.28em;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      margin: 0 0 14px;
+      font-family: "Noto Serif SC", Fraunces, serif;
+      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+      font-weight: 500;
+      line-height: 1.35;
+      animation: rise 0.9s 0.08s ease both;
+    }
+
+    .hero-desc {
+      margin: 0 0 28px;
+      max-width: 28rem;
+      color: var(--fog);
+      font-size: 1rem;
+      animation: rise 0.9s 0.16s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      animation: rise 0.9s 0.24s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 46px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s, color 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      color: #071018;
+      background: linear-gradient(135deg, var(--sand-hot), var(--sand));
+    }
+
+    .btn-ghost {
+      color: var(--paper);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* VR 舞台：鼠标 / 陀螺仪驱动的 3D 倾转 */
+    .vr-stage {
+      position: relative;
+      height: min(58vh, 460px);
+      perspective: 900px;
+      animation: rise 1s 0.12s ease both;
+    }
+
+    .vr-orbit {
+      position: absolute;
+      inset: 8% 10%;
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      border-radius: 50%;
+      transform: rotateX(68deg);
+      box-shadow: 0 0 40px rgba(45, 212, 191, 0.12);
+      animation: spin 18s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotateX(68deg) rotateZ(360deg); }
+    }
+
+    .vr-card {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .vr-card img {
+      display: block;
+      width: min(100%, 380px);
+      border-radius: 28px;
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+      transform: translateZ(40px);
+    }
+
+    .vr-glow {
+      position: absolute;
+      width: 55%;
+      height: 40%;
+      left: 22%;
+      bottom: 8%;
+      background: radial-gradient(ellipse, rgba(45, 212, 191, 0.35), transparent 70%);
+      filter: blur(18px);
+      transform: translateZ(-20px);
+      pointer-events: none;
+    }
+
+    .vr-hint {
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      color: var(--fog);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      transform: translateX(-50%);
+      opacity: 0.75;
+    }
+
+    /* ---------- 通用区块 ---------- */
+    .section {
+      position: relative;
+      padding: 100px 24px;
+    }
+
+    .section-inner {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin-bottom: 12px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      font-family: "Noto Serif SC", Fraunces, serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .section .lead {
+      max-width: 36rem;
+      color: var(--fog);
+    }
+
+    /* 滚动章节：高度拉长，内部 sticky 钉住，滚轮推进景深动画 */
+    .scroll-chapter {
+      position: relative;
+      height: 220vh;
+    }
+
+    .scroll-chapter__sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      display: grid;
+      align-items: end;
+    }
+
+    .scroll-chapter__bg {
+      position: absolute;
+      /* 四周留足余量，左右平移时才不会露边 */
+      inset: -28% -18%;
+      background-size: cover;
+      background-position: center;
+      will-change: transform, filter;
+      filter: saturate(1.05);
+    }
+
+    .scroll-chapter__veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(7, 16, 24, 0.88), rgba(7, 16, 24, 0.28) 55%, rgba(7, 16, 24, 0.6));
+      will-change: opacity;
+    }
+
+    .scroll-chapter__caption {
+      position: relative;
+      z-index: 1;
+      width: min(1080px, calc(100% - 48px));
+      margin: 0 auto 12vh;
+      max-width: 32rem;
+      will-change: transform, opacity;
+    }
+
+    .scroll-chapter__caption h2 {
+      text-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 左右视差前景条：与背景横向反向移动 */
+    .scroll-chapter__rail {
+      position: absolute;
+      top: 18%;
+      bottom: 22%;
+      width: min(28vw, 220px);
+      z-index: 1;
+      border-radius: 18px;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      will-change: transform, opacity;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .scroll-chapter__rail--left {
+      left: max(16px, calc(50% - 540px));
+    }
+
+    .scroll-chapter__rail--right {
+      right: max(16px, calc(50% - 540px));
+    }
+
+    .hero-copy,
+    .vr-stage {
+      will-change: transform;
+    }
+
+    .scroll-chapter__progress {
+      position: absolute;
+      left: 28px;
+      top: 50%;
+      z-index: 2;
+      width: 2px;
+      height: 88px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      transform: translateY(-50%);
+      overflow: hidden;
+    }
+
+    .scroll-chapter__progress > i {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, var(--teal), var(--sand-hot));
+      transform-origin: top center;
+      transform: scaleY(0);
+      will-change: transform;
+    }
+
+    /* 特性三列（非卡片堆叠：分割线构图） */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 56px;
+      border-top: 1px solid var(--line);
+    }
+
+    .feature {
+      padding: 28px 24px 8px 0;
+      border-right: 1px solid var(--line);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .feature:last-child {
+      border-right: 0;
+      padding-right: 0;
+    }
+
+    .feature.is-in {
+      opacity: 1;
+      transform: none;
+    }
+
+    .feature h3 {
+      margin: 0 0 10px;
+      font-family: "Noto Serif SC", serif;
+      font-size: 1.25rem;
+    }
+
+    .feature p {
+      color: var(--fog);
+      font-size: 0.95rem;
+    }
+
+    /* 双栏沉浸 */
+    .split {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .split-visual {
+      position: relative;
+      min-height: 420px;
+      overflow: hidden;
+      border-radius: 24px;
+    }
+
+    .split-visual img {
+      position: absolute;
+      left: 0;
+      top: -18%;
+      width: 100%;
+      height: 136%;
+      object-fit: cover;
+      will-change: transform;
+    }
+
+    .split-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--line);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .spec-list {
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .spec-list li {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      color: var(--fog);
+      font-size: 0.95rem;
+    }
+
+    .spec-list strong {
+      color: var(--paper);
+      font-weight: 600;
+    }
+
+    /* 结尾 CTA */
+    .finale {
+      position: relative;
+      padding: 120px 24px 100px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .finale-bg {
+      position: absolute;
+      inset: -30% 0;
+      background: url('./images/hands.jpg') center / cover;
+      will-change: transform;
+      filter: brightness(0.45) saturate(1.1);
+    }
+
+    .finale-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(7, 16, 24, 0.2), rgba(7, 16, 24, 0.92));
+    }
+
+    .finale-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .finale h2 {
+      margin: 0 auto 14px;
+      max-width: 16em;
+      font-family: "Noto Serif SC", Fraunces, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+    }
+
+    .finale p {
+      margin: 0 auto 28px;
+      max-width: 28rem;
+      color: var(--fog);
+    }
+
+    .footnote {
+      padding: 28px 24px 40px;
+      color: rgba(158, 176, 192, 0.65);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding-top: 110px;
+        text-align: center;
+      }
+
+      .hero-copy { max-width: none; }
+      .hero-desc { margin-left: auto; margin-right: auto; }
+      .hero-cta { justify-content: center; }
+
+      .vr-stage { height: 300px; }
+      .vr-hint { display: none; }
+
+      .features { grid-template-columns: 1fr; }
+      .feature {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 22px 0;
+      }
+
+      .split { grid-template-columns: 1fr; }
+      .split-visual { min-height: 280px; }
+
+      .spec-list li { grid-template-columns: 1fr; gap: 4px; }
+
+      .scroll-chapter__rail { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav" id="nav">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <div class="brand-mini">观穹 ORBIT</div>
+  </nav>
+
+  <!-- Hero：品牌 + 一句主张 + CTA + VR 产品舞台 -->
+  <header class="hero" id="hero">
+    <div class="hero-layer hero-sky" data-hero="sky"></div>
+    <div class="hero-layer hero-stars" data-hero="stars"></div>
+
+    <div class="hero-content" data-hero="content">
+      <div class="hero-copy">
+        <h1 class="hero-brand">观穹<small>ORBIT Spatial Viewer</small></h1>
+        <p class="hero-title">把整片天空，收进掌心的轨道。</p>
+        <p class="hero-desc">随身空间影像设备。移动视角即漫游现场，滚动浏览像穿过一层层景深——不是平面相册，是可走进去的记忆。</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#immersive">体验沉浸体验</a>
+          <a class="btn btn-ghost" href="#specs">查看规格</a>
+        </div>
+      </div>
+
+      <div class="vr-stage" id="vrStage" aria-label="可拖动倾转的产品预览">
+        <div class="vr-orbit" aria-hidden="true"></div>
+        <div class="vr-card" id="vrCard">
+          <div class="vr-glow" aria-hidden="true"></div>
+          <img src="./images/product.jpg" alt="观穹 ORBIT 头戴式空间影像设备" width="760" height="760" draggable="false">
+        </div>
+        <p class="vr-hint">移动鼠标或倾斜手机 · VR 视角跟随</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- 滚动章节：往下滚时画面与文字一起下移并渐变 -->
+  <section class="scroll-chapter" id="immersive" data-chapter>
+    <div class="scroll-chapter__sticky">
+      <div class="scroll-chapter__bg" data-layer="bg" style="background-image:url('./images/scene-nature.jpg')"></div>
+      <div class="scroll-chapter__veil" data-layer="veil"></div>
+      <div class="scroll-chapter__rail scroll-chapter__rail--right" data-layer="rail"
+        style="background-image:url('./images/detail.jpg')"></div>
+      <div class="scroll-chapter__progress" aria-hidden="true"><i data-layer="bar"></i></div>
+      <div class="scroll-chapter__caption" data-layer="caption">
+        <p class="eyebrow">Immersive Capture</p>
+        <h2>一镜收入地平线，回放时仍能左右环顾。</h2>
+        <p class="lead">双广角同步曝光，现场光线被写成可导航的空间。下山后，朋友仍能站在你当时的位置看云。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <p class="eyebrow">Why Orbit</p>
+      <h2>为「再去一次」而设计。</h2>
+      <p class="lead">旅行、展陈、房产与教学——凡是说不清的现场感，都适合用轨道视角留下来。</p>
+
+      <div class="features" id="features">
+        <article class="feature">
+          <h3>空间级回放</h3>
+          <p>拖拽或陀螺仪驱动视角，像把窗户开在记忆里。支持网页与头显浏览。</p>
+        </article>
+        <article class="feature">
+          <h3>口袋机身</h3>
+          <p>折叠体积接近薄钱包，磁吸充电。开机到开录，少于两秒。</p>
+        </article>
+        <article class="feature">
+          <h3>景深叙事</h3>
+          <p>页面本身用视差讲故事：前景、主体、远山分层滚动，预告成品气质。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="scroll-chapter" data-chapter>
+    <div class="scroll-chapter__sticky">
+      <div class="scroll-chapter__bg" data-layer="bg" style="background-image:url('./images/scene-city.jpg')"></div>
+      <div class="scroll-chapter__veil" data-layer="veil"></div>
+      <div class="scroll-chapter__rail scroll-chapter__rail--left" data-layer="rail"
+        style="background-image:url('./images/product-2.jpg')"></div>
+      <div class="scroll-chapter__progress" aria-hidden="true"><i data-layer="bar"></i></div>
+      <div class="scroll-chapter__caption" data-layer="caption">
+        <p class="eyebrow">City Orbit</p>
+        <h2>夜色里的楼群，也能被慢慢绕行。</h2>
+        <p class="lead">高动态范围保住霓虹与暗部。分享链接打开即是完整现场，无需安装客户端。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="specs">
+    <div class="section-inner split">
+      <div class="split-visual">
+        <img src="./images/detail.jpg" alt="近距离观察设备细节" data-float>
+      </div>
+      <div>
+        <p class="eyebrow">Specs</p>
+        <h2>够用的硬指标，克制的噪音。</h2>
+        <p class="lead">我们把算力留给拼缝与稳定，而不是堆砌参数表上的噱头。</p>
+        <ul class="spec-list">
+          <li><strong>视场</strong><span>双 200° 超广角 · 自动拼成约 360°×180°</span></li>
+          <li><strong>解析</strong><span>8K 空间帧 · 导出平面视频可选</span></li>
+          <li><strong>续航</strong><span>连续录制约 75 分钟 · 快充 20 分钟可用半小时</span></li>
+          <li><strong>连接</strong><span>USB-C · Wi-Fi 6 直传 · 网页 VR 播放</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner split" style="grid-template-columns: 0.95fr 1.05fr;">
+      <div>
+        <p class="eyebrow">Live Preview</p>
+        <h2>同一套交互语言，从官网到成片。</h2>
+        <p class="lead">本页的 VR 倾转与滚动视差，正是播放器里的手感原型——先在这里感受，再决定是否带它出门。</p>
+        <div class="hero-cta" style="margin-top: 24px;">
+          <a class="btn btn-primary" href="#hero">回到产品舞台</a>
+        </div>
+      </div>
+      <div class="split-visual">
+        <img src="./images/product-2.jpg" alt="观穹设备另一角度" data-float>
+      </div>
+    </div>
+  </section>
+
+  <section class="finale" data-finale>
+    <div class="finale-bg" data-finale-bg></div>
+    <div class="finale-inner" data-finale-copy>
+      <p class="eyebrow">Reserve</p>
+      <h2>下一次远行，留一颗会转的太阳。</h2>
+      <p>本页为交互演示样例，展示 VR 视角跟随与滚动视差如何服务于产品叙事。</p>
+      <a class="btn btn-primary" href="../index.html">返回工具列表</a>
+    </div>
+  </section>
+
+  <p class="footnote">演示品牌「观穹 ORBIT」为虚构产品 · 图片来自 Unsplash（本地已缓存）</p>
+
+  <script>
+    ;(function () {
+      'use strict'
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      var nav = document.getElementById('nav')
+      var vrStage = document.getElementById('vrStage')
+      var vrCard = document.getElementById('vrCard')
+      var hero = document.getElementById('hero')
+      var heroSky = document.querySelector('[data-hero="sky"]')
+      var heroStars = document.querySelector('[data-hero="stars"]')
+      var heroContent = document.querySelector('[data-hero="content"]')
+      var heroCopy = document.querySelector('.hero-copy')
+      var chapters = Array.prototype.slice.call(document.querySelectorAll('[data-chapter]'))
+      var floatImgs = Array.prototype.slice.call(document.querySelectorAll('[data-float]'))
+      var finale = document.querySelector('[data-finale]')
+      var finaleBg = document.querySelector('[data-finale-bg]')
+      var finaleCopy = document.querySelector('[data-finale-copy]')
+
+      var targetTilt = { x: 0, y: 0 }
+      var tilt = { x: 0, y: 0 }
+      var ticking = false
+
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v))
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t
+      }
+
+      /* ---------- VR 倾转（与滚动分离，避免互相覆盖 transform） ---------- */
+      function onPointer(e) {
+        if (reduceMotion || !vrStage) return
+        var rect = vrStage.getBoundingClientRect()
+        var nx = ((e.clientX - rect.left) / rect.width) * 2 - 1
+        var ny = ((e.clientY - rect.top) / rect.height) * 2 - 1
+        targetTilt.y = clamp(nx, -1, 1) * 14
+        targetTilt.x = clamp(-ny, -1, 1) * 10
+      }
+      window.addEventListener('pointermove', onPointer)
+
+      if (window.DeviceOrientationEvent && !reduceMotion) {
+        window.addEventListener('deviceorientation', function (e) {
+          if (e.beta == null || e.gamma == null || window.innerWidth > 860) return
+          targetTilt.x = clamp((e.beta - 45) / 35, -1, 1) * 12
+          targetTilt.y = clamp(e.gamma / 35, -1, 1) * 14
+        })
+      }
+
+      function tickVR() {
+        tilt.x += (targetTilt.x - tilt.x) * 0.08
+        tilt.y += (targetTilt.y - tilt.y) * 0.08
+        if (vrCard) {
+          vrCard.style.transform =
+            'rotateX(' + tilt.x.toFixed(2) + 'deg) rotateY(' + tilt.y.toFixed(2) + 'deg)'
+        }
+        requestAnimationFrame(tickVR)
+      }
+      if (!reduceMotion) requestAnimationFrame(tickVR)
+
+      /**
+       * 章节进度：0 = 刚钉住顶部，1 = 即将滚出
+       * 往下滚时 p 增大，各层 translateY 为正 → 画面整体往下走并伴随缩放/透明度变化
+       */
+      function chapterProgress(section) {
+        var rect = section.getBoundingClientRect()
+        var travel = section.offsetHeight - window.innerHeight
+        if (travel <= 0) return 0
+        // section.top 从 0 走到 -(travel)
+        return clamp(-rect.top / travel, 0, 1)
+      }
+
+      function updateScrollEffects() {
+        var scrollY = window.scrollY || window.pageYOffset
+        var vh = window.innerHeight
+        nav.classList.toggle('is-solid', scrollY > 40)
+
+        if (reduceMotion) return
+
+        // —— Hero：上下 + 左右分层（文案左漂、产品右漂） ——
+        if (hero && heroContent) {
+          var heroRect = hero.getBoundingClientRect()
+          var leave = clamp(-heroRect.top / vh, 0, 1.2)
+
+          if (heroSky) {
+            // 天空：下移同时向左平移
+            heroSky.style.transform =
+              'translate3d(' + (leave * -90).toFixed(1) + 'px, ' + (leave * 140).toFixed(1) + 'px, 0) scale(' +
+              (1.12 + leave * 0.08).toFixed(3) + ')'
+          }
+          if (heroStars) {
+            // 星点：反向向右 + 更快下移
+            heroStars.style.transform =
+              'translate3d(' + (leave * 120).toFixed(1) + 'px, ' + (leave * 220).toFixed(1) + 'px, 0)'
+          }
+          heroContent.style.opacity = String(clamp(1 - leave * 1.15, 0, 1))
+          if (heroCopy) {
+            heroCopy.style.transform =
+              'translate3d(' + (leave * -100).toFixed(1) + 'px, ' + (leave * 260).toFixed(1) + 'px, 0)'
+          }
+          if (vrStage) {
+            vrStage.style.transform =
+              'translate3d(' + (leave * 110).toFixed(1) + 'px, ' + (leave * 300).toFixed(1) + 'px, 0)'
+          }
+        }
+
+        // —— Sticky 滚动章节：背景左右扫，前景条反向，文案斜向位移 ——
+        chapters.forEach(function (section, index) {
+          var p = chapterProgress(section)
+          var dir = index % 2 === 0 ? 1 : -1 // 相邻章节左右方向相反
+          var bg = section.querySelector('[data-layer="bg"]')
+          var veil = section.querySelector('[data-layer="veil"]')
+          var caption = section.querySelector('[data-layer="caption"]')
+          var rail = section.querySelector('[data-layer="rail"]')
+          var bar = section.querySelector('[data-layer="bar"]')
+
+          if (bg) {
+            var bgY = lerp(-80, 160, p)
+            // 横向扫过：从一侧滑到另一侧（幅度够大，肉眼可见）
+            var bgX = lerp(-120 * dir, 140 * dir, p)
+            var bgScale = lerp(1.22, 1.05, p)
+            bg.style.transform =
+              'translate3d(' + bgX.toFixed(1) + 'px, ' + bgY.toFixed(1) + 'px, 0) scale(' + bgScale.toFixed(3) + ')'
+            bg.style.filter = 'saturate(1.05) brightness(' + lerp(0.85, 1.05, p).toFixed(2) + ')'
+          }
+          if (veil) {
+            veil.style.opacity = String(lerp(0.95, 0.55, p))
+          }
+          // 侧边图：与背景反向横向移动，形成左右景深
+          if (rail) {
+            var railX = lerp(80 * dir, -100 * dir, p)
+            var railY = lerp(-30, 90, p)
+            var railOp = p < 0.15 ? p / 0.15 : p > 0.85 ? (1 - p) / 0.15 : 1
+            rail.style.transform =
+              'translate3d(' + railX.toFixed(1) + 'px, ' + railY.toFixed(1) + 'px, 0) rotate(' +
+              (dir * lerp(-4, 6, p)).toFixed(2) + 'deg)'
+            rail.style.opacity = String(clamp(railOp, 0, 0.95))
+          }
+          if (caption) {
+            var capY, capX, capOp, capScale
+            if (p < 0.25) {
+              var t = p / 0.25
+              capY = lerp(70, 0, t)
+              capX = lerp(-70 * dir, 0, t)
+              capOp = t
+              capScale = lerp(0.96, 1, t)
+            } else if (p < 0.65) {
+              var mid = (p - 0.25) / 0.4
+              capY = lerp(0, 40, mid)
+              capX = lerp(0, 36 * dir, mid)
+              capOp = 1
+              capScale = 1
+            } else {
+              var t2 = (p - 0.65) / 0.35
+              capY = lerp(40, 120, t2)
+              capX = lerp(36 * dir, 90 * dir, t2)
+              capOp = 1 - t2
+              capScale = lerp(1, 0.94, t2)
+            }
+            caption.style.transform =
+              'translate3d(' + capX.toFixed(1) + 'px, ' + capY.toFixed(1) + 'px, 0) scale(' + capScale.toFixed(3) + ')'
+            caption.style.opacity = String(clamp(capOp, 0, 1))
+          }
+          if (bar) {
+            bar.style.transform = 'scaleY(' + p.toFixed(3) + ')'
+          }
+        })
+
+        // —— 规格区图片：进视口时斜向漂（下 + 侧） ——
+        floatImgs.forEach(function (img, i) {
+          var box = img.parentElement.getBoundingClientRect()
+          var p = clamp((vh - box.top) / (vh + box.height), 0, 1)
+          var side = i % 2 === 0 ? 1 : -1
+          var y = lerp(-60, 80, p)
+          var x = lerp(-50 * side, 55 * side, p)
+          img.style.transform =
+            'translate3d(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px, 0) scale(1.14)'
+        })
+
+        // —— 结尾区：背景横向漂移 + 文案上浮 ——
+        if (finale && finaleBg) {
+          var fr = finale.getBoundingClientRect()
+          var fp = clamp((vh - fr.top) / (vh + fr.height), 0, 1)
+          finaleBg.style.transform =
+            'translate3d(' + lerp(-60, 80, fp).toFixed(1) + 'px, ' +
+            lerp(-40, 100, fp).toFixed(1) + 'px, 0) scale(1.18)'
+          if (finaleCopy) {
+            finaleCopy.style.transform =
+              'translate3d(0, ' + lerp(50, 0, clamp(fp * 1.4, 0, 1)).toFixed(1) + 'px, 0)'
+            finaleCopy.style.opacity = String(clamp(fp * 1.6, 0, 1))
+          }
+        }
+      }
+
+      function requestTick() {
+        if (ticking) return
+        ticking = true
+        requestAnimationFrame(function () {
+          ticking = false
+          updateScrollEffects()
+        })
+      }
+
+      /* ---------- 特性入场 ---------- */
+      function observeFeatures() {
+        var items = document.querySelectorAll('.feature')
+        if (!('IntersectionObserver' in window)) {
+          items.forEach(function (el) { el.classList.add('is-in') })
+          return
+        }
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-in')
+              obs.unobserve(entry.target)
+            }
+          })
+        }, { threshold: 0.25 })
+        items.forEach(function (el, i) {
+          el.style.transitionDelay = (i * 0.12) + 's'
+          obs.observe(el)
+        })
+      }
+
+      observeFeatures()
+      updateScrollEffects()
+      window.addEventListener('scroll', requestTick, { passive: true })
+      window.addEventListener('resize', requestTick)
+    })()
+  </script>
+</body>
+
+</html>

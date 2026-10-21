@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三阶魔方</title>
+  <link rel="stylesheet" href="../static/game-ui.css">
+  <style>
+    .stage-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      background: radial-gradient(ellipse at 50% 30%, #3a4258, #1a1e2a 70%);
+      touch-action: none;
+      user-select: none;
+    }
+
+    #cube-canvas {
+      display: block;
+      width: 100%;
+      height: min(62vw, 480px);
+      cursor: grab;
+    }
+
+    .stage-wrap.is-dragging #cube-canvas {
+      cursor: grabbing;
+    }
+
+    /* 面拧转按钮盘 */
+    .pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .pad button {
+      height: 36px;
+      font: inherit;
+      font-weight: 600;
+      color: #1f2329;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .pad button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .pad .u { background: #f5f5f5; }
+    .pad .d { background: #ffd500; }
+    .pad .f { background: #4ade80; }
+    .pad .b { background: #60a5fa; }
+    .pad .l { background: #fb923c; }
+    .pad .r { background: #f87171; color: #fff; }
+
+    .pad-hint {
+      margin: 0 0 10px;
+      color: var(--text-2);
+      font-size: 12px;
+    }
+
+    .formula {
+      margin-top: 12px;
+      padding: 10px 12px;
+      color: var(--text-2);
+      font-size: 12px;
+      font-family: ui-monospace, Consolas, monospace;
+      word-break: break-all;
+      background: #f8f9fc;
+      border-radius: 8px;
+      min-height: 2.6em;
+    }
+  </style>
+  <script src="../static/three.min.js"></script>
+  <script src="./cube.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <a class="back" href="../index.html">← 返回工具列表</a>
+    <header class="header">
+      <h1>三阶魔方</h1>
+      <p>在色块上拖拽拧层，空白处拖拽转视角；也可用右侧按钮或键盘操作</p>
+    </header>
+
+    <div class="container">
+      <section class="card">
+        <div class="stage-wrap" id="stage">
+          <canvas id="cube-canvas"></canvas>
+          <div class="overlay" id="overlay">
+            <h2>还原成功！</h2>
+            <p id="overlayText"></p>
+            <div class="overlay-actions">
+              <button class="btn btn-ghost" id="viewBtn">继续查看</button>
+              <button class="btn" id="againBtn">再打乱一局</button>
+            </div>
+          </div>
+        </div>
+        <p class="board-tip">色块滑动拧层 · 空白处拖（或右键 / Alt+拖）转视角 · 键盘 UDFBLR（Shift 逆时针，再按 2 为 180°）</p>
+      </section>
+
+      <section class="card">
+        <div class="stats">
+          <div class="stat"><span>步数</span><b id="moves">0</b></div>
+          <div class="stat"><span>用时</span><b id="time">0.0</b></div>
+          <div class="stat"><span>状态</span><b id="status">已还原</b></div>
+        </div>
+
+        <p class="pad-hint">也可点这里拧层；「下一次」切换顺时针 / 逆时针 / 180°</p>
+        <div class="pad" id="pad">
+          <button class="u" data-face="U" title="上层">U 上</button>
+          <button class="d" data-face="D" title="下层">D 下</button>
+          <button class="f" data-face="F" title="前层">F 前</button>
+          <button class="b" data-face="B" title="后层">B 后</button>
+          <button class="l" data-face="L" title="左层">L 左</button>
+          <button class="r" data-face="R" title="右层">R 右</button>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="primeBtn">下一次：顺时针</button>
+          <button class="btn btn-ghost" id="undoBtn">撤销</button>
+          <button class="btn btn-ghost" id="autoBtn">自动还原</button>
+          <button class="btn btn-ghost" id="resetBtn">重置</button>
+          <button class="btn btn-block" id="scrambleBtn">打乱</button>
+        </div>
+
+        <div class="formula" id="formula">打乱公式会显示在这里</div>
+
+        <div class="rules">
+          <p>在贴纸上拖动拧层；在深色背景上拖动（或按住右键 / Alt）旋转视角，上下拖只会前后翻，不会往旁边甩。</p>
+          <p>「自动还原」按操作历史逆序回放，一定能还原（不一定是最短步数）。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    ;(function () {
+      'use strict'
+
+      var GAP = 0.06
+      var SIZE = 1 - GAP
+      var ANIM_MS = 180
+      var COLORS = RubiksCube.FACE_COLORS
+      var FACE_AXIS = RubiksCube.FACE_AXIS
+      var FACE_LAYER = RubiksCube.FACE_LAYER
+
+      // Three.js 盒体面顺序：+x -x +y -y +z -z → R L U D F B
+      var BOX_FACES = ['R', 'L', 'U', 'D', 'F', 'B']
+
+      var cube = new RubiksCube()
+      var meshes = []
+      var busy = false
+      var primeNext = false
+      var halfNext = false
+      var moveCount = 0
+      /** 打乱占用的历史步数：撤销/步数只统计这之后的用户操作；自动还原会连同打乱一起逆序回放 */
+      var scrambleBase = 0
+      var timer = null
+      var elapsed = 0
+      var timing = false
+      var scrambleText = ''
+      var autoTimer = null
+
+      var canvas = document.getElementById('cube-canvas')
+      var stage = document.getElementById('stage')
+      var overlay = document.getElementById('overlay')
+      var autoBtn = document.getElementById('autoBtn')
+      var primeBtn = document.getElementById('primeBtn')
+
+      /* ---------- Three.js 场景 ---------- */
+      var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true })
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+      renderer.setClearColor(0x000000, 0)
+
+      var scene = new THREE.Scene()
+      var camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100)
+      camera.position.set(5.2, 4.2, 6.2)
+      camera.lookAt(0, 0, 0)
+
+      var root = new THREE.Group()
+      scene.add(root)
+
+      var ambient = new THREE.AmbientLight(0xffffff, 0.75)
+      scene.add(ambient)
+      var key = new THREE.DirectionalLight(0xffffff, 0.55)
+      key.position.set(4, 8, 5)
+      scene.add(key)
+      var fill = new THREE.DirectionalLight(0xffffff, 0.25)
+      fill.position.set(-5, -2, -3)
+      scene.add(fill)
+
+      /** 创建塑料边材质 */
+      function plasticMat() {
+        return new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.4 })
+      }
+
+      /** 贴纸材质 */
+      function stickerMat(hex) {
+        return new THREE.MeshStandardMaterial({
+          color: new THREE.Color(hex),
+          roughness: 0.45,
+          metalness: 0.05
+        })
+      }
+
+      /** 根据逻辑小块生成网格 */
+      function buildMeshes() {
+        // 清空旧网格
+        while (root.children.length) root.remove(root.children[0])
+        meshes = []
+
+        cube.cubies.forEach(function (c, i) {
+          var mats = BOX_FACES.map(function (face) {
+            return c.stickers[face] ? stickerMat(c.stickers[face]) : plasticMat()
+          })
+          var geo = new THREE.BoxGeometry(SIZE, SIZE, SIZE)
+          var mesh = new THREE.Mesh(geo, mats)
+          mesh.userData.index = i
+          root.add(mesh)
+          meshes.push(mesh)
+        })
+        syncMeshes()
+      }
+
+      /** 把逻辑坐标同步到网格（无动画） */
+      function syncMeshes() {
+        cube.cubies.forEach(function (c, i) {
+          var mesh = meshes[i]
+          mesh.position.set(c.pos[0], c.pos[1], c.pos[2])
+          // ori 是世界 = R * 局部，Three.js 矩阵列向量
+          var m = c.ori
+          var mat = new THREE.Matrix4().set(
+            m[0][0], m[0][1], m[0][2], 0,
+            m[1][0], m[1][1], m[1][2], 0,
+            m[2][0], m[2][1], m[2][2], 0,
+            0, 0, 0, 1
+          )
+          mesh.quaternion.setFromRotationMatrix(mat)
+        })
+      }
+
+      function resize() {
+        var w = canvas.clientWidth
+        var h = canvas.clientHeight
+        if (!w || !h) return
+        renderer.setSize(w, h, false)
+        camera.aspect = w / h
+        camera.updateProjectionMatrix()
+      }
+
+      function render() {
+        renderer.render(scene, camera)
+      }
+
+      function loop() {
+        requestAnimationFrame(loop)
+        render()
+      }
+
+      /* ---------- 视角拖拽 / 色块上滑动拧层 ---------- */
+      var raycaster = new THREE.Raycaster()
+      var pointerNdc = new THREE.Vector2()
+      var dragMode = null // 'orbit' | 'twist' | null
+      var twistArmed = false // 已判定方向、正在等动画
+      var lastX = 0
+      var lastY = 0
+      var startX = 0
+      var startY = 0
+      var hitNormal = null
+      var hitPos = null
+      // 初始朝向用四元数，避免欧拉角在俯仰后再偏航时「往一侧歪」
+      root.quaternion.setFromEuler(new THREE.Euler(-0.35, 0.4, 0, 'YXZ'))
+
+      /**
+       * 转盘式旋转视角：左右拖绕竖直轴，上下拖绕屏幕水平轴
+       * 上下拖时不会再串扰出左右转
+       */
+      function orbitByDelta(dx, dy) {
+        var speed = 0.008
+        var qYaw = new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 1, 0),
+          dx * speed
+        )
+        // 俯仰轴取相机「右方向」在水平面上的投影，保证只前后翻
+        var pitchAxis = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion)
+        pitchAxis.y = 0
+        if (pitchAxis.lengthSq() < 1e-6) pitchAxis.set(1, 0, 0)
+        else pitchAxis.normalize()
+        var qPitch = new THREE.Quaternion().setFromAxisAngle(pitchAxis, dy * speed)
+        root.quaternion.premultiply(qYaw)
+        root.quaternion.premultiply(qPitch)
+      }
+
+      /** 屏幕坐标 → 画布 NDC，并做射线检测 */
+      function pickCubie(e) {
+        var rect = canvas.getBoundingClientRect()
+        pointerNdc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+        pointerNdc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+        raycaster.setFromCamera(pointerNdc, camera)
+        return raycaster.intersectObjects(meshes, false)[0] || null
+      }
+
+      /** 把向量四舍五入到最近的坐标轴单位向量 */
+      function snapAxis(v) {
+        var ax = Math.abs(v.x)
+        var ay = Math.abs(v.y)
+        var az = Math.abs(v.z)
+        if (ax >= ay && ax >= az) return new THREE.Vector3(Math.sign(v.x) || 1, 0, 0)
+        if (ay >= az) return new THREE.Vector3(0, Math.sign(v.y) || 1, 0)
+        return new THREE.Vector3(0, 0, Math.sign(v.z) || 1)
+      }
+
+      /**
+       * 根据点到的面法线、小块位置、滑动方向，算出要拧的面与方向
+       * 滑动方向取与法线垂直的最近坐标轴
+       */
+      function moveFromDrag(pos, normal, slide) {
+        // 先尝试：转动「滑动方向扫过」的那一层（棱块 / 角块）
+        var rotAxis = new THREE.Vector3().crossVectors(normal, slide)
+        if (rotAxis.lengthSq() < 1e-6) return null
+        rotAxis = snapAxis(rotAxis)
+
+        var axisIndex = rotAxis.x !== 0 ? 0 : rotAxis.y !== 0 ? 1 : 2
+        var layerValue = pos[axisIndex]
+
+        // 点到面心时 layer 为 0（中层），改为拧当前这整个面
+        if (layerValue === 0) {
+          axisIndex = normal.x !== 0 ? 0 : normal.y !== 0 ? 1 : 2
+          layerValue = pos[axisIndex]
+          rotAxis = normal.clone()
+        }
+
+        var face = null
+        for (var f in FACE_LAYER) {
+          if (FACE_LAYER[f].axis === axisIndex && FACE_LAYER[f].value === layerValue) {
+            face = f
+            break
+          }
+        }
+        if (!face) return null
+
+        var fa = FACE_AXIS[face]
+        var faceAxis = new THREE.Vector3(fa[0], fa[1], fa[2])
+        // 右手系：贴纸沿 slide 移动 ↔ 绕 (normal × slide) 正转
+        // 与该面定义轴同向则为 turns=1，否则为 -1
+        var turns = faceAxis.dot(rotAxis) > 0 ? 1 : -1
+
+        // 面心：绕面法线转，用面内参考轴判断顺逆
+        if (Math.abs(rotAxis.dot(normal)) > 0.9) {
+          var ref = Math.abs(normal.y) < 0.9
+            ? new THREE.Vector3(0, 1, 0)
+            : new THREE.Vector3(1, 0, 0)
+          var u = new THREE.Vector3().crossVectors(ref, normal).normalize()
+          var spin = new THREE.Vector3().crossVectors(u, slide)
+          turns = spin.dot(faceAxis) > 0 ? 1 : -1
+        }
+
+        return { face: face, turns: turns }
+      }
+
+      stage.addEventListener('pointerdown', function (e) {
+        if (e.target.closest('.overlay') || busy) return
+        startX = lastX = e.clientX
+        startY = lastY = e.clientY
+        twistArmed = false
+
+        // 右键、中键或按住 Alt：即使点在色块上也只转视角
+        var forceOrbit = e.button === 2 || e.button === 1 || e.altKey
+        var hit = forceOrbit ? null : pickCubie(e)
+        if (hit && !autoTimer) {
+          // 点在色块上：准备拧层（滑动超过阈值后触发）
+          dragMode = 'twist'
+          var n = hit.face.normal.clone().transformDirection(hit.object.matrixWorld).normalize()
+          hitNormal = snapAxis(n)
+          hitPos = cube.cubies[hit.object.userData.index].pos.slice()
+        } else {
+          // 点在空白处（或强制转视角）：旋转整个魔方
+          dragMode = 'orbit'
+        }
+        stage.classList.add('is-dragging')
+        stage.setPointerCapture(e.pointerId)
+      })
+
+      stage.addEventListener('pointermove', function (e) {
+        if (!dragMode) return
+        var dx = e.clientX - lastX
+        var dy = e.clientY - lastY
+        lastX = e.clientX
+        lastY = e.clientY
+
+        if (dragMode === 'orbit') {
+          orbitByDelta(dx, dy)
+          return
+        }
+
+        // twist：累计滑动足够后触发一次拧转
+        if (twistArmed || busy) return
+        var totalX = e.clientX - startX
+        var totalY = e.clientY - startY
+        if (Math.hypot(totalX, totalY) < 28) return
+
+        // 屏幕滑动 → 大致世界方向（用相机右/上），再投影到贴纸平面
+        var camRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion)
+        var camUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion)
+        var dragWorld = camRight.multiplyScalar(totalX).add(camUp.multiplyScalar(-totalY))
+        dragWorld.addScaledVector(hitNormal, -dragWorld.dot(hitNormal))
+        if (dragWorld.lengthSq() < 1e-8) return
+        var slide = snapAxis(dragWorld)
+
+        var mv = moveFromDrag(hitPos, hitNormal, slide)
+        if (!mv) return
+        twistArmed = true
+        dragMode = null
+        doMove(mv.face, mv.turns, true)
+      })
+
+      function endDrag(e) {
+        dragMode = null
+        twistArmed = false
+        stage.classList.remove('is-dragging')
+        if (e && stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId)
+      }
+      stage.addEventListener('pointerup', endDrag)
+      stage.addEventListener('pointercancel', endDrag)
+      // 右键用于转视角时，屏蔽浏览器菜单
+      stage.addEventListener('contextmenu', function (e) { e.preventDefault() })
+
+      /* ---------- 拧转动画 ---------- */
+      function animateTwist(face, turns) {
+        return new Promise(function (resolve) {
+          var axisArr = FACE_AXIS[face]
+          var layer = FACE_LAYER[face]
+          var pivot = new THREE.Group()
+          root.add(pivot)
+
+          var moving = []
+          cube.cubies.forEach(function (c, i) {
+            if (c.pos[layer.axis] !== layer.value) return
+            var mesh = meshes[i]
+            root.remove(mesh)
+            pivot.add(mesh)
+            moving.push(mesh)
+          })
+
+          var axis = new THREE.Vector3(axisArr[0], axisArr[1], axisArr[2]).normalize()
+          var target = (turns * Math.PI) / 2
+          var start = performance.now()
+
+          function frame(now) {
+            var t = Math.min(1, (now - start) / ANIM_MS)
+            // ease-out
+            var e = 1 - Math.pow(1 - t, 3)
+            pivot.setRotationFromAxisAngle(axis, target * e)
+            if (t < 1) {
+              requestAnimationFrame(frame)
+            } else {
+              // 动画结束：更新逻辑，网格归位
+              moving.forEach(function (mesh) {
+                pivot.remove(mesh)
+                root.add(mesh)
+              })
+              root.remove(pivot)
+              cube.twist(face, turns, true)
+              syncMeshes()
+              resolve()
+            }
+          }
+          requestAnimationFrame(frame)
+        })
+      }
+
+      /** 执行一步拧转（带忙碌锁） */
+      function doMove(face, turns, fromUser) {
+        if (busy) return Promise.resolve()
+        // 归一化 turns
+        if (turns === -2) turns = 2
+        busy = true
+        setControlsDisabled(true)
+        return animateTwist(face, turns).then(function () {
+          if (fromUser) {
+            moveCount++
+            startTimerIfNeeded()
+          }
+          busy = false
+          setControlsDisabled(false)
+          updateUI()
+          checkSolved()
+        })
+      }
+
+      function setControlsDisabled(disabled) {
+        document.querySelectorAll('.pad button, #scrambleBtn, #resetBtn, #undoBtn, #autoBtn, #primeBtn').forEach(function (el) {
+          // 自动还原进行中允许点停止
+          if (el === autoBtn && autoTimer) {
+            el.disabled = false
+            return
+          }
+          el.disabled = disabled && !(el === autoBtn && autoTimer)
+        })
+      }
+
+      /* ---------- 计时与 UI ---------- */
+      function startTimerIfNeeded() {
+        if (timing) return
+        timing = true
+        var t0 = performance.now() - elapsed * 1000
+        clearInterval(timer)
+        timer = setInterval(function () {
+          elapsed = (performance.now() - t0) / 1000
+          document.getElementById('time').textContent = elapsed.toFixed(1)
+        }, 100)
+      }
+
+      function stopTimer() {
+        clearInterval(timer)
+        timer = null
+        timing = false
+      }
+
+      function updateUI() {
+        document.getElementById('moves').textContent = moveCount
+        document.getElementById('time').textContent = elapsed.toFixed(1)
+        document.getElementById('status').textContent = cube.isSolved() ? '已还原' : '打乱中'
+        document.getElementById('formula').textContent = scrambleText || '打乱公式会显示在这里'
+        document.getElementById('undoBtn').disabled =
+          busy || cube.history.length <= scrambleBase || !!autoTimer
+        primeBtn.textContent = '下一次：' + (halfNext ? '180°' : primeNext ? '逆时针' : '顺时针')
+        primeBtn.classList.toggle('is-active', primeNext || halfNext)
+      }
+
+      function checkSolved() {
+        if (!cube.isSolved() || moveCount === 0) return
+        stopTimer()
+        document.getElementById('overlayText').textContent =
+          '步数 ' + moveCount + '，用时 ' + elapsed.toFixed(1) + ' 秒'
+        setTimeout(function () { overlay.classList.add('is-show') }, 280)
+      }
+
+      /* ---------- 打乱 / 重置 / 撤销 / 自动 ---------- */
+      function scramble() {
+        if (busy || autoTimer) return
+        stopAuto()
+        overlay.classList.remove('is-show')
+        cube.reset()
+        // 逻辑打乱后直接同步画面，避免连续播 25 段动画
+        scrambleText = cube.scramble(25)
+        scrambleBase = cube.history.length
+        moveCount = 0
+        elapsed = 0
+        stopTimer()
+        syncMeshes()
+        updateUI()
+      }
+
+      function resetCube() {
+        if (busy || autoTimer) return
+        stopAuto()
+        overlay.classList.remove('is-show')
+        cube.reset()
+        scrambleText = ''
+        scrambleBase = 0
+        moveCount = 0
+        elapsed = 0
+        stopTimer()
+        syncMeshes()
+        updateUI()
+      }
+
+      function undo() {
+        if (busy || autoTimer || cube.history.length <= scrambleBase) return
+        var last = cube.history.pop()
+        var inv = cube.inverse(last)
+        busy = true
+        setControlsDisabled(true)
+        animateTwistOnly(inv.face, inv.turns).then(function () {
+          cube.twist(inv.face, inv.turns, false)
+          syncMeshes()
+          moveCount = Math.max(0, moveCount - 1)
+          busy = false
+          setControlsDisabled(false)
+          updateUI()
+        })
+      }
+
+      /** 只播动画、不改逻辑（由调用方负责 twist） */
+      function animateTwistOnly(face, turns) {
+        return new Promise(function (resolve) {
+          var axisArr = FACE_AXIS[face]
+          var layer = FACE_LAYER[face]
+          var pivot = new THREE.Group()
+          root.add(pivot)
+          var moving = []
+          cube.cubies.forEach(function (c, i) {
+            if (c.pos[layer.axis] !== layer.value) return
+            var mesh = meshes[i]
+            root.remove(mesh)
+            pivot.add(mesh)
+            moving.push(mesh)
+          })
+          var axis = new THREE.Vector3(axisArr[0], axisArr[1], axisArr[2]).normalize()
+          var target = (turns * Math.PI) / 2
+          var start = performance.now()
+          function frame(now) {
+            var t = Math.min(1, (now - start) / ANIM_MS)
+            var e = 1 - Math.pow(1 - t, 3)
+            pivot.setRotationFromAxisAngle(axis, target * e)
+            if (t < 1) requestAnimationFrame(frame)
+            else {
+              moving.forEach(function (mesh) {
+                pivot.remove(mesh)
+                root.add(mesh)
+              })
+              root.remove(pivot)
+              resolve()
+            }
+          }
+          requestAnimationFrame(frame)
+        })
+      }
+
+      /** 自动还原是否被用户点停止 */
+      var autoStopFlag = false
+
+      function stopAuto() {
+        clearTimeout(autoTimer)
+        autoTimer = null
+        autoStopFlag = true
+        autoBtn.textContent = '自动还原'
+        autoBtn.classList.remove('is-stop')
+      }
+
+      function autoSolve() {
+        // 进行中再点 → 停止
+        if (autoTimer) {
+          stopAuto()
+          return
+        }
+        if (busy || cube.isSolved()) return
+        var seq = cube.solveFromHistory()
+        if (!seq.length) return
+        // 清空历史，避免还原过程再记入
+        cube.history = []
+        autoStopFlag = false
+        autoBtn.textContent = '停止'
+        autoBtn.classList.add('is-stop')
+        busy = true
+        autoTimer = -1 // 占位：表示正在自动还原
+        setControlsDisabled(true)
+        autoBtn.disabled = false
+
+        var i = 0
+        function step() {
+          if (autoStopFlag) {
+            autoTimer = null
+            busy = false
+            setControlsDisabled(false)
+            updateUI()
+            return
+          }
+          if (i >= seq.length) {
+            stopAuto()
+            autoStopFlag = false
+            scrambleBase = 0
+            scrambleText = ''
+            moveCount = 0
+            busy = false
+            setControlsDisabled(false)
+            stopTimer()
+            updateUI()
+            return
+          }
+          var mv = cube.parseMove(seq[i++])
+          animateTwistOnly(mv.face, mv.turns).then(function () {
+            cube.twist(mv.face, mv.turns, false)
+            syncMeshes()
+            updateUI()
+            if (autoStopFlag) {
+              autoTimer = null
+              busy = false
+              setControlsDisabled(false)
+              updateUI()
+              return
+            }
+            autoTimer = setTimeout(step, 40)
+          })
+        }
+        autoTimer = setTimeout(step, 0)
+      }
+
+      /** 根据当前「顺/逆/180」模式计算 turns */
+      function turnsForClick() {
+        if (halfNext) return 2
+        return primeNext ? -1 : 1
+      }
+
+      /* ---------- 事件绑定 ---------- */
+      document.getElementById('pad').addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-face]')
+        if (!btn || busy) return
+        doMove(btn.dataset.face, turnsForClick(), true)
+      })
+
+      primeBtn.onclick = function () {
+        // 三态：顺时针 → 逆时针 → 180° → 顺时针
+        if (!primeNext && !halfNext) {
+          primeNext = true
+        } else if (primeNext && !halfNext) {
+          primeNext = false
+          halfNext = true
+        } else {
+          halfNext = false
+          primeNext = false
+        }
+        updateUI()
+      }
+
+      document.getElementById('scrambleBtn').onclick = scramble
+      document.getElementById('resetBtn').onclick = resetCube
+      document.getElementById('undoBtn').onclick = undo
+      autoBtn.onclick = autoSolve
+      document.getElementById('againBtn').onclick = scramble
+      document.getElementById('viewBtn').onclick = function () {
+        overlay.classList.remove('is-show')
+      }
+
+      // 键盘
+      var pendingFace = null
+      document.addEventListener('keydown', function (e) {
+        if (e.target.matches('input, textarea')) return
+        var key = e.key
+        if (pendingFace && (key === '2' || key === '＠')) {
+          e.preventDefault()
+          doMove(pendingFace, 2, true)
+          pendingFace = null
+          return
+        }
+        var face = key.toUpperCase()
+        if ('UDFBLR'.indexOf(face) >= 0 && key.length === 1) {
+          e.preventDefault()
+          pendingFace = face
+          var turns = e.shiftKey ? -1 : 1
+          // 短延迟等待是否按 2
+          setTimeout(function () {
+            if (pendingFace !== face) return
+            pendingFace = null
+            doMove(face, turns, true)
+          }, 180)
+        }
+      })
+
+      window.addEventListener('resize', resize)
+
+      // 启动
+      buildMeshes()
+      resize()
+      loop()
+      updateUI()
+    })()
+  </script>
+</body>
+
+</html>

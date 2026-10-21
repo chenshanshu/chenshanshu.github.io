@@ -148,6 +148,20 @@
     .games .go {
       color: #e07b00;
     }
+
+    /* 展示页卡片：深色调区分 */
+    .showcases .tool-icon {
+      color: #0d9488;
+      background: rgba(13, 148, 136, 0.12);
+    }
+
+    .showcases .tool:hover {
+      border-color: rgba(13, 148, 136, 0.45);
+    }
+
+    .showcases .go {
+      color: #0f766e;
+    }
   </style>
 </head>
 
@@ -157,6 +171,43 @@
       <h1>在线小工具</h1>
       <p>纯前端实现，图片只在本地浏览器处理，不会上传到服务器</p>
     </header>
+
+    <h2 class="section-title">展示 <small>交互样例</small></h2>
+    <ul class="tools showcases">
+      <li>
+        <a class="tool" href="./product-vr/index.html">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h6l2-2h2l2 2h6v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><circle cx="12" cy="13" r="3.5"/></svg>
+          </div>
+          <h2>观穹 ORBIT 产品页</h2>
+          <p>虚构空间影像产品介绍：鼠标 / 陀螺仪 VR 倾转预览，滚动多层视差叙事，适合作品集演示。</p>
+          <div class="tags"><span>VR 倾转</span><span>滚动视差</span><span>落地页</span></div>
+          <span class="go">打开演示 →</span>
+        </a>
+      </li>
+      <li>
+        <a class="tool" href="./tech-svg/index.html">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+          </div>
+          <h2>棱核 AETHER</h2>
+          <p>纯 SVG 科技动效页：旋转能量环、数据流折线、扫描六边形与可交互雷达，无位图依赖。</p>
+          <div class="tags"><span>SVG</span><span>动效</span><span>科技感</span></div>
+          <span class="go">打开演示 →</span>
+        </a>
+      </li>
+      <li>
+        <a class="tool" href="./iron-bot/index.html">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="2.5"/><path d="M8 8.5V6.2C8 5 9.2 4 12 4s4 1 4 2.2v2.3"/><path d="M7 14h10l1 6H6l1-6z"/><circle cx="8.5" cy="19.5" r="1.2"/><circle cx="15.5" cy="19.5" r="1.2"/></svg>
+          </div>
+          <h2>弧光 ARC 全息机甲</h2>
+          <p>钢铁侠 Mk.85 线框投影：可拖拽环视，左侧雷达锁定，右侧 JARVIS 日志通栏输出。</p>
+          <div class="tags"><span>Three.js</span><span>Mk.85</span><span>HUD</span></div>
+          <span class="go">打开演示 →</span>
+        </a>
+      </li>
+    </ul>
 
     <!-- 新增工具时，复制一个 li 修改链接与描述即可 -->
     <h2 class="section-title">工具 <small>图片处理</small></h2>
@@ -178,8 +229,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg>
           </div>
           <h2>图片旋转裁剪</h2>
-          <p>自由旋转、翻转、缩放图片，按比例拖拽裁剪框，按原图分辨率导出。</p>
-          <div class="tags"><span>旋转</span><span>裁剪</span><span>可作插件引用</span></div>
+          <p>自由旋转、翻转、缩放图片，按比例拖拽裁剪框，支持涂抹打马赛克和添加文字水印，按原图分辨率导出。</p>
+          <div class="tags"><span>裁剪</span><span>马赛克</span><span>水印</span><span>可作插件引用</span></div>
           <span class="go">开始使用 →</span>
         </a>
       </li>
@@ -294,6 +345,28 @@
           </div>
           <h2>五子棋</h2>
           <p>与电脑对弈，简单 / 困难两档 AI，可选先后手，支持悔棋，标记最后一手和连五。</p>
+          <div class="tags"><span>小游戏</span><span>人机对战</span><span>悔棋</span></div>
+          <span class="go">开始游戏 →</span>
+        </a>
+      </li>
+      <li>
+        <a class="tool" href="./rubiks-cube/index.html">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8z"/><path d="M5 8l3.5-4h7L19 8"/><path d="M12 4v17M5 12h14M5 16h14"/></svg>
+          </div>
+          <h2>三阶魔方</h2>
+          <p>3×3 立体魔方，拖拽旋转视角，按钮或键盘拧层，支持打乱、撤销和按历史自动还原。</p>
+          <div class="tags"><span>小游戏</span><span>3D</span><span>自动还原</span></div>
+          <span class="go">开始游戏 →</span>
+        </a>
+      </li>
+      <li>
+        <a class="tool" href="./xiangqi/index.html">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><path d="M9.2 10.5h5.6M9.2 13.5h5.6"/></svg>
+          </div>
+          <h2>中国象棋</h2>
+          <p>人机对弈，完整走子规则与将军判定，可选执红 / 执黑，简单 / 困难两档，支持悔棋。</p>
           <div class="tags"><span>小游戏</span><span>人机对战</span><span>悔棋</span></div>
           <span class="go">开始游戏 →</span>
         </a>

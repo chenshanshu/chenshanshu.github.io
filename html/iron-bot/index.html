@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>弧光 ARC · 机甲全息 HUD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #02040a;
+      --cyan: #3db8ff;
+      --cyan-hot: #8ad4ff;
+      --line: rgba(61, 184, 255, 0.32);
+      --panel: rgba(3, 12, 28, 0.82);
+      --muted: rgba(130, 190, 230, 0.5);
+      --ok: #3db8ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: #d8f0ff;
+      font: 400 11px/1.45 "Share Tech Mono", monospace;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .hud {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: radial-gradient(ellipse 55% 50% at 50% 42%, #0a1e3a 0%, #040a16 55%, #010308 100%);
+    }
+
+    .hud::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(61, 184, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(61, 184, 255, 0.12) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%);
+      pointer-events: none;
+    }
+
+    .crt {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0, 10, 30, 0.1) 2px, rgba(0, 10, 30, 0.1) 3px
+      );
+    }
+
+    .top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 15;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: linear-gradient(180deg, rgba(0, 6, 16, 0.9), transparent);
+    }
+
+    .top .back { color: var(--muted); font-size: 12px; transition: color 0.2s; }
+    .top .back:hover { color: var(--cyan-hot); }
+
+    .top .title {
+      font-family: Orbitron, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.38em;
+      color: var(--cyan);
+      text-shadow: 0 0 16px rgba(61, 184, 255, 0.7);
+    }
+
+    .top .clock {
+      font-family: Orbitron, monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--cyan-hot);
+    }
+
+    .layout {
+      position: absolute;
+      inset: 44px 12px 56px;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: minmax(190px, 1fr) minmax(300px, 1.65fr) minmax(190px, 1fr);
+      gap: 10px;
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .panel {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: inset 0 0 30px rgba(30, 120, 200, 0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .panel::before,
+    .panel::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 1.5px solid var(--cyan);
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+    .panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+    .panel-h {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--line);
+      font-family: Orbitron, sans-serif;
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      color: var(--cyan);
+      background: rgba(8, 30, 55, 0.55);
+    }
+
+    .panel-h .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 8px var(--ok);
+      animation: blink 1.2s steps(1) infinite;
+    }
+
+    .code-box {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      padding: 8px 10px;
+      /* 只弱化上下边缘，中间整列都用来刷日志 */
+      mask-image: linear-gradient(180deg, transparent, #000 4%, #000 96%, transparent);
+    }
+
+    .code {
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-size: 11px;
+      line-height: 1.55;
+      color: rgba(90, 170, 220, 0.55);
+      min-height: 100%;
+    }
+    .code .kw { color: var(--cyan-hot); }
+    .code .num { color: #7ecfff; }
+    .code .ok { color: var(--ok); text-shadow: 0 0 6px rgba(61, 184, 255, 0.45); }
+    .code .err { color: #fb7185; text-shadow: 0 0 6px rgba(251, 113, 133, 0.4); }
+    .code .warn { color: #fbbf24; }
+    .code .cmt { color: rgba(61, 184, 255, 0.28); }
+    .code .hi { color: #fff; text-shadow: 0 0 8px rgba(120, 200, 255, 0.85); }
+
+    /* 左侧：动态柱状图 */
+    .bars-panel {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bars-stage {
+      flex: 1;
+      min-height: 0;
+      padding: 12px 10px 8px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bars-stage canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      min-height: 120px;
+    }
+
+    .bars-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      padding: 4px 2px 0;
+      font-size: 8px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-family: Orbitron, sans-serif;
+    }
+
+    .bars-legend span::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin-right: 4px;
+      vertical-align: middle;
+      background: var(--cyan);
+      box-shadow: 0 0 6px rgba(61, 184, 255, 0.6);
+    }
+
+    /* 中央 3D 全息舞台 */
+    .center-stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      border: 1px solid var(--line);
+      background: rgba(2, 8, 20, 0.45);
+      overflow: hidden;
+      box-shadow:
+        inset 0 0 80px rgba(20, 100, 180, 0.15),
+        0 0 40px rgba(20, 80, 160, 0.2);
+    }
+
+    .center-stage .frame-h {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 12px;
+      font-family: Orbitron, sans-serif;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      color: var(--cyan);
+      background: linear-gradient(180deg, rgba(0, 12, 28, 0.75), transparent);
+      pointer-events: none;
+    }
+
+    /* Mk.85 / 蓝图线稿切换 */
+    .mode-switch {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 12;
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--line);
+      background: rgba(2, 10, 24, 0.85);
+      pointer-events: auto;
+    }
+
+    .mode-switch button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-family: Orbitron, sans-serif;
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .mode-switch button + button {
+      border-left: 1px solid var(--line);
+    }
+
+    .mode-switch button:hover {
+      color: var(--cyan-hot);
+    }
+
+    .mode-switch button.on {
+      color: #fff;
+      background: rgba(61, 184, 255, 0.18);
+      text-shadow: 0 0 10px rgba(61, 184, 255, 0.65);
+    }
+
+    /* MECHA 档：机甲型号切换 */
+    .frame-switch {
+      position: absolute;
+      top: 54px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 12;
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      max-width: 92%;
+      pointer-events: auto;
+    }
+
+    .frame-switch.show { display: flex; }
+
+    .frame-switch button {
+      appearance: none;
+      border: 1px solid rgba(61, 184, 255, 0.35);
+      background: rgba(2, 10, 24, 0.82);
+      color: rgba(180, 220, 255, 0.72);
+      font-family: Orbitron, sans-serif;
+      font-size: 7px;
+      letter-spacing: 0.12em;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .frame-switch button:hover {
+      color: #d8f0ff;
+      border-color: rgba(138, 212, 255, 0.7);
+    }
+
+    .frame-switch button.on {
+      color: #fff;
+      border-color: #3db8ff;
+      background: rgba(14, 74, 120, 0.55);
+      box-shadow: 0 0 12px rgba(61, 184, 255, 0.45);
+      text-shadow: 0 0 8px rgba(61, 184, 255, 0.8);
+    }
+
+    /* MECHA：准星 + 发光氛围（无线扫光带；发光在 3D 线条上） */
+    .hud-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      background:
+        radial-gradient(ellipse 42% 50% at 50% 48%, rgba(14, 74, 120, 0.22), transparent 70%);
+      box-shadow: inset 0 0 48px rgba(61, 184, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .hud-layer.show { opacity: 1; }
+
+    .hud-reticle {
+      position: absolute;
+      inset: 6% 10%;
+      border: 1px solid rgba(61, 184, 255, 0.28);
+      box-shadow: 0 0 18px rgba(61, 184, 255, 0.15);
+      pointer-events: none;
+    }
+
+    .hud-reticle::before,
+    .hud-reticle::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid #3db8ff;
+      opacity: 0.85;
+      filter: drop-shadow(0 0 4px rgba(61, 184, 255, 0.8));
+    }
+    .hud-reticle::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+    .hud-reticle::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+    /* MECHA 档 canvas：强化线条霓虹感（蓝色） */
+    #mechaCanvas.hud-glow {
+      filter:
+        drop-shadow(0 0 1px rgba(180, 230, 255, 0.9))
+        drop-shadow(0 0 5px rgba(61, 184, 255, 0.75))
+        drop-shadow(0 0 14px rgba(61, 184, 255, 0.45));
+    }
+
+    #mechaCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      outline: none;
+      cursor: grab;
+    }
+    #mechaCanvas:active { cursor: grabbing; }
+
+    .mecha-caption {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 5;
+      padding: 24px 12px 10px;
+      text-align: center;
+      background: linear-gradient(0deg, rgba(0, 8, 20, 0.88), transparent);
+      pointer-events: none;
+    }
+
+    .mecha-caption .name {
+      font-family: Orbitron, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.42em;
+      color: #fff;
+      text-shadow: 0 0 18px rgba(61, 184, 255, 0.8);
+    }
+
+    .mecha-caption .sub {
+      margin-top: 3px;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .load-tip {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: grid;
+      place-items: center;
+      font-family: Orbitron, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      color: var(--cyan);
+      background: rgba(2, 8, 18, 0.55);
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+    .load-tip.hide { opacity: 0; }
+
+    .gauge-wrap {
+      flex: 0 0 auto;
+      height: 38%;
+      min-height: 140px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .gauge {
+      border: 1px solid var(--line);
+      background: rgba(0, 16, 36, 0.5);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .gauge svg { width: 88%; height: 88%; }
+
+    .gauge .g-label {
+      position: absolute;
+      bottom: 6px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: Orbitron, sans-serif;
+      font-size: 7px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    /* LOCK 捕捉雷达（画布） */
+    .lock-radar {
+      width: 88%;
+      height: 88%;
+      display: block;
+    }
+
+    .spin { transform-origin: center; transform-box: fill-box; animation: spin 7s linear infinite; }
+    .spin-rev { transform-origin: center; transform-box: fill-box; animation: spin 12s linear infinite reverse; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .bottom {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 15;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1px;
+      padding: 0 12px 8px;
+      background: linear-gradient(0deg, rgba(0, 6, 14, 0.92), transparent);
+    }
+
+    .stat {
+      padding: 7px 10px;
+      background: rgba(4, 14, 28, 0.85);
+      border: 1px solid var(--line);
+      border-top: 2px solid #1a7ab8;
+    }
+
+    .stat .k {
+      font-family: Orbitron, sans-serif;
+      font-size: 7px;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .stat .v {
+      margin-top: 2px;
+      font-family: Orbitron, monospace;
+      font-size: 13px;
+      color: var(--cyan-hot);
+    }
+
+    .stat .v.ok { color: var(--ok); }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+
+    .boot {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      background: #010308;
+      transition: opacity 0.65s ease, visibility 0.65s;
+    }
+    .boot.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+    .boot-log {
+      width: min(420px, 88vw);
+      color: var(--cyan);
+      font-size: 12px;
+      text-shadow: 0 0 8px rgba(61, 184, 255, 0.5);
+    }
+    .boot-log div {
+      opacity: 0;
+      animation: fadeIn 0.1s ease forwards;
+      margin-bottom: 4px;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .credit {
+      position: absolute;
+      right: 14px;
+      bottom: 52px;
+      z-index: 12;
+      font-size: 9px;
+      color: rgba(100, 160, 200, 0.35);
+      pointer-events: none;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        inset: 44px 8px 52px;
+      }
+      .col.side { display: none; }
+      .bottom { grid-template-columns: repeat(3, 1fr); }
+      .bottom .stat:nth-child(n+4) { display: none; }
+      .credit { display: none; }
+    }
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <div class="boot" id="boot">
+    <div class="boot-log" id="bootLog"></div>
+  </div>
+
+  <div class="hud">
+    <div class="crt" aria-hidden="true"></div>
+
+    <header class="top">
+      <a class="back" href="../index.html">← 返回</a>
+      <div class="title">ARC PROTOCOL // HOLOGRAM MECHA</div>
+      <div class="clock" id="clock">00:00:00.00</div>
+    </header>
+
+    <div class="layout">
+      <!-- 左侧：动态柱状图 + 锁定/核心仪表（无代码） -->
+      <div class="col side">
+        <div class="panel bars-panel" style="flex: 1.15;">
+          <div class="panel-h"><span>SYS SPECTRUM</span><span class="dot"></span></div>
+          <div class="bars-stage">
+            <canvas id="barCanvas" width="300" height="260" aria-hidden="true"></canvas>
+            <div class="bars-legend">
+              <span>PWR</span><span>CPU</span><span>THR</span><span>SEN</span><span>NET</span><span>HUD</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel" style="flex: 0.75; padding: 0;">
+          <div class="panel-h"><span>TARGET / CORE</span><span class="dot"></span></div>
+          <div class="gauge-wrap" style="height: auto; flex: 1;">
+            <div class="gauge">
+              <canvas class="lock-radar" id="lockRadar" width="160" height="160" aria-label="目标捕捉雷达"></canvas>
+              <div class="g-label">LOCK · <span id="lockCount">0</span></div>
+            </div>
+            <div class="gauge">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(61,184,255,0.25)" stroke-width="6" stroke-dasharray="2 4" />
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#3db8ff" stroke-width="4"
+                  stroke-dasharray="200 251" stroke-linecap="round" transform="rotate(-90 50 50)" />
+                <text x="50" y="54" text-anchor="middle" fill="#8ad4ff" font-family="Orbitron, monospace" font-size="14" id="corePct">97</text>
+              </svg>
+              <div class="g-label">CORE %</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="center-stage">
+          <div class="frame-h">
+            <span id="frameMode">Mk.85 · WIREFRAME</span>
+            <span id="frameHint">DRAG TO ORBIT</span>
+          </div>
+          <!-- Mk.85 轨道线框 / FORGE 机甲 HUD 发光 / 头盔线稿 -->
+          <div class="mode-switch" role="tablist" aria-label="机甲显示模式">
+            <button type="button" data-mecha-mode="mk85" class="on" role="tab">Mk.85</button>
+            <button type="button" data-mecha-mode="mecha" role="tab">MECHA</button>
+          </div>
+          <!-- MECHA 内：多款 FORGE 机甲切换 -->
+          <div class="frame-switch" id="frameSwitch" role="tablist" aria-label="机甲型号" aria-hidden="true"></div>
+          <div class="load-tip" id="loadTip">LOADING MECHA MESH…</div>
+          <canvas id="mechaCanvas"></canvas>
+          <!-- MECHA 档：准星氛围；线条发光由 3D / canvas filter 负责 -->
+          <div class="hud-layer" id="hudLayer" aria-hidden="true">
+            <div class="hud-reticle"></div>
+          </div>
+          <div class="mecha-caption">
+            <div class="name">ARC</div>
+            <div class="sub" id="mechaSub">Mk.85 · 3D WIREFRAME</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：代码流占满整列 -->
+      <div class="col side">
+        <div class="panel" style="flex: 1; min-height: 0;">
+          <div class="panel-h"><span>JARVIS · STREAM</span><span class="dot"></span></div>
+          <div class="code-box"><div class="code" id="codeRight"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit">Mk.85 wireframe · FORGE mecha HUD glow</div>
+
+    <footer class="bottom">
+      <div class="stat"><div class="k">REACTOR</div><div class="v ok">STABLE</div></div>
+      <div class="stat"><div class="k">OUTPUT</div><div class="v"><span id="stPower">97.4</span>%</div></div>
+      <div class="stat"><div class="k">INTEGRITY</div><div class="v"><span id="stArmor">99</span>%</div></div>
+      <div class="stat"><div class="k">UPLINK</div><div class="v"><span id="stPing">11</span> ms</div></div>
+      <div class="stat"><div class="k">THRUST</div><div class="v">STANDBY</div></div>
+      <div class="stat"><div class="k">THREAT</div><div class="v">1 / 5</div></div>
+    </footer>
+  </div>
+
+  <script>
+    // HUD 代码流 / 遥测（与 3D 场景并行）
+    ;(function () {
+      'use strict'
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      var JARVIS = [
+        '[J] Wireframe projector <span class="ok">online</span>.',
+        '[J] Mecha mesh decoded. <span class="ok">OK</span>',
+        '[J] Edge lines extracted. <span class="ok">PASS</span>',
+        '[J] Arc reactor: <span class="ok">nominal</span>.',
+        '[J] Orbit controls enabled.',
+        '[J] Overlay decluttered.',
+        '[J] Flight systems: standby.',
+        '[J] Awaiting command, sir.',
+        '[J] Sensor bus handshake <span class="ok">ACK</span>',
+        '[J] Coolant loop pressure <span class="ok">stable</span>',
+        '[J] Suit integrity check <span class="ok">99%</span>',
+        '[J] Uplink encrypted <span class="ok">AES-GCM</span>',
+        '[J] Targeting reticle calibrated.',
+        '[J] Boot sequence complete. <span class="ok">GREEN</span>',
+        '[J] Power routing redistributed.',
+        '[J] HUD theme locked: cyan.',
+        // 蓝色成功类
+        '<span class="ok">[OK] reactor_core.init() → SUCCESS</span>',
+        '<span class="ok">[OK] thruster_calibrate() → DONE</span>',
+        '<span class="ok">[OK] visor_shader.compile() → PASS</span>',
+        '<span class="ok">[OK] packet_loss = 0.00%</span>',
+        '<span class="ok">[OK] backup_suit sync 100%</span>',
+        '<span class="ok">[OK] identity verified · welcome back</span>',
+        // 红色错误 / 告警
+        '<span class="err">[ERR] servo.L_knee torque spike +12%</span>',
+        '<span class="err">[ERR] lidar sector-C timeout 42ms</span>',
+        '<span class="err">[ERR] hud_layer.bloom overflow (clamped)</span>',
+        '<span class="err">[ERR] temporary uplink jitter 38ms</span>',
+        '<span class="warn">[WARN] palm_repulsor heat rising</span>',
+        '<span class="warn">[WARN] cache miss · rebuilding L2</span>',
+        '<span class="err">[ERR] retrying sensor DMA…</span>',
+        '<span class="ok">[OK] sensor DMA recovered</span>',
+        '<span class="ok">[OK] lidar sector-C restored</span>',
+        '<span class="err">[ERR] false positive · IFF flicker</span>',
+        '<span class="ok">[OK] IFF cleared · FOE=0</span>',
+        '[J] Running continuous diagnostic…',
+        '[J] No hostile signatures nearby.',
+        '[J] All stations reporting.'
+      ]
+
+      var bootLines = [
+        'ARC_HUD INIT ………………',
+        'fetch mecha.glb ……… <span class="ok">OK</span>',
+        'init WebGL context … <span class="ok">OK</span>',
+        'compile holo shader … <span class="ok">OK</span>',
+        'ENGAGE.'
+      ]
+
+      function runBoot(done) {
+        var boot = document.getElementById('boot')
+        var log = document.getElementById('bootLog')
+        if (reduce) { boot.classList.add('hide'); done(); return }
+        var i = 0
+        ;(function next() {
+          if (i >= bootLines.length) {
+            setTimeout(function () { boot.classList.add('hide'); done() }, 350)
+            return
+          }
+          var d = document.createElement('div')
+          d.innerHTML = bootLines[i++]
+          log.appendChild(d)
+          setTimeout(next, 140 + Math.random() * 80)
+        })()
+      }
+
+      function Stream(el, pool, opts) {
+        this.el = el
+        this.pool = pool
+        this.lines = []
+        this.max = opts.max || 24
+        this.interval = opts.interval || 100
+        this.fill = !!opts.fill
+      }
+
+      /** 按容器高度算能铺满多少行 */
+      Stream.prototype.calcMax = function () {
+        var box = this.el.parentElement
+        if (!box) return this.max
+        var h = box.clientHeight || 400
+        var lh = 17
+        var n = Math.floor(h / lh) - 1
+        return Math.max(18, Math.min(80, n))
+      }
+
+      /** 往模板里塞随机数，避免固定文案循环感 */
+      Stream.prototype.spice = function (raw) {
+        raw = raw
+          .replace(/\b\d+(\.\d+)?%/g, function () {
+            return (Math.random() * 28 + 70).toFixed(Math.random() > 0.5 ? 0 : 1) + '%'
+          })
+          .replace(/\b\d+ms\b/g, function () {
+            return Math.floor(Math.random() * 90 + 8) + 'ms'
+          })
+          .replace(/\+(\d+)%/g, function () {
+            return '+' + Math.floor(Math.random() * 28 + 3) + '%'
+          })
+          .replace(/FOE=0/g, function () {
+            return 'FOE=' + (Math.random() < 0.85 ? '0' : String(Math.floor(Math.random() * 3)))
+          })
+          .replace(/sector-[A-Z]/g, function () {
+            return 'sector-' + 'ABCDEF'[Math.floor(Math.random() * 6)]
+          })
+        // 偶发插入纯随机遥测行
+        if (Math.random() < 0.14) {
+          var kinds = [
+            '<span class="ok">[OK] hash=' + Math.floor(Math.random() * 0xffffff).toString(16) + '</span>',
+            '<span class="err">[ERR] code=0x' + Math.floor(Math.random() * 0xffff).toString(16) + '</span>',
+            '<span class="warn">[WARN] temp=' + (36 + Math.random() * 18).toFixed(1) + '°C</span>',
+            '[J] seq=' + Math.floor(Math.random() * 9000 + 1000) + ' · jitter=' + Math.floor(Math.random() * 40) + 'ms',
+            '<span class="num">λ</span>=' + (Math.random() * 2.4).toFixed(3) + '  σ=' + (Math.random() * 0.4).toFixed(3)
+          ]
+          raw = kinds[Math.floor(Math.random() * kinds.length)]
+        }
+        return raw
+      }
+
+      Stream.prototype.tick = function () {
+        if (this.fill) this.max = this.calcMax()
+        // 随机抽行，不按顺序循环
+        var raw = this.pool[Math.floor(Math.random() * this.pool.length)]
+        raw = this.spice(raw)
+        if (Math.random() < 0.1 && raw.indexOf('class="err"') < 0 && raw.indexOf('class="ok"') < 0) {
+          raw = '<span class="hi">' + raw + '</span>'
+        }
+        this.lines.push(raw)
+        while (this.lines.length > this.max) this.lines.shift()
+        this.el.innerHTML = this.lines.join('\n')
+      }
+
+      Stream.prototype.start = function () {
+        var self = this
+        var fillCount = self.fill ? self.calcMax() : 10
+        for (var i = 0; i < fillCount; i++) self.tick()
+        if (reduce) return
+
+        // 1.44 秒刷一行（偶发连吐仍保留轻微随机）
+        ;(function loop() {
+          self.tick()
+          setTimeout(loop, 1440)
+        })()
+
+        window.addEventListener('resize', function () {
+          self.max = self.calcMax()
+          while (self.lines.length > self.max) self.lines.shift()
+          while (self.lines.length < self.max) self.tick()
+          self.el.innerHTML = self.lines.join('\n')
+        })
+      }
+
+      function pad(n, w) {
+        n = String(n)
+        while (n.length < (w || 2)) n = '0' + n
+        return n
+      }
+
+      /* LOCK 雷达：扫描扇 + 捕捉点（非代码） */
+      function startLockRadar() {
+        var c = document.getElementById('lockRadar')
+        var countEl = document.getElementById('lockCount')
+        if (!c) return
+        var ctx = c.getContext('2d')
+        var angle = 0
+        var contacts = []
+
+        function spawnContact() {
+          var a = Math.random() * Math.PI * 2
+          var r = 0.25 + Math.random() * 0.62
+          contacts.push({
+            a: a,
+            r: r,
+            life: 1,
+            locked: false,
+            pulse: Math.random() * Math.PI * 2,
+            hostile: Math.random() < 0.28
+          })
+          if (contacts.length > 7) contacts.shift()
+        }
+
+        // 初始几个点
+        for (var i = 0; i < 4; i++) spawnContact()
+        setInterval(function () {
+          if (Math.random() < 0.55) spawnContact()
+          // 偶发丢掉一个旧点
+          if (contacts.length > 3 && Math.random() < 0.35) contacts.shift()
+        }, 1440)
+
+        function resize() {
+          var box = c.parentElement.getBoundingClientRect()
+          var side = Math.max(80, Math.floor(Math.min(box.width, box.height) * 0.88))
+          var dpr = Math.min(window.devicePixelRatio || 1, 2)
+          c.width = Math.floor(side * dpr)
+          c.height = Math.floor(side * dpr)
+          c.style.width = side + 'px'
+          c.style.height = side + 'px'
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+        }
+        resize()
+        window.addEventListener('resize', resize)
+
+        function draw() {
+          var w = c.clientWidth
+          var h = c.clientHeight
+          var cx = w / 2
+          var cy = h / 2
+          var R = Math.min(w, h) * 0.42
+          ctx.clearRect(0, 0, w, h)
+
+          // 底盘
+          ctx.beginPath()
+          ctx.arc(cx, cy, R, 0, Math.PI * 2)
+          ctx.fillStyle = 'rgba(8, 40, 70, 0.35)'
+          ctx.fill()
+
+          // 同心圆
+          ctx.strokeStyle = 'rgba(61,184,255,0.28)'
+          ctx.lineWidth = 1
+          ;[0.33, 0.66, 1].forEach(function (k) {
+            ctx.beginPath()
+            ctx.arc(cx, cy, R * k, 0, Math.PI * 2)
+            ctx.stroke()
+          })
+
+          // 十字
+          ctx.beginPath()
+          ctx.moveTo(cx, cy - R)
+          ctx.lineTo(cx, cy + R)
+          ctx.moveTo(cx - R, cy)
+          ctx.lineTo(cx + R, cy)
+          ctx.strokeStyle = 'rgba(61,184,255,0.22)'
+          ctx.stroke()
+
+          // 扫描扇面
+          angle += 0.025
+          if (angle > Math.PI * 2) angle -= Math.PI * 2
+          var sweep = Math.PI / 5
+          var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, R)
+          grad.addColorStop(0, 'rgba(61,184,255,0.35)')
+          grad.addColorStop(1, 'rgba(61,184,255,0)')
+          ctx.beginPath()
+          ctx.moveTo(cx, cy)
+          ctx.arc(cx, cy, R, angle - sweep, angle)
+          ctx.closePath()
+          ctx.fillStyle = grad
+          ctx.fill()
+          // 扫描前沿线
+          ctx.beginPath()
+          ctx.moveTo(cx, cy)
+          ctx.lineTo(cx + Math.cos(angle) * R, cy + Math.sin(angle) * R)
+          ctx.strokeStyle = 'rgba(138,212,255,0.85)'
+          ctx.lineWidth = 1.5
+          ctx.stroke()
+
+          // 捕捉点
+          var lockedN = 0
+          contacts.forEach(function (p) {
+            // 被扫描线扫到 → 锁定闪一下
+            var diff = Math.abs(((p.a - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI)
+            if (diff < 0.18) p.locked = true
+            if (p.locked) lockedN++
+
+            p.pulse += 0.08
+            var px = cx + Math.cos(p.a) * p.r * R
+            var py = cy + Math.sin(p.a) * p.r * R
+            var col = p.hostile ? '#fb7185' : '#3db8ff'
+            var glow = p.hostile ? 'rgba(251,113,133,0.7)' : 'rgba(61,184,255,0.7)'
+
+            // 外圈捕捉框
+            var s = 5 + Math.sin(p.pulse) * 1.2
+            ctx.strokeStyle = col
+            ctx.lineWidth = 1
+            ctx.strokeRect(px - s, py - s, s * 2, s * 2)
+            // 角标
+            ctx.beginPath()
+            ctx.moveTo(px - s - 2, py - s)
+            ctx.lineTo(px - s - 2, py - s - 2)
+            ctx.lineTo(px - s, py - s - 2)
+            ctx.moveTo(px + s + 2, py - s)
+            ctx.lineTo(px + s + 2, py - s - 2)
+            ctx.lineTo(px + s, py - s - 2)
+            ctx.stroke()
+
+            // 中心点
+            ctx.beginPath()
+            ctx.arc(px, py, 2.2, 0, Math.PI * 2)
+            ctx.fillStyle = col
+            ctx.shadowColor = glow
+            ctx.shadowBlur = p.locked ? 10 : 4
+            ctx.fill()
+            ctx.shadowBlur = 0
+
+            // 锁定时画连线到中心
+            if (p.locked) {
+              ctx.beginPath()
+              ctx.moveTo(cx, cy)
+              ctx.lineTo(px, py)
+              ctx.strokeStyle = p.hostile ? 'rgba(251,113,133,0.35)' : 'rgba(61,184,255,0.35)'
+              ctx.lineWidth = 0.8
+              ctx.stroke()
+            }
+
+            // 缓慢漂移
+            p.a += (Math.random() - 0.5) * 0.01
+            p.r += (Math.random() - 0.5) * 0.004
+            p.r = Math.max(0.18, Math.min(0.92, p.r))
+          })
+
+          if (countEl) countEl.textContent = String(lockedN)
+
+          // 中心点
+          ctx.beginPath()
+          ctx.arc(cx, cy, 2.5, 0, Math.PI * 2)
+          ctx.fillStyle = '#8ad4ff'
+          ctx.fill()
+
+          if (!reduce) requestAnimationFrame(draw)
+        }
+        draw()
+      }
+
+      /* 左侧动态柱状图 */
+      function startBars() {
+        var c = document.getElementById('barCanvas')
+        if (!c) return
+        var ctx = c.getContext('2d')
+        var labels = ['PWR', 'CPU', 'THR', 'SEN', 'NET', 'HUD']
+        // 各柱基准高度，波动只在基准附近小幅抖动
+        var bases = [0.78, 0.52, 0.46, 0.38, 0.58, 0.32]
+        var values = bases.slice()
+        var targets = bases.slice()
+
+        function resizeCanvas() {
+          var rect = c.parentElement.getBoundingClientRect()
+          var dpr = Math.min(window.devicePixelRatio || 1, 2)
+          var w = Math.max(160, Math.floor(rect.width))
+          var h = Math.max(140, Math.floor(rect.height - 22))
+          c.width = Math.floor(w * dpr)
+          c.height = Math.floor(h * dpr)
+          c.style.width = w + 'px'
+          c.style.height = h + 'px'
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+        }
+        resizeCanvas()
+        window.addEventListener('resize', resizeCanvas)
+
+        // 每 1.44 秒小幅波动（约 ±6%）
+        function flipTargets() {
+          for (var i = 0; i < labels.length; i++) {
+            var delta = (Math.random() - 0.5) * 0.12
+            targets[i] = Math.max(0.18, Math.min(0.92, bases[i] + delta))
+          }
+        }
+        flipTargets()
+        setInterval(flipTargets, 1440)
+
+        function draw() {
+          var w = c.clientWidth
+          var h = c.clientHeight
+          ctx.clearRect(0, 0, w, h)
+
+          ctx.strokeStyle = 'rgba(61,184,255,0.12)'
+          ctx.lineWidth = 1
+          for (var g = 1; g <= 4; g++) {
+            var gy = h - 22 - ((h - 30) * g) / 4
+            ctx.beginPath()
+            ctx.moveTo(8, gy)
+            ctx.lineTo(w - 8, gy)
+            ctx.stroke()
+          }
+
+          var n = labels.length
+          var slotW = (w - 20) / n
+          var barW = Math.max(4, Math.min(10, slotW * 0.28))
+          var maxH = h - 36
+
+          for (var i = 0; i < n; i++) {
+            values[i] += (targets[i] - values[i]) * 0.045
+            values[i] = Math.max(0.15, Math.min(0.95, values[i]))
+
+            var bh = maxH * values[i]
+            var x = 10 + i * slotW + (slotW - barW) / 2
+            var y = h - 22 - bh
+
+            var grad = ctx.createLinearGradient(0, y, 0, h - 22)
+            if (values[i] > 0.75) {
+              grad.addColorStop(0, '#8ad4ff')
+              grad.addColorStop(1, '#1a7ab8')
+            } else if (values[i] < 0.22) {
+              grad.addColorStop(0, '#fb7185')
+              grad.addColorStop(1, '#7f1d1d')
+            } else {
+              grad.addColorStop(0, '#8ad4ff')
+              grad.addColorStop(1, '#0ea5e9')
+            }
+
+            ctx.fillStyle = grad
+            ctx.shadowColor = 'rgba(61,184,255,0.45)'
+            ctx.shadowBlur = 6
+            ctx.fillRect(x, y, barW, bh)
+            ctx.shadowBlur = 0
+
+            ctx.fillStyle = 'rgba(255,255,255,0.4)'
+            ctx.fillRect(x, y, barW, 2)
+
+            ctx.fillStyle = '#8ad4ff'
+            ctx.font = '9px Orbitron, monospace'
+            ctx.textAlign = 'center'
+            ctx.fillText(Math.round(values[i] * 100) + '%', x + barW / 2, y - 4)
+          }
+          if (!reduce) requestAnimationFrame(draw)
+        }
+        draw()
+      }
+
+      runBoot(function () {
+        new Stream(document.getElementById('codeRight'), JARVIS, {
+          max: 40,
+          fill: true
+        }).start()
+        startBars()
+        startLockRadar()
+        setInterval(function () {
+          var d = new Date()
+          document.getElementById('clock').textContent =
+            pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()) + '.' +
+            pad(Math.floor(d.getMilliseconds() / 10), 2)
+        }, 40)
+        setInterval(function () {
+          var p = 90 + Math.random() * 9.5
+          document.getElementById('stPower').textContent = p.toFixed(1)
+          document.getElementById('stArmor').textContent = String(94 + Math.floor(Math.random() * 6))
+          document.getElementById('stPing').textContent = String(4 + Math.floor(Math.random() * 28))
+          document.getElementById('corePct').textContent = String(Math.round(p))
+        }, 1440)
+      })
+    })()
+  </script>
+
+  <!-- Mk.85 GLB 线框 + 自绘蓝图线稿切换 -->
+  <script type="module" src="./mecha-viewer.js"></script>
+</body>
+
+</html>
