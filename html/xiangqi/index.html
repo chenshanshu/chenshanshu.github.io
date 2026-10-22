@@ -104,6 +104,7 @@
           <div class="segmented" role="radiogroup" aria-label="难度">
             <input type="radio" name="level" id="lv1" value="easy" checked><label for="lv1">简单</label>
             <input type="radio" name="level" id="lv2" value="hard"><label for="lv2">困难</label>
+            <input type="radio" name="level" id="lv3" value="expert"><label for="lv3">专家</label>
           </div>
         </div>
 
@@ -520,15 +521,18 @@
       function aiMove() {
         thinking = true
         updateUI()
+        // 高难度搜索更重，稍延后开算，让「思考中」先上屏
+        var lv = setting('level')
+        var delay = lv === 'expert' ? 40 : lv === 'hard' ? 60 : 220
         aiTimer = setTimeout(function () {
-          var mv = game.bestMove(setting('level'))
+          var mv = game.bestMove(lv)
           thinking = false
           if (mv) {
             playMove(mv.from.x, mv.from.y, mv.to.x, mv.to.y, afterMove)
           } else {
             updateUI()
           }
-        }, 220)
+        }, delay)
       }
 
       function trySelectOrMove(sq) {
