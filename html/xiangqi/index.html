@@ -147,6 +147,9 @@
       var lastMove = null
       var thinking = false
       var aiTimer = null
+      /** 走子滑动动画：{ piece, from, to, capture, t0, dur } */
+      var anim = null
+      var animRaf = 0
 
       // 布局参数（CSS 像素）
       var W = 0
@@ -281,13 +284,32 @@
           })
         }
 
-        // 棋子
+        // 棋子（动画中：终点格跳过，改在插值位置画；被吃子先淡出）
+        var skipX = anim ? anim.to.x : -1
+        var skipY = anim ? anim.to.y : -1
         for (var y = 0; y < ROWS; y++) {
           for (var x = 0; x < COLS; x++) {
+            if (x === skipX && y === skipY) continue
             var p = game.board[y][x]
-            if (p) drawPiece(x, y, p)
+            if (p) drawPieceAt(px(x), py(y), p, 1)
           }
         }
+
+        if (anim) {
+          var t = easeOutCubic(anim.progress)
+          var ax = px(anim.from.x) + (px(anim.to.x) - px(anim.from.x)) * t
+          var ay = py(anim.from.y) + (py(anim.to.y) - py(anim.from.y)) * t
+          // 被吃子留在终点半透明，直到吃子到位
+          if (anim.capture) {
+            drawPieceAt(px(anim.to.x), py(anim.to.y), anim.capture, 1 - t * 0.85)
+          }
+          drawPieceAt(ax, ay, anim.piece, 1)
+        }
+      }
+
+      /** 缓动：快起慢停，走子更自然 */
+      function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3)
       }
 
       function drawPalace(x0, y0) {
@@ -329,11 +351,21 @@
         ctx.fill()
       }
 
-      function drawPiece(x, y, p) {
-        var cx = px(x)
-        var cy = py(y)
+      /**
+       * 在像素坐标画棋子
+       * @param {number} cx
+       * @param {number} cy
+       * @param {string} p
+       * @param {number} [alpha]
+       */
+      function drawPieceAt(cx, cy, p, alpha) {
+        if (alpha == null) alpha = 1
+        if (alpha <= 0.01) return
         var r = cell * 0.4
         var red = p === p.toUpperCase()
+
+        ctx.save()
+        ctx.globalAlpha = alpha
 
         ctx.beginPath()
         ctx.arc(cx, cy, r, 0, Math.PI * 2)
@@ -354,6 +386,7 @@
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(NAMES[p], cx, cy + 1)
+        ctx.restore()
       }
 
       function updateUI() {
@@ -361,7 +394,7 @@
         document.getElementById('loseCount').textContent = record.lose
         document.getElementById('drawCount').textContent = record.draw
 
-        var canUndo = !thinking && !game.winner && game.history.length > 0
+        var canUndo = !thinking && !anim && !game.winner && game.history.length > 0
         document.getElementById('undoBtn').disabled = !canUndo
 
         // 吃子展示
@@ -403,10 +436,64 @@
         hints = []
         lastMove = null
         thinking = false
+        stopAnim()
         overlay.classList.remove('is-show')
         draw()
         updateUI()
         if (game.turn !== playerSide) aiMove()
+      }
+
+      function stopAnim() {
+        if (animRaf) cancelAnimationFrame(animRaf)
+        animRaf = 0
+        anim = null
+      }
+
+      /**
+       * 执行走子并播放滑动动画，结束后回调
+       * @returns {boolean}
+       */
+      function playMove(fromX, fromY, toX, toY, done) {
+        var piece = game.board[fromY][fromX]
+        var capture = game.board[toY][toX]
+        if (!piece) return false
+        if (!game.move(fromX, fromY, toX, toY)) return false
+
+        selected = null
+        hints = []
+        lastMove = game.history[game.history.length - 1]
+        // 距离略长时动画稍久一点
+        var dist = Math.max(Math.abs(toX - fromX), Math.abs(toY - fromY))
+        var dur = 220 + dist * 40
+
+        stopAnim()
+        anim = {
+          piece: piece,
+          from: { x: fromX, y: fromY },
+          to: { x: toX, y: toY },
+          capture: capture,
+          t0: performance.now(),
+          dur: dur,
+          progress: 0
+        }
+        updateUI()
+
+        function tick(now) {
+          if (!anim) return
+          anim.progress = Math.min(1, (now - anim.t0) / anim.dur)
+          draw()
+          if (anim.progress < 1) {
+            animRaf = requestAnimationFrame(tick)
+          } else {
+            anim = null
+            animRaf = 0
+            draw()
+            updateUI()
+            if (done) done()
+          }
+        }
+        animRaf = requestAnimationFrame(tick)
+        return true
       }
 
       function finish(result) {
@@ -422,11 +509,6 @@
       }
 
       function afterMove() {
-        lastMove = game.history[game.history.length - 1]
-        selected = null
-        hints = []
-        draw()
-        updateUI()
         if (game.winner) {
           var playerWin = game.winner === playerSide
           finish(playerWin ? 'win' : 'lose')
@@ -442,8 +524,7 @@
           var mv = game.bestMove(setting('level'))
           thinking = false
           if (mv) {
-            game.move(mv.from.x, mv.from.y, mv.to.x, mv.to.y)
-            afterMove()
+            playMove(mv.from.x, mv.from.y, mv.to.x, mv.to.y, afterMove)
           } else {
             updateUI()
           }
@@ -451,7 +532,7 @@
       }
 
       function trySelectOrMove(sq) {
-        if (thinking || game.winner) return
+        if (thinking || anim || game.winner) return
         if (game.turn !== playerSide) return
 
         var piece = game.board[sq.y][sq.x]
@@ -463,7 +544,7 @@
             return m.to.x === sq.x && m.to.y === sq.y
           })
           if (hit) {
-            if (game.move(selected.x, selected.y, sq.x, sq.y)) afterMove()
+            playMove(selected.x, selected.y, sq.x, sq.y, afterMove)
             return
           }
           // 点到其它己方棋子 → 改选
@@ -488,7 +569,7 @@
       }
 
       function undo() {
-        if (thinking || game.winner) return
+        if (thinking || anim || game.winner) return
         // 撤回到轮到玩家
         var guard = 0
         do {
