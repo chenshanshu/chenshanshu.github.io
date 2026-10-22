@@ -278,6 +278,12 @@
       return cap
     },
 
+    /** 撤销一步（与 applyMove 配对，供 AI 搜索复用同一棋盘） */
+    unmakeMove: function (board, move, capture) {
+      board[move.from.y][move.from.x] = board[move.to.y][move.to.x]
+      board[move.to.y][move.to.x] = capture
+    },
+
     /** 指定颜色是否被将军 */
     inCheck: function (red, board) {
       board = board || this.board
@@ -404,43 +410,68 @@
     },
 
     /**
-     * AI 搜索最佳着法
+     * AI 搜索最佳着法（迭代加深 + 限时，避免专家档卡死页面）
      * @param {'easy'|'hard'|'expert'} level
-     *   简单：深度 1，约 35% 概率在前几步随机
-     *   困难：深度 4 + 吃子静默 3
-     *   专家：深度 5 + 吃子静默 5（更慢、更稳）
      */
     bestMove: function (level) {
       var red = this.turn === 'red'
       var cfg = {
-        easy: { depth: 1, qDepth: 0, random: true },
-        hard: { depth: 4, qDepth: 3, random: false },
-        expert: { depth: 5, qDepth: 5, random: false }
-      }[level] || { depth: 1, qDepth: 0, random: true }
+        easy: { maxDepth: 1, qDepth: 0, timeMs: 80, random: true },
+        hard: { maxDepth: 4, qDepth: 2, timeMs: 500, random: false },
+        expert: { maxDepth: 5, qDepth: 3, timeMs: 900, random: false }
+      }[level] || { maxDepth: 1, qDepth: 0, timeMs: 80, random: true }
 
-      var moves = this.legalMoves(red)
-      if (!moves.length) return null
+      var rootMoves = this.legalMoves(red)
+      if (!rootMoves.length) return null
+      this._sortMoves(rootMoves)
 
-      // 吃子优先排序，利于剪枝
-      this._sortMoves(moves)
-
-      if (cfg.random && moves.length > 1 && Math.random() < 0.35) {
-        // 简单难度：有时在前几步里随机挑
-        return moves[Math.floor(Math.random() * Math.min(4, moves.length))]
+      if (cfg.random && rootMoves.length > 1 && Math.random() < 0.35) {
+        return rootMoves[Math.floor(Math.random() * Math.min(4, rootMoves.length))]
       }
 
-      var best = moves[0]
-      var bestScore = red ? -Infinity : Infinity
-      var useQ = cfg.qDepth > 0
+      // 只用一份工作棋盘，搜索中 apply/unmake，避免每层 clone
+      var board = cloneBoard(this.board)
+      this._deadline = Date.now() + cfg.timeMs
+      this._timedOut = false
 
-      for (var i = 0; i < moves.length; i++) {
-        var m = moves[i]
-        var b = cloneBoard(this.board)
-        this.applyMove(b, m)
-        var score = this._minimax(b, cfg.depth - 1, !red, -Infinity, Infinity, useQ, cfg.qDepth)
+      var best = rootMoves[0]
+      // 迭代加深：超时则退回上一层完整结果
+      for (var d = 1; d <= cfg.maxDepth; d++) {
+        this._timedOut = false
+        var trial = this._searchRoot(board, rootMoves, d, red, cfg.qDepth)
+        if (this._timedOut) break
+        if (trial) best = trial
+      }
+      return best
+    },
+
+    /** 根节点搜一层完整深度，返回最佳着法 */
+    _searchRoot: function (board, rootMoves, depth, red, qDepth) {
+      var best = null
+      var bestScore = red ? -Infinity : Infinity
+      var useQ = qDepth > 0
+
+      for (var i = 0; i < rootMoves.length; i++) {
+        if (Date.now() >= this._deadline) {
+          this._timedOut = true
+          break
+        }
+        var m = rootMoves[i]
+        var cap = this.applyMove(board, m)
+        var score = this._minimax(board, depth - 1, !red, -Infinity, Infinity, useQ, qDepth)
+        this.unmakeMove(board, m, cap)
+        if (this._timedOut) break
         if (red ? score > bestScore : score < bestScore) {
           bestScore = score
           best = m
+        }
+      }
+      // 把本轮最佳着挪到列表前面，利于下一轮加深剪枝
+      if (best) {
+        var idx = rootMoves.indexOf(best)
+        if (idx > 0) {
+          rootMoves.splice(idx, 1)
+          rootMoves.unshift(best)
         }
       }
       return best
@@ -458,7 +489,7 @@
     },
 
     /**
-     * 生成合法着法；onlyCapture 时只保留吃子（静默搜索用）
+     * 生成合法着法（不克隆棋盘）；onlyCapture 时只保留吃子
      */
     _genLegal: function (board, redToMove, onlyCapture) {
       var moves = []
@@ -470,11 +501,10 @@
           for (var i = 0; i < pseudo.length; i++) {
             var m = pseudo[i]
             if (onlyCapture && !m.capture) continue
-            var nb = cloneBoard(board)
-            this.applyMove(nb, m)
-            if (!this.inCheck(redToMove, nb) && !flyingGeneral(nb)) {
-              moves.push({ m: m, b: nb })
-            }
+            var cap = this.applyMove(board, m)
+            var ok = !this.inCheck(redToMove, board) && !flyingGeneral(board)
+            this.unmakeMove(board, m, cap)
+            if (ok) moves.push(m)
           }
         }
       }
@@ -487,6 +517,11 @@
      * @param {number} qDepth 静默搜索层数
      */
     _minimax: function (board, depth, redToMove, alpha, beta, useQuiescence, qDepth) {
+      if (Date.now() >= this._deadline) {
+        this._timedOut = true
+        return this.evaluate(board)
+      }
+
       if (depth <= 0) {
         if (useQuiescence) return this._quiesce(board, redToMove, alpha, beta, qDepth)
         return this.evaluate(board)
@@ -494,20 +529,17 @@
 
       var moves = this._genLegal(board, redToMove, false)
       if (!moves.length) {
-        // 无棋可走：困毙 / 将死
         return redToMove ? -8000 - depth : 8000 + depth
-      }
-
-      // 被将军时多搜一层，避免漏杀
-      var nextDepth = depth - 1
-      if (useQuiescence && this.inCheck(redToMove, board) && nextDepth < 2) {
-        nextDepth = 2
       }
 
       if (redToMove) {
         var max = -Infinity
         for (var j = 0; j < moves.length; j++) {
-          var s = this._minimax(moves[j].b, nextDepth, false, alpha, beta, useQuiescence, qDepth)
+          if (this._timedOut) break
+          var m = moves[j]
+          var cap = this.applyMove(board, m)
+          var s = this._minimax(board, depth - 1, false, alpha, beta, useQuiescence, qDepth)
+          this.unmakeMove(board, m, cap)
           if (s > max) max = s
           if (max > alpha) alpha = max
           if (beta <= alpha) break
@@ -516,7 +548,11 @@
       }
       var min = Infinity
       for (var k = 0; k < moves.length; k++) {
-        var s2 = this._minimax(moves[k].b, nextDepth, true, alpha, beta, useQuiescence, qDepth)
+        if (this._timedOut) break
+        var m2 = moves[k]
+        var cap2 = this.applyMove(board, m2)
+        var s2 = this._minimax(board, depth - 1, true, alpha, beta, useQuiescence, qDepth)
+        this.unmakeMove(board, m2, cap2)
         if (s2 < min) min = s2
         if (min < beta) beta = min
         if (beta <= alpha) break
@@ -524,8 +560,13 @@
       return min
     },
 
-    /** 静默搜索：只延伸吃子，避免「看一步就停、漏掉连吃」 */
+    /** 静默搜索：只延伸吃子 */
     _quiesce: function (board, redToMove, alpha, beta, qDepth) {
+      if (Date.now() >= this._deadline) {
+        this._timedOut = true
+        return this.evaluate(board)
+      }
+
       var stand = this.evaluate(board)
       if (qDepth <= 0) return stand
 
@@ -537,23 +578,28 @@
         if (stand < beta) beta = stand
       }
 
-      var moves = this._genLegal(board, redToMove, true)
-      // 被将时必须考虑全部应将，不能只搜吃子
-      if (!moves.length && this.inCheck(redToMove, board)) {
-        moves = this._genLegal(board, redToMove, false)
-      }
+      var inChk = this.inCheck(redToMove, board)
+      var moves = this._genLegal(board, redToMove, !inChk)
       if (!moves.length) return stand
 
       if (redToMove) {
         for (var i = 0; i < moves.length; i++) {
-          var s = this._quiesce(moves[i].b, false, alpha, beta, qDepth - 1)
+          if (this._timedOut) break
+          var m = moves[i]
+          var cap = this.applyMove(board, m)
+          var s = this._quiesce(board, false, alpha, beta, qDepth - 1)
+          this.unmakeMove(board, m, cap)
           if (s > alpha) alpha = s
           if (alpha >= beta) return beta
         }
         return alpha
       }
       for (var j = 0; j < moves.length; j++) {
-        var s2 = this._quiesce(moves[j].b, true, alpha, beta, qDepth - 1)
+        if (this._timedOut) break
+        var m2 = moves[j]
+        var cap2 = this.applyMove(board, m2)
+        var s2 = this._quiesce(board, true, alpha, beta, qDepth - 1)
+        this.unmakeMove(board, m2, cap2)
         if (s2 < beta) beta = s2
         if (beta <= alpha) return alpha
       }
