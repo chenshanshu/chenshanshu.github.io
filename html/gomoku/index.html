@@ -79,6 +79,7 @@
           <div class="segmented" role="radiogroup" aria-label="难度">
             <input type="radio" name="level" id="lv1" value="easy"><label for="lv1">简单</label>
             <input type="radio" name="level" id="lv2" value="hard" checked><label for="lv2">困难</label>
+            <input type="radio" name="level" id="lv3" value="expert"><label for="lv3">专家</label>
           </div>
         </div>
 
@@ -114,6 +115,8 @@
     let thinking = false
     let hover = -1
     let aiTimer = null
+    /** @type {Worker|null} */
+    let aiWorker = null
 
     // 画布尺寸（CSS 像素）与格距
     let px = 0
@@ -237,7 +240,7 @@
     }
 
     function newGame() {
-      clearTimeout(aiTimer)
+      killAi()
       board = new Array(SIZE * SIZE).fill(0)
       moves = []
       winLine = null
@@ -269,17 +272,68 @@
       return false
     }
 
-    /** 电脑落子（稍作延时，避免界面卡顿并给出思考感） */
+    function killAi() {
+      if (aiTimer) {
+        clearTimeout(aiTimer)
+        aiTimer = null
+      }
+      if (aiWorker) {
+        aiWorker.terminate()
+        aiWorker = null
+      }
+    }
+
+    /** 电脑落子：Worker 后台搜 + 硬性时限，超时用 quickMove 必出一手 */
     function aiMove() {
+      killAi()
       thinking = true
       updateUI()
-      aiTimer = setTimeout(() => {
-        const i = GomokuAI.bestMove(board, SIZE, 3 - playerColor, setting('level'))
+
+      const lv = setting('level')
+      const me = 3 - playerColor
+      const limit = (GomokuAI.LEVEL_TIME && GomokuAI.LEVEL_TIME[lv]) || 500
+      let done = false
+
+      function finishAi(i) {
+        if (done) return
+        done = true
+        killAi()
         thinking = false
-        put(i)
+        if (typeof i === 'number' && i >= 0 && !board[i]) {
+          put(i)
+        } else {
+          // 兜底：找任意空位
+          const fallback = GomokuAI.quickMove(board, SIZE, me)
+          if (!board[fallback]) put(fallback)
+        }
         draw()
         updateUI()
-      }, 250)
+      }
+
+      // 墙钟：到点终止 Worker，立刻 quickMove
+      aiTimer = setTimeout(() => {
+        finishAi(GomokuAI.quickMove(board, SIZE, me))
+      }, limit + 120)
+
+      try {
+        aiWorker = new Worker('./gomoku-ai-worker.js')
+        aiWorker.onmessage = (e) => {
+          finishAi(e.data && typeof e.data.i === 'number' ? e.data.i : GomokuAI.quickMove(board, SIZE, me))
+        }
+        aiWorker.onerror = () => {
+          finishAi(GomokuAI.quickMove(board, SIZE, me))
+        }
+        aiWorker.postMessage({
+          board: board.slice(),
+          size: SIZE,
+          me: me,
+          level: lv
+        })
+      } catch (err) {
+        setTimeout(() => {
+          finishAi(GomokuAI.bestMove(board, SIZE, me, lv))
+        }, 40)
+      }
     }
 
     function finish(result) {
@@ -295,6 +349,7 @@
     /** 悔棋：撤回到上一次轮到玩家时的局面 */
     function undo() {
       if (over || thinking) return
+      killAi()
       do {
         board[moves.pop()] = 0
       } while (moves.length && moves.length % 2 !== (playerColor === 1 ? 0 : 1))

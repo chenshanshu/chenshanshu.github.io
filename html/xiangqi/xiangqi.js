@@ -162,6 +162,12 @@
   Xiangqi.ROWS = ROWS
   Xiangqi.NAMES = NAMES
   Xiangqi.START = START
+  /** 各难度思考时限（毫秒），主线程与 Worker 共用 */
+  Xiangqi.LEVEL_TIME = {
+    easy: 800,
+    hard: 8000,
+    expert: 60000
+  }
 
   Xiangqi.prototype = {
     reset: function (fen) {
@@ -410,16 +416,18 @@
     },
 
     /**
-     * AI 搜索最佳着法（迭代加深 + 限时，避免专家档卡死页面）
+     * AI 搜索最佳着法（迭代加深 + 硬性时限，超时必返回）
      * @param {'easy'|'hard'|'expert'} level
      */
     bestMove: function (level) {
       var red = this.turn === 'red'
+      var timeMs = (Xiangqi.LEVEL_TIME && Xiangqi.LEVEL_TIME[level]) || 400
       var cfg = {
-        easy: { maxDepth: 1, qDepth: 0, timeMs: 80, random: true },
-        hard: { maxDepth: 4, qDepth: 2, timeMs: 500, random: false },
-        expert: { maxDepth: 5, qDepth: 3, timeMs: 900, random: false }
-      }[level] || { maxDepth: 1, qDepth: 0, timeMs: 80, random: true }
+        easy: { maxDepth: 1, qDepth: 0, random: true },
+        hard: { maxDepth: 4, qDepth: 2, random: false },
+        // 专家：时限内尽量加深，上限提高以便用满约 1 分钟
+        expert: { maxDepth: 8, qDepth: 3, random: false }
+      }[level] || { maxDepth: 1, qDepth: 0, random: true }
 
       var rootMoves = this.legalMoves(red)
       if (!rootMoves.length) return null
@@ -429,20 +437,32 @@
         return rootMoves[Math.floor(Math.random() * Math.min(4, rootMoves.length))]
       }
 
-      // 只用一份工作棋盘，搜索中 apply/unmake，避免每层 clone
       var board = cloneBoard(this.board)
-      this._deadline = Date.now() + cfg.timeMs
+      this._deadline = Date.now() + timeMs
       this._timedOut = false
+      this._nodes = 0
 
       var best = rootMoves[0]
-      // 迭代加深：超时则退回上一层完整结果
       for (var d = 1; d <= cfg.maxDepth; d++) {
+        if (Date.now() >= this._deadline) break
         this._timedOut = false
         var trial = this._searchRoot(board, rootMoves, d, red, cfg.qDepth)
-        if (this._timedOut) break
         if (trial) best = trial
+        if (this._timedOut || Date.now() >= this._deadline) break
       }
-      return best
+      return best || rootMoves[0]
+    },
+
+    /** 是否已超时（生成着法循环里也要查） */
+    _overtime: function () {
+      if (this._timedOut) return true
+      this._nodes = (this._nodes || 0) + 1
+      // 每 64 个节点看一次表，降低 Date.now 开销
+      if ((this._nodes & 63) === 0 && Date.now() >= this._deadline) {
+        this._timedOut = true
+        return true
+      }
+      return false
     },
 
     /** 根节点搜一层完整深度，返回最佳着法 */
@@ -495,10 +515,12 @@
       var moves = []
       for (var y = 0; y < ROWS; y++) {
         for (var x = 0; x < COLS; x++) {
+          if (this._overtime()) return moves
           var p = board[y][x]
           if (!p || isRed(p) !== redToMove) continue
           var pseudo = this.genPseudo(x, y, board)
           for (var i = 0; i < pseudo.length; i++) {
+            if (this._overtime()) return moves
             var m = pseudo[i]
             if (onlyCapture && !m.capture) continue
             var cap = this.applyMove(board, m)
@@ -517,10 +539,7 @@
      * @param {number} qDepth 静默搜索层数
      */
     _minimax: function (board, depth, redToMove, alpha, beta, useQuiescence, qDepth) {
-      if (Date.now() >= this._deadline) {
-        this._timedOut = true
-        return this.evaluate(board)
-      }
+      if (this._overtime()) return this.evaluate(board)
 
       if (depth <= 0) {
         if (useQuiescence) return this._quiesce(board, redToMove, alpha, beta, qDepth)
@@ -535,7 +554,7 @@
       if (redToMove) {
         var max = -Infinity
         for (var j = 0; j < moves.length; j++) {
-          if (this._timedOut) break
+          if (this._overtime()) break
           var m = moves[j]
           var cap = this.applyMove(board, m)
           var s = this._minimax(board, depth - 1, false, alpha, beta, useQuiescence, qDepth)
@@ -548,7 +567,7 @@
       }
       var min = Infinity
       for (var k = 0; k < moves.length; k++) {
-        if (this._timedOut) break
+        if (this._overtime()) break
         var m2 = moves[k]
         var cap2 = this.applyMove(board, m2)
         var s2 = this._minimax(board, depth - 1, true, alpha, beta, useQuiescence, qDepth)
@@ -560,12 +579,9 @@
       return min
     },
 
-    /** 静默搜索：只延伸吃子 */
+    /** 静默搜索：只延伸吃子（最多看前 12 个，防爆炸） */
     _quiesce: function (board, redToMove, alpha, beta, qDepth) {
-      if (Date.now() >= this._deadline) {
-        this._timedOut = true
-        return this.evaluate(board)
-      }
+      if (this._overtime()) return this.evaluate(board)
 
       var stand = this.evaluate(board)
       if (qDepth <= 0) return stand
@@ -581,10 +597,11 @@
       var inChk = this.inCheck(redToMove, board)
       var moves = this._genLegal(board, redToMove, !inChk)
       if (!moves.length) return stand
+      if (moves.length > 12) moves.length = 12
 
       if (redToMove) {
         for (var i = 0; i < moves.length; i++) {
-          if (this._timedOut) break
+          if (this._overtime()) break
           var m = moves[i]
           var cap = this.applyMove(board, m)
           var s = this._quiesce(board, false, alpha, beta, qDepth - 1)
@@ -595,7 +612,7 @@
         return alpha
       }
       for (var j = 0; j < moves.length; j++) {
-        if (this._timedOut) break
+        if (this._overtime()) break
         var m2 = moves[j]
         var cap2 = this.applyMove(board, m2)
         var s2 = this._quiesce(board, true, alpha, beta, qDepth - 1)

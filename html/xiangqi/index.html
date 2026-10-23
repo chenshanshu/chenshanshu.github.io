@@ -148,6 +148,8 @@
       var lastMove = null
       var thinking = false
       var aiTimer = null
+      /** @type {Worker|null} */
+      var aiWorker = null
       /** 走子滑动动画：{ piece, from, to, capture, t0, dur } */
       var anim = null
       var animRaf = 0
@@ -437,6 +439,7 @@
         hints = []
         lastMove = null
         thinking = false
+        killAi()
         stopAnim()
         overlay.classList.remove('is-show')
         draw()
@@ -518,21 +521,75 @@
         if (game.turn !== playerSide) aiMove()
       }
 
+      /** 杀掉进行中的 AI（换局 / 超时） */
+      function killAi() {
+        if (aiTimer) {
+          clearTimeout(aiTimer)
+          aiTimer = null
+        }
+        if (aiWorker) {
+          aiWorker.terminate()
+          aiWorker = null
+        }
+      }
+
+      /** 极速兜底着法（深度 1 / 简单），保证超时也能走 */
+      function quickFallbackMove() {
+        try {
+          return game.bestMove('easy')
+        } catch (e) {
+          var moves = game.legalMoves(game.turn === 'red')
+          return moves.length ? moves[0] : null
+        }
+      }
+
       function aiMove() {
+        killAi()
         thinking = true
         updateUI()
-        // 高难度搜索更重，稍延后开算，让「思考中」先上屏
+
         var lv = setting('level')
-        var delay = lv === 'expert' ? 40 : lv === 'hard' ? 60 : 220
-        aiTimer = setTimeout(function () {
-          var mv = game.bestMove(lv)
+        var limit = (Xiangqi.LEVEL_TIME && Xiangqi.LEVEL_TIME[lv]) || 450
+        var done = false
+
+        function finishAi(mv) {
+          if (done) return
+          done = true
+          killAi()
           thinking = false
-          if (mv) {
+          if (mv && typeof mv.from === 'object') {
             playMove(mv.from.x, mv.from.y, mv.to.x, mv.to.y, afterMove)
           } else {
             updateUI()
           }
-        }, delay)
+        }
+
+        // 硬性墙钟：到点必终止 Worker，用简单搜索补一招
+        aiTimer = setTimeout(function () {
+          finishAi(quickFallbackMove())
+        }, limit + 200)
+
+        // 后台线程搜棋，避免卡死 UI
+        try {
+          aiWorker = new Worker('./xiangqi-ai-worker.js')
+          aiWorker.onmessage = function (e) {
+            var data = e.data || {}
+            finishAi(data.move || quickFallbackMove())
+          }
+          aiWorker.onerror = function () {
+            finishAi(quickFallbackMove())
+          }
+          aiWorker.postMessage({
+            board: game.board,
+            turn: game.turn,
+            level: lv
+          })
+        } catch (err) {
+          // 不支持 Worker 时退回主线程（仍受 LEVEL_TIME 约束）
+          setTimeout(function () {
+            finishAi(game.bestMove(lv) || quickFallbackMove())
+          }, 30)
+        }
       }
 
       function trySelectOrMove(sq) {
@@ -574,6 +631,7 @@
 
       function undo() {
         if (thinking || anim || game.winner) return
+        killAi()
         // 撤回到轮到玩家
         var guard = 0
         do {

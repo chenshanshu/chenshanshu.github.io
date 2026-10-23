@@ -1,33 +1,30 @@
 /**
- * 五子棋 AI：基于棋型打分
- * 棋盘为 size*size 的一维数组，0 空，1 黑，2 白
+ * 五子棋 AI
+ * - 简单：棋型打分 + 随机扰动
+ * - 困难：强制应对优先级 + 2 层 αβ
+ * - 专家：强制应对 + 3 层 αβ + 更强防守权重
+ *
+ * 棋盘：size*size 一维数组，0 空，1 黑，2 白
  */
 const GomokuAI = (function () {
   const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]]
 
-  /**
-   * 棋型分值表：1 己方棋子，0 空位
-   * 按分值从高到低排列，同一方向只取最高的一种
-   */
+  /** 棋型：1 己方，0 空，2 对方/边 */
   const PATTERNS = [
     ['11111', 1000000],
-    ['011110', 50000],                       // 活四
-    ['11110', 3000], ['01111', 3000],        // 冲四
-    ['11011', 3000], ['10111', 3000], ['11101', 3000],
-    ['01110', 2500],                         // 活三
-    ['011010', 2000], ['010110', 2000],      // 跳活三
-    ['11100', 300], ['00111', 300],          // 眠三
-    ['11010', 250], ['01011', 250], ['10110', 250], ['01101', 250],
-    ['10011', 200], ['11001', 200], ['10101', 200],
-    ['0110', 150], ['01010', 120], ['010010', 100], // 活二
-    ['11000', 20], ['00011', 20], ['10100', 15], ['00101', 15], // 眠二
-    ['010', 5]
+    ['011110', 100000], // 活四
+    ['11110', 10000], ['01111', 10000], // 冲四
+    ['11011', 10000], ['10111', 10000], ['11101', 10000],
+    ['01110', 5000], // 活三
+    ['011010', 4500], ['010110', 4500],
+    ['11100', 500], ['00111', 500],
+    ['11010', 480], ['01011', 480], ['10110', 480], ['01101', 480],
+    ['10011', 400], ['11001', 400], ['10101', 400],
+    ['0110', 200], ['01010', 160], ['010010', 140],
+    ['11000', 30], ['00011', 30], ['10100', 25], ['00101', 25],
+    ['010', 8]
   ]
 
-  /**
-   * 取得以 (r, c) 为中心某方向上的一行（前后各 5 格），
-   * 己方棋子记 '1'，空位记 '0'，对方棋子或棋盘外记 '2'
-   */
   function lineString(board, size, r, c, dr, dc, player) {
     let s = ''
     for (let k = -5; k <= 5; k++) {
@@ -42,7 +39,6 @@ const GomokuAI = (function () {
     return s
   }
 
-  /** 一行字符串中匹配到的最高棋型分 */
   function patternScore(s) {
     for (const [p, score] of PATTERNS) {
       if (s.includes(p)) return score
@@ -50,7 +46,7 @@ const GomokuAI = (function () {
     return 0
   }
 
-  /** 在 (r, c) 落子后，player 在四个方向上新增的棋型分 */
+  /** 落子后四向棋型增量分 */
   function pointScore(board, size, r, c, player) {
     let total = 0
     for (const [dr, dc] of DIRS) {
@@ -61,8 +57,35 @@ const GomokuAI = (function () {
     return total
   }
 
-  /** 候选点：已有棋子周围 2 格内的空位 */
-  function candidates(board, size) {
+  /**
+   * 统计落子后形成的关键威胁数量
+   * win / openFour / four / openThree
+   */
+  function countThreats(board, size, i, player) {
+    const r = Math.floor(i / size)
+    const c = i % size
+    let win = 0
+    let openFour = 0
+    let four = 0
+    let openThree = 0
+    for (const [dr, dc] of DIRS) {
+      const before = lineString(board, size, r, c, dr, dc, player)
+      const after = before.slice(0, 5) + '1' + before.slice(6)
+      if (after.includes('11111')) win++
+      else if (after.includes('011110')) openFour++
+      else if (
+        after.includes('11110') || after.includes('01111') ||
+        after.includes('11011') || after.includes('10111') || after.includes('11101')
+      ) four++
+      else if (
+        after.includes('01110') || after.includes('011010') || after.includes('010110')
+      ) openThree++
+    }
+    return { win, openFour, four, openThree }
+  }
+
+  /** 候选点：已有子周围 radius 格 */
+  function candidates(board, size, radius) {
     const set = new Set()
     let hasStone = false
     for (let i = 0; i < board.length; i++) {
@@ -70,11 +93,13 @@ const GomokuAI = (function () {
       hasStone = true
       const r = Math.floor(i / size)
       const c = i % size
-      for (let dr = -2; dr <= 2; dr++) {
-        for (let dc = -2; dc <= 2; dc++) {
+      for (let dr = -radius; dr <= radius; dr++) {
+        for (let dc = -radius; dc <= radius; dc++) {
           const rr = r + dr
           const cc = c + dc
-          if (rr >= 0 && rr < size && cc >= 0 && cc < size && !board[rr * size + cc]) set.add(rr * size + cc)
+          if (rr >= 0 && rr < size && cc >= 0 && cc < size && !board[rr * size + cc]) {
+            set.add(rr * size + cc)
+          }
         }
       }
     }
@@ -82,21 +107,32 @@ const GomokuAI = (function () {
     return [...set]
   }
 
-  /** 给所有候选点打分：进攻分 + 防守分 */
-  function rank(board, size, me, defenseWeight) {
+  function rank(board, size, me, defenseWeight, radius) {
     const opp = 3 - me
-    return candidates(board, size).map((i) => {
+    return candidates(board, size, radius).map((i) => {
       const r = Math.floor(i / size)
       const c = i % size
       const attack = pointScore(board, size, r, c, me)
       const defense = pointScore(board, size, r, c, opp)
-      return { i, attack, defense, score: attack + defense * defenseWeight }
+      const at = countThreats(board, size, i, me)
+      const dt = countThreats(board, size, i, opp)
+      // 组合威胁加成：双活三 / 冲四+活三 等
+      let combo = 0
+      if (at.openFour || at.four >= 2 || (at.four && at.openThree) || at.openThree >= 2) {
+        combo += 80000
+      }
+      if (dt.openFour || dt.four >= 2 || (dt.four && dt.openThree) || dt.openThree >= 2) {
+        combo += 75000 * defenseWeight
+      }
+      return {
+        i,
+        attack,
+        defense,
+        score: attack + defense * defenseWeight + combo
+      }
     }).sort((a, b) => b.score - a.score)
   }
 
-  /**
-   * 判断最后一手是否连成五子，返回连成的格子下标，否则返回 null
-   */
   function checkWin(board, size, i) {
     const player = board[i]
     if (!player) return null
@@ -118,57 +154,209 @@ const GomokuAI = (function () {
     return null
   }
 
+  /** 局面静态评估（相对 me） */
+  function evaluateBoard(board, size, me) {
+    const opp = 3 - me
+    let score = 0
+    const empties = candidates(board, size, 2)
+    // 只在候选空点上估「下一步能形成什么」，近似局面分
+    for (const i of empties) {
+      const r = Math.floor(i / size)
+      const c = i % size
+      score += pointScore(board, size, r, c, me) * 0.15
+      score -= pointScore(board, size, r, c, opp) * 0.18
+    }
+    return score
+  }
+
   /**
-   * 计算电脑落子位置
-   * @param {number[]} board 棋盘
-   * @param {number} size 边长
-   * @param {number} me 电脑执子（1 黑 / 2 白）
-   * @param {'easy'|'hard'} level 难度
+   * 强制应对：赢 / 堵赢 / 活四 / 堵活四 / 双威胁
+   * 找不到则返回 -1
    */
-  function bestMove(board, size, me, level = 'hard') {
-    const list = rank(board, size, me, level === 'hard' ? 0.9 : 0.8)
-    if (list.length === 1) return list[0].i
+  function forcedMove(board, size, me) {
+    const opp = 3 - me
+    const spots = candidates(board, size, 3)
 
-    // 能直接赢就赢，对方下一步能赢就堵
-    const win = list.find((m) => m.attack >= 900000)
-    if (win) return win.i
-    const block = list.find((m) => m.defense >= 900000)
-    if (block) return block.i
+    // 1. 自己能赢
+    for (const i of spots) {
+      board[i] = me
+      const win = checkWin(board, size, i)
+      board[i] = 0
+      if (win) return i
+    }
+    // 2. 对方下一步能赢 → 必须堵
+    for (const i of spots) {
+      board[i] = opp
+      const win = checkWin(board, size, i)
+      board[i] = 0
+      if (win) return i
+    }
+    // 3. 自己活四
+    for (const i of spots) {
+      const t = countThreats(board, size, i, me)
+      if (t.openFour) return i
+    }
+    // 4. 堵对方活四
+    const blockFours = []
+    for (const i of spots) {
+      const t = countThreats(board, size, i, opp)
+      if (t.openFour) blockFours.push(i)
+    }
+    if (blockFours.length) {
+      // 在堵点里选对自己进攻最好的
+      return blockFours.sort((a, b) => {
+        const ra = Math.floor(a / size)
+        const ca = a % size
+        const rb = Math.floor(b / size)
+        const cb = b % size
+        return pointScore(board, size, rb, cb, me) - pointScore(board, size, ra, ca, me)
+      })[0]
+    }
+    // 5. 自己双威胁（冲四+活三 / 双活三 / 双冲四）
+    for (const i of spots) {
+      const t = countThreats(board, size, i, me)
+      if (t.four >= 2 || (t.four && t.openThree) || t.openThree >= 2) return i
+    }
+    // 6. 堵对方双威胁
+    const blockDouble = []
+    for (const i of spots) {
+      const t = countThreats(board, size, i, opp)
+      if (t.four >= 2 || (t.four && t.openThree) || t.openThree >= 2) blockDouble.push(i)
+    }
+    if (blockDouble.length) {
+      return blockDouble.sort((a, b) => {
+        const ra = Math.floor(a / size)
+        const ca = a % size
+        const rb = Math.floor(b / size)
+        const cb = b % size
+        return pointScore(board, size, rb, cb, me) - pointScore(board, size, ra, ca, me)
+      })[0]
+    }
+    return -1
+  }
 
-    if (level === 'hard') {
-      // 能形成活四（下一步必胜）就走
-      const four = list.find((m) => m.attack >= 40000)
-      if (four) return four.i
-      // 对方能形成活四时必须拦截，在拦截点里选进攻最好的
-      const stops = list.filter((m) => m.defense >= 40000)
-      if (stops.length) return stops.sort((a, b) => b.attack - a.attack)[0].i
+  function minimax(board, size, me, depth, maximizing, alpha, beta, deadline) {
+    if (Date.now() >= deadline) return evaluateBoard(board, size, me)
+    if (depth <= 0) return evaluateBoard(board, size, me)
+
+    const player = maximizing ? me : 3 - me
+    const list = rank(board, size, player, maximizing ? 1.1 : 1.2, 2).slice(0, 12)
+    if (!list.length) return 0
+
+    if (maximizing) {
+      let best = -Infinity
+      for (const m of list) {
+        board[m.i] = me
+        if (checkWin(board, size, m.i)) {
+          board[m.i] = 0
+          return 5000000 + depth
+        }
+        const v = minimax(board, size, me, depth - 1, false, alpha, beta, deadline)
+        board[m.i] = 0
+        if (v > best) best = v
+        if (best > alpha) alpha = best
+        if (beta <= alpha) break
+        if (Date.now() >= deadline) break
+      }
+      return best
     }
 
-    if (level === 'easy') {
-      // 简单难度：在前几名里随机挑一个，留出破绽
+    let best = Infinity
+    const opp = 3 - me
+    for (const m of list) {
+      board[m.i] = opp
+      if (checkWin(board, size, m.i)) {
+        board[m.i] = 0
+        return -5000000 - depth
+      }
+      const v = minimax(board, size, me, depth - 1, true, alpha, beta, deadline)
+      board[m.i] = 0
+      if (v < best) best = v
+      if (best < beta) beta = best
+      if (beta <= alpha) break
+      if (Date.now() >= deadline) break
+    }
+    return best
+  }
+
+  /** 各难度思考时限（毫秒） */
+  const LEVEL_TIME = {
+    easy: 200,
+    hard: 500,
+    expert: 2000
+  }
+
+  /**
+   * @param {'easy'|'hard'|'expert'} level
+   */
+  function bestMove(board, size, me, level = 'hard') {
+    const timeMs = LEVEL_TIME[level] || 500
+    const cfg = {
+      easy: { defense: 0.85, radius: 2, depth: 0, top: 4, random: true },
+      hard: { defense: 1.15, radius: 2, depth: 2, top: 8, random: false },
+      expert: { defense: 1.35, radius: 3, depth: 3, top: 10, random: false }
+    }[level] || { defense: 1.15, radius: 2, depth: 2, top: 8, random: false }
+
+    // 强制应对优先（赢/堵/活四/双威胁）
+    if (level !== 'easy') {
+      const forced = forcedMove(board, size, me)
+      if (forced >= 0) return forced
+    } else {
+      // 简单也至少堵连五、抢连五
+      const spots = candidates(board, size, 2)
+      for (const i of spots) {
+        board[i] = me
+        const w = checkWin(board, size, i)
+        board[i] = 0
+        if (w) return i
+      }
+      for (const i of spots) {
+        board[i] = 3 - me
+        const w = checkWin(board, size, i)
+        board[i] = 0
+        if (w) return i
+      }
+    }
+
+    const list = rank(board, size, me, cfg.defense, cfg.radius)
+    if (!list.length) return Math.floor(size * size / 2)
+    if (list.length === 1) return list[0].i
+
+    if (cfg.random) {
       const limit = list[0].score - Math.abs(list[0].score) * 0.4
       const top = list.filter((m) => m.score >= limit).slice(0, 4)
       return top[Math.floor(Math.random() * top.length)].i
     }
 
-    // 困难难度：对前若干候选点向前看一步，扣除对手应手中最大的进攻威胁
-    // （只看对手的进攻分，否则对手“堵我”的分数会反过来压低我的进攻）
-    const opp = 3 - me
+    // 困难 / 专家：αβ 搜索（超时立即返回当前最佳）
+    const deadline = Date.now() + timeMs
     let best = list[0]
-    let bestValue = -Infinity
-    for (const m of list.slice(0, 10)) {
+    let bestVal = -Infinity
+    for (const m of list.slice(0, cfg.top)) {
+      if (Date.now() >= deadline) break
       board[m.i] = me
-      const replies = rank(board, size, opp, 0)
+      if (checkWin(board, size, m.i)) {
+        board[m.i] = 0
+        return m.i
+      }
+      const val = minimax(board, size, me, cfg.depth, false, -Infinity, Infinity, deadline)
       board[m.i] = 0
-      const threat = replies.length ? Math.max(...replies.map((x) => x.attack)) : 0
-      const value = m.score - threat * 0.5
-      if (value > bestValue) {
-        bestValue = value
+      const mixed = val + m.score * 0.02
+      if (mixed > bestVal) {
+        bestVal = mixed
         best = m
       }
     }
     return best.i
   }
 
-  return { bestMove, checkWin }
+  /** 极速兜底：只做强制应对 + 打分，不做深搜 */
+  function quickMove(board, size, me) {
+    const forced = forcedMove(board, size, me)
+    if (forced >= 0) return forced
+    const list = rank(board, size, me, 1.2, 2)
+    return list.length ? list[0].i : Math.floor(size * size / 2)
+  }
+
+  return { bestMove, checkWin, quickMove, LEVEL_TIME }
 })()
